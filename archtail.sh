@@ -61,27 +61,28 @@ not_connected(){
     exit 1
 }
 
+DISKS=()
 show_disks(){
-   DISKS=()
+   #DISKS=()
    for d in $(lsblk | grep disk | awk '{printf "%s\n%s\n",$1,$4}'); do
         DISKS+=($d)
    done
 
-   max=${#DISKS[@]}
-   for ((n=0;n<$max;n+=2)); do
-        printf "%s\t%s\t%s\n" ${DISKS[$n]} ${DISKS[(($n+1))]} "OFF"
-   done
-   echo
+   #max=${#DISKS[@]}
+   #for ((n=0;n<$max;n+=2)); do
+   #     printf "%s\t%s\t%s\n" ${DISKS[$n]} ${DISKS[(($n+1))]} 'OFF'
+   #done
+   #echo
 }
 
 choose_disk(){
-    message=$(show_disks)
+    show_disks
+    #message=$(show_disks)
     #echo "$message" 
     choice=$(whiptail --title "choose an installation disk" --radiolist "installation disk:" 20 70 4 \
-        #'sda' '300G' OFF \
-        #'sdb' '200G' OFF \
-        #'sdc' '400G' OFF \
-        "$message"
+        "${DISKS[0]}" "${DISKS[1]}" OFF \
+        "${DISKS[2]}" "${DISKS[3]}" OFF \
+        "${DISKS[4]}" "${DISKS[5]}" OFF \
         3>&2 2>&1 1>&3 )
 
     echo -e "\nYou chose $choice\n"
