@@ -67,18 +67,10 @@ show_disks(){
    for d in $(lsblk | grep disk | awk '{printf "%s\n%s\n",$1,$4}'); do
         DISKS+=($d)
    done
-
-   #max=${#DISKS[@]}
-   #for ((n=0;n<$max;n+=2)); do
-   #     printf "%s\t%s\t%s\n" ${DISKS[$n]} ${DISKS[(($n+1))]} 'OFF'
-   #done
-   #echo
 }
 
 choose_disk(){
     show_disks
-    #message=$(show_disks)
-    #echo "$message" 
     choice=$(whiptail --title "choose an installation disk" --radiolist "installation disk:" 20 70 4 \
         "${DISKS[0]}" "${DISKS[1]}" OFF \
         "${DISKS[2]}" "${DISKS[3]}" OFF \
@@ -88,18 +80,14 @@ choose_disk(){
 }
 
 choose_disk1(){
-       DISKS=()
-       for d in $(lsblk | grep disk | awk '{printf "%s\n%s\n",$1,$4}'); do
-            DISKS+=($d)
+       local DISKS=()
+       for d in $(lsblk | grep disk | awk '{printf "%s\n%s \\\n",$1,$4}'); do
+            DISKS+=("$d")
        done
 
-       {
-           max=${#DISKS[@]}
-           for ((n=0;n<$max;n+=2)); do
-                printf "%s\t%s\t%s\n" ${DISKS[$n]} ${DISKS[(($n+1))]} 'OFF'
-           done
-       } | whiptail --title "choose an installation disk" --menu "installation disk:" 20 70 4 \
-
+       whiptail --title "choose an installation disk"  --radiolist "installation disk: " 20 70 4 \
+           "${DISKS[@]}" 3>&2 2>&1 1>&3
+            
 }
 
 
