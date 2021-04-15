@@ -85,7 +85,7 @@ choose_disk1(){
             DISKS+=("$d")
        done
 
-       whiptail --title "choose an installation disk"  --radiolist "installation disk: " 20 70 4 \
+       whiptail --title "CHOOSE AN INSTALLATION DISK"  --radiolist " Your Installation Disk: " 20 70 4 \
            "${DISKS[@]}" 3>&2 2>&1 1>&3
             
 }
