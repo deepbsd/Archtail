@@ -87,5 +87,21 @@ choose_disk(){
     echo -e "\nYou chose $choice\n"
 }
 
-choose_disk
+choose_disk1(){
+       DISKS=()
+       for d in $(lsblk | grep disk | awk '{printf "%s\n%s\n",$1,$4}'); do
+            DISKS+=($d)
+       done
+
+       {
+           max=${#DISKS[@]}
+           for ((n=0;n<$max;n+=2)); do
+                printf "%s\t%s\t%s\n" ${DISKS[$n]} ${DISKS[(($n+1))]} 'OFF'
+           done
+       } | whiptail --title "choose an installation disk" --menu "installation disk:" 20 70 4 \
+
+}
+
+
+choose_disk1
 
