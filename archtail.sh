@@ -84,7 +84,6 @@ choose_disk(){
         "${DISKS[2]}" "${DISKS[3]}" OFF \
         "${DISKS[4]}" "${DISKS[5]}" OFF \
         3>&2 2>&1 1>&3 )
-
     echo -e "\nYou chose $choice\n"
 }
 
