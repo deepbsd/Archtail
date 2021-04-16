@@ -99,28 +99,57 @@ efi_boot_mode(){
 # FIND GRAPHICS CARD
 find_card(){
     card=$(lspci | grep VGA | sed 's/^.*: //g')
-    echo "You're using a $card" && echo
+    whiptail --title "Your Video Card" --msgbox  "You're using a $card  Write this down and hit OK to continue." 8 65 3>&2 2>&1 1>&3
 }
 
 # IF NOT CONNTECTED
 not_connected(){
     clear
-    echo "No network connection!!!  Perhaps your wifi card is not supported?"
-    echo "Is your network cable plugged in?"
+    message="No network connection!!!  Perhaps your wifi card is not supported?\nIs your network card plugged in?"
+    TERM=ansi whiptail --title "NO NETWORK CONNECTION" --infobox "$message" 15 70
+    sleep 5
     exit 1
 }
 
 choose_disk(){
+       depth=$(lsblk | grep 'disk' | wc -l)
        local DISKS=()
        for d in $(lsblk | grep disk | awk '{printf "%s\n%s \\\n",$1,$4}'); do
             DISKS+=("$d")
        done
 
-       whiptail --title "CHOOSE AN INSTALLATION DISK"  --radiolist " Your Installation Disk: " 20 70 4 \
+       whiptail --title "CHOOSE AN INSTALLATION DISK"  --radiolist " Your Installation Disk: " 20 70 "$depth" \
            "${DISKS[@]}" 3>&2 2>&1 1>&3
             
 }
 
+get_hostname(){
+    whiptail --title "Hostname" --inputbox "What is your new hostname?" 20 40 3>&2 2>&1 1>&3
+}
 
-choose_disk
+# VALIDATE PKG NAMES IN SCRIPT
+validate_pkgs(){
+    echo && echo -n "    validating pkg names..."
+    for pkg_arr in "${all_pkgs[@]}"; do
+        declare -n arr_name=$pkg_arr
+        for pkg_name in "${arr_name[@]}"; do
+            if $( pacman -Sp $pkg_name &>/dev/null ); then
+                echo -n .
+            else 
+                echo -n "$pkg_name from $pkg_arr not in repos."
+            fi
+        done
+    done
+    echo -e "\n" && read -p "Press any key to continue." empty
+}
 
+
+##########################################
+###    SCRIPT STARTS
+##########################################
+
+VIDEO_CARD=$(find_card)
+IN_DEVICE=$(choose_disk)
+HOSTNAME=$(get_hostname)
+
+not_connected
