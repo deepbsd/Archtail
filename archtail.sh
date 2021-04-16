@@ -106,7 +106,7 @@ find_card(){
 not_connected(){
     clear
     message="No network connection!!!  Perhaps your wifi card is not supported?\nIs your network card plugged in?"
-    TERM=ansi whiptail --title "NO NETWORK CONNECTION" --infobox "$message" 15 70
+    TERM=ansi whiptail --backtitle "NO NETWORK CONNECTION" --title "Are you connected?" --infobox "$message" 15 70
     sleep 5
     exit 1
 }
@@ -151,5 +151,6 @@ validate_pkgs(){
 VIDEO_CARD=$(find_card)
 IN_DEVICE=$(choose_disk)
 HOSTNAME=$(get_hostname)
+whiptail --backtitle "/ETC/HOSTS" --title "Your /etc/hosts file" --textbox /etc/hosts 25 80 
 
-not_connected
+#not_connected
