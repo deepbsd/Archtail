@@ -177,7 +177,7 @@ startmenu(){
     #check_reflector
     while true ; do
         menupick=$(
-        whiptail --backtitle "Daves ARCHlinux Installer" --title "Main Menu" --menu "Your choice?" 25 70 16 \ 
+        whiptail --backtitle "Daves ARCHlinux Installer" --title "Main Menu" --menu "Your choice?" 25 70 16 \
             "1"    "Check connection and date"  \
             "2"    "Prepare Installation Disk"  \
             "3"    "Install Base System"        \
@@ -192,25 +192,26 @@ startmenu(){
             "12"   "Install Extra Window Mgrs"  \
             "13"   "Repopulate Variables "      \
             "14"   "Check for pkg name changes" \
-            "15"   "Exit Script "  3>&2 2>&1 1>&3 
+            "15"   "Exit Script "  3>&2 2>&1 1>&3
         )
 
         case $menupick in
-            "1")  echo 'hey' ;;  # check_connect; time_date; check_tasks 1 ;;
-            "2")  echo 'hey' ;;  # diskmenu;;
-            "3")  echo 'hey' ;;  # install_base; check_tasks 3 ;;
-            "4")  echo 'hey' ;;  # gen_fstab; set_tz; set_locale; check_tasks 4 ;;
-            "5")  echo 'hey' ;;  # set_hostname; check_tasks 5 ;;
-            "6")  echo 'hey' ;;  # echo "Setting ROOT password..."; # arch-chroot /mnt passwd ; # check_tasks 6 ; # echo "Any key to continue..."; read continue ;;
-            "7")  echo 'hey' ;;  # install_essential; check_tasks 7 ;;
-            "8")  echo 'hey' ;;  # add_user_acct; check_tasks 8 ;;
-            "9")  echo 'hey' ;;  # wl_wifi; check_tasks 9 ;;
-            "10") echo 'hey' ;;  #  install_grub; check_tasks 10 ;;
-            "11") echo 'hey' ;;  #  install_desktop; check_tasks 11 ;;
-            "12") echo 'hey' ;;  #  install_extra_stuff; check_tasks 12 ;;
-            "13") echo 'hey' ;;  #  set_variables ;;
-            "14") echo 'hey' ;;  #  validate_pkgs ;;
-            "15") echo 'hey' ;;  #  echo "exit"  #TERM=ansi whiptail --title "exit installer" --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 5 60; sleep 5; exit 0 ;;
+            "1")  check_connect; time_date; check_tasks 1 ;;
+            "2")  diskmenu;;
+            "3")  install_base; check_tasks 3 ;;
+            "4")  gen_fstab; set_tz; set_locale; check_tasks 4 ;;
+            "5")  set_hostname; check_tasks 5 ;;
+            "6")  echo "Setting ROOT password..."; 
+                  arch-chroot /mnt passwd ;; 
+            "7")  install_essential; check_tasks 7 ;;
+            "8")  add_user_acct; check_tasks 8 ;;
+            "9")  wl_wifi; check_tasks 9 ;;
+            "10")  install_grub; check_tasks 10 ;;
+            "11")  install_desktop; check_tasks 11 ;;
+            "12")  install_extra_stuff; check_tasks 12 ;;
+            "13")  set_variables ;;
+            "14")  validate_pkgs ;;
+            "15") TERM=ansi whiptail --title "exit installer" --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; sleep 5; exit 0 ;;
         esac
     done
 }
