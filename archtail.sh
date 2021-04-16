@@ -116,12 +116,23 @@ check_connect(){
     TERM=ansi whiptail --backtitle "Checking Network Connection" --title "Are you connected?" --infobox "Checking connection now..." 15 60 
     if $(ping -c 3 archlinux.org &>/dev/null); then
         TERM=ansi whiptail --backtitle "Network is UP" --title "Network is up!" --infobox "Your network connection is up!" 15 60
+        sleep 3
     else
         not_connected
     fi
 }
 
+# FIND CLOSEST MIRROR
+check_reflector(){
+    clear
+    whiptail --title "Finding closes mirror" --infobox "Evaluating and finding closest mirrors for Arch repos..." 10 65
+    while true; do
+        pgrep -x reflector &>/dev/null || break
+        sleep 2
+    done
+}
 
+# SELECT INSTALLATION DISK
 choose_disk(){
        depth=$(lsblk | grep 'disk' | wc -l)
        local DISKS=()
@@ -174,7 +185,7 @@ show_hosts(){
 #check_connect
 
 startmenu(){
-    #check_reflector
+    check_reflector
     while true ; do
         menupick=$(
         whiptail --backtitle "Daves ARCHlinux Installer" --title "Main Menu" --menu "Your choice?" 25 70 16 \
@@ -211,7 +222,7 @@ startmenu(){
             "12")  install_extra_stuff; check_tasks 12 ;;
             "13")  set_variables ;;
             "14")  validate_pkgs ;;
-            "15") TERM=ansi whiptail --title "exit installer" --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; sleep 5; exit 0 ;;
+            "15") TERM=ansi whiptail --title "exit installer" --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; sleep 3; exit 0 ;;
         esac
     done
 }
