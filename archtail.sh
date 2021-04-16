@@ -154,6 +154,8 @@ validate_pkgs(){
         done
     done
     } | whiptail --backtitle "Checking repos for packages" --gauge "Verifying Packages..."  6 78 0
+    
+    echo "${missing_pkgs[@]}"
 }
 
 show_hosts(){
