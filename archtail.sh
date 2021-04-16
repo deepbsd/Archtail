@@ -110,25 +110,7 @@ not_connected(){
     exit 1
 }
 
-DISKS=()
-show_disks(){
-   #DISKS=()
-   for d in $(lsblk | grep disk | awk '{printf "%s\n%s\n",$1,$4}'); do
-        DISKS+=($d)
-   done
-}
-
 choose_disk(){
-    show_disks
-    choice=$(whiptail --title "choose an installation disk" --radiolist "installation disk:" 20 70 4 \
-        "${DISKS[0]}" "${DISKS[1]}" OFF \
-        "${DISKS[2]}" "${DISKS[3]}" OFF \
-        "${DISKS[4]}" "${DISKS[5]}" OFF \
-        3>&2 2>&1 1>&3 )
-    echo -e "\nYou chose $choice\n"
-}
-
-choose_disk1(){
        local DISKS=()
        for d in $(lsblk | grep disk | awk '{printf "%s\n%s \\\n",$1,$4}'); do
             DISKS+=("$d")
@@ -140,5 +122,5 @@ choose_disk1(){
 }
 
 
-choose_disk1
+choose_disk
 
