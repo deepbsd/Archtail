@@ -166,13 +166,60 @@ show_hosts(){
 ###    SCRIPT STARTS
 ##########################################
 
-VIDEO_CARD=$(find_card)
-IN_DEVICE=$(choose_disk)
-HOSTNAME=$(get_hostname)
-#validate_pkgs   # have to execute as root
+#VIDEO_CARD=$(find_card)
+#IN_DEVICE=$(choose_disk)
+#HOSTNAME=$(get_hostname)
+##validate_pkgs   # have to execute as root
+#
+#check_connect
 
-check_connect
+startmenu(){
+    #check_reflector
+    while true ; do
+        menupick=$(
+        whiptail --backtitle "Dave's Arch Linux Installer" --title "Main Menu" --menu "Choose an option" 25 78 16 \ 
+            "1" "Check connection and date" \
+            "2" "Prepare Installation Disk" \
+            "3" "Install Base System" \
+            "4" "New FSTAB and TZ/Locale" \
+            "5" "Set new hostname" \
+            "6" "Set root password" \
+            "7" "Install more essentials" \
+            "8" "Add user + sudo account " \
+            "9" "Install Wifi Drivers "\
+            "10" "Install grub" \
+            "11" "Install Xorg + Desktop" \
+            "12" "Install Extra Window Mgrs " \
+            "13" "Repopulate Variables " \
+            "14" "Check for pkg name changes" \
+            "15" "Exit Script "  3>&2 2>&1 1>&3 
+        )
 
+        case $menupick in
+            "1") check_connect; time_date; check_tasks 1 ;;
+            "2") diskmenu;;
+            "3") install_base; check_tasks 3 ;;
+            "4") gen_fstab; set_tz; set_locale; check_tasks 4 ;;
+            "5") set_hostname; check_tasks 5 ;;
+            "6") echo "Setting ROOT password..."; 
+                arch-chroot /mnt passwd ; 
+                check_tasks 6 ;
+                echo "Any key to continue..."; read continue ;;
+            "7") install_essential; check_tasks 7 ;;
+            "8") add_user_acct; check_tasks 8 ;;
+            "9") wl_wifi; check_tasks 9 ;;
+            "10") install_grub; check_tasks 10 ;;
+            "11") install_desktop; check_tasks 11 ;;
+            "12") install_extra_stuff; check_tasks 12 ;;
+            "13") set_variables ;;
+            "14") validate_pkgs ;;
+            "15") echo "exit"  #TERM=ansi whiptail --title "exit installer" --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 5 60;
+                sleep 5;
+                exit 0 ;;
+        esac
+    done
+}
 
+startmenu
 
 
