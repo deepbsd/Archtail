@@ -111,6 +111,17 @@ not_connected(){
     exit 1
 }
 
+# ARE WE CONNTECTED??
+check_connect(){
+    TERM=ansi whiptail --backtitle "Checking Network Connection" --title "Are you connected?" --infobox "Checking connection now..." 15 60 
+    if $(ping -c 3 archlinux.org &>/dev/null); then
+        TERM=ansi whiptail --backtitle "Network is UP" --title "Network is up!" --infobox "Your network connection is up!" 15 60
+    else
+        not_connected
+    fi
+}
+
+
 choose_disk(){
        depth=$(lsblk | grep 'disk' | wc -l)
        local DISKS=()
@@ -129,20 +140,25 @@ get_hostname(){
 
 # VALIDATE PKG NAMES IN SCRIPT
 validate_pkgs(){
-    echo && echo -n "    validating pkg names..."
+    missing_pkgs=()
+    {
     for pkg_arr in "${all_pkgs[@]}"; do
         declare -n arr_name=$pkg_arr
         for pkg_name in "${arr_name[@]}"; do
             if $( pacman -Sp $pkg_name &>/dev/null ); then
-                echo -n .
+                echo -n "" 
             else 
-                echo -n "$pkg_name from $pkg_arr not in repos."
+                #echo -n "$pkg_name from $pkg_arr not in repos."
+                missing_pkgs+=("$pkg_arr::$pkg_name")
             fi
         done
     done
-    echo -e "\n" && read -p "Press any key to continue." empty
+    } | whiptail --backtitle "Checking repos for packages" --gauge "Verifying Packages..."  6 78 0
 }
 
+show_hosts(){
+    whiptail --backtitle "/ETC/HOSTS" --title "Your /etc/hosts file" --textbox /etc/hosts 25 80 
+}
 
 ##########################################
 ###    SCRIPT STARTS
@@ -151,6 +167,10 @@ validate_pkgs(){
 VIDEO_CARD=$(find_card)
 IN_DEVICE=$(choose_disk)
 HOSTNAME=$(get_hostname)
-whiptail --backtitle "/ETC/HOSTS" --title "Your /etc/hosts file" --textbox /etc/hosts 25 80 
+#validate_pkgs   # have to execute as root
 
-#not_connected
+check_connect
+
+
+
+
