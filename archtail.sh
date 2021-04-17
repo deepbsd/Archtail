@@ -190,24 +190,21 @@ show_hosts(){
 }
 
 diskmenu(){
-    clear
-    check_tasks 2
-    while true ; do
-        echo -e "\n\n     Prepare Installation Disk (Choose One)" 
-        echo -e "  1) Prepare Installation Disk with Normal Partitions"
-        echo -e "  2) Prepare Installation Disk with LVM"
-        echo -e "  3) Prepare Installation Disk Encryption and LVM"
-        echo -e "  4) Return to previous menu"
-        echo -e "\n\n"
 
-        echo -e "\n\n   Your choice?  "; read diskmenupick
+    #check_tasks 2
+    while true ; do
+        diskmenupick=$(whiptail --backtitle "PARTION DISKS" --title "DISK PARTITIONS" --menu "Prepare Installation Disk (Choose One)" 18 80 4 \
+        "N"   "Prepare Installation Disk with Normal Partitions" \
+        "L"   "Prepare Installation Disk with LVM"   \
+        "E"   "Prepare Installation Disk Encryption and LVM"   \
+        "R"   "Return to previous menu"   3>&2 2>&1 1>&3
+        ) 
 
     case $diskmenupick in
-        1) get_install_device ;;
-        2) lv_create ;;
-        3) USE_CRYPT='TRUE'; lv_create ;;
-        4) startmenu ;;
-        *) echo "Please make a valid pick from menu!" ;;
+        "N") get_install_device ;;
+        "L") lv_create ;;
+        "E") USE_CRYPT='TRUE'; lv_create ;;
+        "R") startmenu ;;
     esac
     done
 }
