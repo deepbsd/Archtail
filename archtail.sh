@@ -121,6 +121,21 @@ check_connect(){
     fi
 }
 
+# UPDATE SYSTEM CLOCK
+time_date(){
+    timedatectl set-ntp true
+    time_date_status=$(timedatectl status)
+    whiptail --backtitle "Timedate Status" --title "Time and Date Status" --msgbox "$time_date_status" 10 70
+}
+
+# CHECK IF TASK IS COMPLETED
+check_tasks(){
+    # If task already exists in array return falsey
+    # Function takes a task number as an argument
+    [[ "${completed_tasks[@]}" =~ $1 ]] && return 1
+    completed_tasks+=( "$1" )
+    return 0
+}
 
 choose_disk(){
        depth=$(lsblk | grep 'disk' | wc -l)
@@ -162,6 +177,30 @@ show_hosts(){
     whiptail --backtitle "/ETC/HOSTS" --title "Your /etc/hosts file" --textbox /etc/hosts 25 80 
 }
 
+diskmenu(){
+    clear
+    check_tasks 2
+    while true ; do
+        echo -e "\n\n     Prepare Installation Disk (Choose One)" 
+        echo -e "  1) Prepare Installation Disk with Normal Partitions"
+        echo -e "  2) Prepare Installation Disk with LVM"
+        echo -e "  3) Prepare Installation Disk Encryption and LVM"
+        echo -e "  4) Return to previous menu"
+        echo -e "\n\n"
+
+        echo -e "\n\n   Your choice?  "; read diskmenupick
+
+    case $diskmenupick in
+        1) get_install_device ;;
+        2) lv_create ;;
+        3) USE_CRYPT='TRUE'; lv_create ;;
+        4) startmenu ;;
+        *) echo "Please make a valid pick from menu!" ;;
+    esac
+    done
+}
+
+
 ##########################################
 ###    SCRIPT STARTS
 ##########################################
@@ -196,7 +235,7 @@ startmenu(){
         )
 
         case $menupick in
-            "1")  check_connect; time_date; check_tasks 1 ;;
+            "1")  check_connect; time_date ;;
             "2")  diskmenu;;
             "3")  install_base; check_tasks 3 ;;
             "4")  gen_fstab; set_tz; set_locale; check_tasks 4 ;;
