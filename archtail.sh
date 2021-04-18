@@ -223,11 +223,12 @@ part_disk(){
     if $( whiptail --backtitle "DISK FORMATTING" --title "Formatting Drive" --yesno "Partitioning Drive EFI: $EFI_SIZE ROOT: $ROOT_SIZE SWAP: $SWAP_SIZE HOME: $HOME_SIZE  OK to proceed?" 10 89 ) ; then
         continue
     else
+        whiptail --title "Not Partitioning Disk" --msgbox "Sending you back to startmenu. OK?"  8 60
         startmenu
     fi
     
-    echo "exiting..."
-    exit 0
+    #echo "exiting..."
+    #exit 0
 
     if $(efi_boot_mode); then
             sgdisk -Z "$IN_DEVICE"
@@ -257,7 +258,7 @@ EOF
     [[ -n "$root_device" ]] && format_disk "$ROOT_SLICE" root
 
 
-
+        # Continue from here:
 
     lsblk -f "$IN_DEVICE" && echo "EFI device name (leave empty if not EFI/GPT)?"; read efi_device
     EFI_SLICE="/dev/$efi_device"
