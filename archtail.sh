@@ -167,17 +167,46 @@ choose_disk(){
             
 }
 
+# FORMAT DEVICE
+format_disk(){
+    device=$1; slice=$2
+    # only do efi slice if efi_boot_mode return 0; else return 0
+    [[ "$slice" =~ 'efi' && ! "$DISKTABLE" =~ 'GPT' ]] && return 0
+    clear
+    #echo "Formatting $device with $slice. . ."
+    sleep 3
+    case $slice in 
+        efi ) mkfs.fat -F32 "$device"
+            mount_part "$device" /mnt/boot/efi
+            ;;
+        home  ) mkfs.ext4 "$device"
+            mount_part "$device" /mnt/home
+            ;;
+        root  ) mkfs.ext4 "$device"
+            mount_part "$device" /mnt
+            ;;
+        swap  ) mkswap "$device"
+                swapon "$device"
+                #echo && echo "Swap space should be turned on now..."
+                TERM=ansi whiptail --title "Swap space now on" --infobox "Swap space should now be turned on..." 8 50
+                sleep 3
+            ;;
+        * ) whiptail --title "Bad disk format request" --infobox "Can't make that disk * * format" 8 60 && sleep 5  && startmenu ;;
+    esac
+}
+
 # PARTITION NON-LVM DISK
 part_disk(){
     device=$1 ; IN_DEVICE="/dev/$device"
 
-    if $( whiptail --backtitle "DISK FORMATTING" --title "Formatting Drive" --yesno
-        "Partitioning Drive EFI: $EFI_SIZE ROOT: $ROOT_SIZE SWAP: $SWAP_SIZE HOME:
-        $HOME_SIZE  OK to proceed?" 10 89 ) ; then
+    if $( whiptail --backtitle "DISK FORMATTING" --title "Formatting Drive" --yesno "Partitioning Drive EFI: $EFI_SIZE ROOT: $ROOT_SIZE SWAP: $SWAP_SIZE HOME: $HOME_SIZE  OK to proceed?" 10 89 ) ; then
         continue
     else
-        mainmenu
+        startmenu
     fi
+    
+    echo "exiting..."
+    exit 0
 
     if $(efi_boot_mode); then
             sgdisk -Z "$IN_DEVICE"
@@ -198,15 +227,16 @@ EOF
     fi
 
     # SHOW RESULTS:
-    clear
-    echo && echo "Status of disk device: "
-    fdisk -l "$IN_DEVICE"
-    lsblk -f "$IN_DEVICE"
+    status=$(fdisk -l "$IN_DEVICE"; lsblk -f "$IN_DEVICE")
+    whiptail --backtitle "CREATED PARTITIONS" --title "Current Disk Status" --msgbox "$status  OK to continue." 30 75
 
-    echo "Root device name?"; read root_device
+    #echo "Root device name?"; read root_device
+    root_device=$(whiptail --title "ROOT DEVICE" --inputbox "What's your rootdevice?" 30 75 3>&1 1>&2 2>&3)
     ROOT_SLICE="/dev/$root_device"
-    echo "Formatting $ROOT_SLICE" && sleep 2 
     [[ -n "$root_device" ]] && format_disk "$ROOT_SLICE" root
+
+
+
 
     lsblk -f "$IN_DEVICE" && echo "EFI device name (leave empty if not EFI/GPT)?"; read efi_device
     EFI_SLICE="/dev/$efi_device"
