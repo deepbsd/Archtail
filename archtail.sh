@@ -91,6 +91,11 @@ completed_tasks=()
 ###    FUNCTIONS    ##############
 ##################################
  
+welcome(){
+    message="Dave's ARCH Installer will lead you through each process to create a base installation of Archlinux on your computer or virtual machine by selecting a group of tasks from a main menu.  "
+    whiptail --backtitle "Dave's ARCH Installer (DARCHI)" --title "Welcome to DARCHI!" --msgbox "$message" 15 80 
+}
+
 # VERIFY BOOT MODE
 efi_boot_mode(){
     ( $(ls /sys/firmware/efi/efivars &>/dev/null) && return 0 ) || return 1
@@ -223,43 +228,44 @@ diskmenu(){
 
 startmenu(){
     check_reflector
+    welcome
     while true ; do
         menupick=$(
         whiptail --backtitle "Daves ARCHlinux Installer" --title "Main Menu" --menu "Your choice?" 25 70 16 \
-            "1"    "Check connection and date"  \
-            "2"    "Prepare Installation Disk"  \
-            "3"    "Install Base System"        \
-            "4"    "New FSTAB and TZ/Locale"    \
-            "5"    "Set new hostname"           \
-            "6"    "Set root password"          \
-            "7"    "Install more essentials"    \
-            "8"    "Add user + sudo account "   \
-            "9"    "Install Wifi Drivers "      \
-            "10"   "Install grub"               \
-            "11"   "Install Xorg + Desktop"     \
-            "12"   "Install Extra Window Mgrs"  \
-            "13"   "Repopulate Variables "      \
-            "14"   "Check for pkg name changes" \
-            "15"   "Exit Script "  3>&2 2>&1 1>&3
+            "C"    "Check connection and date"  \
+            "D"    "Prepare Installation Disk"  \
+            "B"    "Install Base System"        \
+            "F"    "New FSTAB and TZ/Locale"    \
+            "H"    "Set new hostname"           \
+            "R"    "Set root password"          \
+            "M"    "Install more essentials"    \
+            "U"    "Add user + sudo account "   \
+            "W"    "Install Wifi Drivers "      \
+            "G"   "Install grub"               \
+            "X"   "Install Xorg + Desktop"     \
+            "I"   "Install Extra Window Mgrs"  \
+            "V"   "Repopulate Variables "      \
+            "P"   "Check for pkg name changes" \
+            "L"   "Exit Script "  3>&2 2>&1 1>&3
         )
 
         case $menupick in
-            "1")  check_connect; time_date ;;
-            "2")  diskmenu;;
-            "3")  install_base; check_tasks 3 ;;
-            "4")  gen_fstab; set_tz; set_locale; check_tasks 4 ;;
-            "5")  set_hostname; check_tasks 5 ;;
-            "6")  echo "Setting ROOT password..."; 
+            "C")  check_connect; time_date ;;
+            "D")  diskmenu;;
+            "B")  install_base; check_tasks 3 ;;
+            "F")  gen_fstab; set_tz; set_locale; check_tasks 4 ;;
+            "H")  set_hostname; check_tasks 5 ;;
+            "R")  echo "Setting ROOT password..."; 
                   arch-chroot /mnt passwd ;; 
-            "7")  install_essential; check_tasks 7 ;;
-            "8")  add_user_acct; check_tasks 8 ;;
-            "9")  wl_wifi; check_tasks 9 ;;
-            "10")  install_grub; check_tasks 10 ;;
-            "11")  install_desktop; check_tasks 11 ;;
-            "12")  install_extra_stuff; check_tasks 12 ;;
-            "13")  set_variables ;;
-            "14")  validate_pkgs ;;
-            "15") TERM=ansi whiptail --title "exit installer" --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; sleep 3; exit 0 ;;
+            "M")  install_essential; check_tasks 7 ;;
+            "U")  add_user_acct; check_tasks 8 ;;
+            "W")  wl_wifi; check_tasks 9 ;;
+            "G")  install_grub; check_tasks 10 ;;
+            "X")  install_desktop; check_tasks 11 ;;
+            "I")  install_extra_stuff; check_tasks 12 ;;
+            "V")  set_variables ;;
+            "P")  validate_pkgs ;;
+            "L") TERM=ansi whiptail --title "exit installer" --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; sleep 3; exit 0 ;;
         esac
     done
 }
