@@ -92,7 +92,7 @@ completed_tasks=()
 ##################################
  
 welcome(){
-    message="Dave's ARCH Installer will lead you through each process to create a base installation of Archlinux on your computer or virtual machine by selecting a group of tasks from a main menu.  "
+    message="Dave's ARCH Installer will lead you through a menu-driven process to create a base installation of Archlinux on your computer or virtual machine by selecting a group of tasks from a main menu.  "
     whiptail --backtitle "Dave's ARCH Installer (DARCHI)" --title "Welcome to DARCHI!" --msgbox "$message" 15 80 
 }
 
@@ -145,8 +145,9 @@ check_tasks(){
 
 # FIND CLOSEST MIRROR
 check_reflector(){
-    clear
+    
     whiptail --title "Finding closes mirror" --infobox "Evaluating and finding closest mirrors for Arch repos..." 10 65
+    #whiptail --title "Finding closes mirror" --gauge "Evaluating and finding closest mirrors for Arch repos..." 10 65 0
     while true; do
         pgrep -x reflector &>/dev/null || break
         sleep 2
@@ -164,6 +165,74 @@ choose_disk(){
        whiptail --title "CHOOSE AN INSTALLATION DISK"  --radiolist " Your Installation Disk: " 20 70 "$depth" \
            "${DISKS[@]}" 3>&2 2>&1 1>&3
             
+}
+
+# PARTITION NON-LVM DISK
+part_disk(){
+    device=$1 ; IN_DEVICE="/dev/$device"
+    if $(efi_boot_mode); then
+            echo && echo "Recommend efi (512MB), root (100G), home (remaining), swap (32G) partitions..."
+            echo && echo "Continue to sgdisk? "; read answer
+            [[ "$answer" =~ [yY] ]] && echo "paritioning with sgdisk..."
+            sgdisk -Z "$IN_DEVICE"
+            sgdisk -n 1::+"$EFI_SIZE" -t 1:ef00 -c 1:EFI "$IN_DEVICE"
+            sgdisk -n 2::+"$ROOT_SIZE" -t 2:8300 -c 2:ROOT "$IN_DEVICE"
+            sgdisk -n 3::+"$SWAP_SIZE" -t 3:8200 -c 3:SWAP "$IN_DEVICE"
+            sgdisk -n 4 -c 4:HOME "$IN_DEVICE"
+    else
+        # For non-EFI. Eg. for MBR systems 
+cat > /tmp/sfdisk.cmd << EOF
+$BOOT_DEVICE : start= 2048, size=+$BOOT_SIZE, type=83, bootable
+$ROOT_DEVICE : size=+$ROOT_SIZE, type=83
+$SWAP_DEVICE : size=+$SWAP_SIZE, type=82
+$HOME_DEVICE : type=83
+EOF
+        # Using sfdisk because we're talking MBR disktable now...
+        sfdisk /dev/sda < /tmp/sfdisk.cmd 
+    fi
+
+    # SHOW RESULTS:
+    clear
+    echo && echo "Status of disk device: "
+    fdisk -l "$IN_DEVICE"
+    lsblk -f "$IN_DEVICE"
+
+    echo "Root device name?"; read root_device
+    ROOT_SLICE="/dev/$root_device"
+    echo "Formatting $ROOT_SLICE" && sleep 2 
+    [[ -n "$root_device" ]] && format_disk "$ROOT_SLICE" root
+
+    lsblk -f "$IN_DEVICE" && echo "EFI device name (leave empty if not EFI/GPT)?"; read efi_device
+    EFI_SLICE="/dev/$efi_device"
+    echo "Formatting $EFI_SLICE" && sleep 2
+    [[ -n "$efi_device" ]] && format_disk "$EFI_SLICE" efi
+
+    lsblk -f "$IN_DEVICE" && echo "Swap device name? (leave empty if no swap device)"; read swap_device
+    SWAP_SLICE="/dev/$swap_device"
+    echo "Formatting $SWAP_SLICE" && sleep 2
+    [[ -n "$swap_device" ]] && format_disk "$SWAP_SLICE" swap
+
+    lsblk -f "$IN_DEVICE" && echo "Home device name? (leave empty if no home device)"; read home_device
+    HOME_SLICE="/dev/$home_device"
+    echo "Formatting $HOME_SLICE" && sleep 2
+    [[ -n "$home_device" ]] && format_disk "$HOME_SLICE" home
+
+    lsblk -f "$IN_DEVICE"
+    echo && echo "Disks should be partioned and mounted.  Continue?"; lsblk ; read more
+    [[ ! "$more" =~ [yY] ]] && exit 1
+}
+
+# INSTALL TO WHAT DEVICE?
+get_install_device(){
+    device=$(choose_disk)
+    if $(efi_boot_mode); then 
+        echo && echo "Formatting with EFI/GPT"
+        DISKTABLE='GPT'
+    else
+        echo && echo "Formatting with BIOS/MBR"
+        DISKTABLE='MBR'
+    fi
+    part_disk "$device"
 }
 
 get_hostname(){
@@ -220,7 +289,6 @@ diskmenu(){
 ##########################################
 
 #VIDEO_CARD=$(find_card)
-#IN_DEVICE=$(choose_disk)
 #HOSTNAME=$(get_hostname)
 ##validate_pkgs   # have to execute as root
 #
