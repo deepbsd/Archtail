@@ -167,6 +167,27 @@ choose_disk(){
             
 }
 
+# MOUNT PARTION
+mount_part(){
+    device=$1; mt_pt=$2
+    [[ ! -d /mnt/boot ]] && mkdir /mnt/boot
+    $(efi_boot_mode) && ! [ -d /mnt/boot/efi ] && mkdir /mnt/boot/efi
+    [[ ! -d "$mt_pt" ]] && mkdir "$mt_pt" 
+    
+    mount "$device" "$mt_pt"
+    if [[ "$?" -eq 0 ]]; then
+        #echo "$device mounted on $mt_pt ..."
+        TERM=ansi whiptail --title "Mount successful" --infobox "$device mounted on $mt_pt" 8 65
+        sleep 3
+    else
+        #echo "Error!!  $mt_pt not mounted!"
+        TERM=ansi whiptail --title "Mount NOT successful" --infobox "$device failed mounting on $mt_pt" 8 65
+        sleep 3
+        exit 1
+    fi
+    return 0
+}
+
 # FORMAT DEVICE
 format_disk(){
     device=$1; slice=$2
