@@ -28,8 +28,8 @@ LV_HOME="ArchHome"
 BOOT_SIZE=512M
 EFI_SIZE=512M
 ROOT_SIZE=13G
-SWAP_SIZE=2G   # SWAP_SIZE="$(free | awk '/^Mem/ {mem=$2/1000000; print int(2.2*mem)}')G"
-HOME_SIZE=12G   # This is set automatically if using LVM
+SWAP_SIZE=4G     # SWAP_SIZE="$(free | awk '/^Mem/ {mem=$2/1000000; print int(2.2*mem)}')G"
+HOME_SIZE=''     # This is set automatically if using LVM
 
 # You can edit this if you want
 #TIMEZONE='America/New_York'
