@@ -170,10 +170,10 @@ choose_disk(){
 # PARTITION NON-LVM DISK
 part_disk(){
     device=$1 ; IN_DEVICE="/dev/$device"
+
+    whiptail --backtitle "DISK FORMATTING" --title "Formatting Drive" --yesno "Partitioning Drive EFI: $EFI_SIZE ROOT: $ROOT_SIZE SWAP: $SWAP_SIZE HOME: $HOME_SIZE  OK to proceed?" 10 89
+
     if $(efi_boot_mode); then
-            echo && echo "Recommend efi (512MB), root (100G), home (remaining), swap (32G) partitions..."
-            echo && echo "Continue to sgdisk? "; read answer
-            [[ "$answer" =~ [yY] ]] && echo "paritioning with sgdisk..."
             sgdisk -Z "$IN_DEVICE"
             sgdisk -n 1::+"$EFI_SIZE" -t 1:ef00 -c 1:EFI "$IN_DEVICE"
             sgdisk -n 2::+"$ROOT_SIZE" -t 2:8300 -c 2:ROOT "$IN_DEVICE"
