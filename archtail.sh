@@ -363,8 +363,6 @@ diskmenu(){
 
 #VIDEO_CARD=$(find_card)
 ##validate_pkgs   # have to execute as root
-#
-#check_connect
 
 startmenu(){
     check_reflector
