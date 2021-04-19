@@ -173,7 +173,8 @@ lv_create(){
     #lsblk
     #show_disks
 
-    echo "What disk are you installing to? (nvme0n1, sda, sdb, etc)"; read disk
+    #echo "What disk are you installing to? (nvme0n1, sda, sdb, etc)"; read disk
+    disk=$(whiptail --title )
     IN_DEVICE=/dev/"$disk"
     echo "What partition is your Physical Device for your Volume Group? (sda2, nvme0n1p2, sdb2, etc)"; read root_dev
     ROOT_DEVICE=/dev/"$root_dev"
@@ -453,8 +454,8 @@ diskmenu(){
 
     case $diskmenupick in
         "N") get_install_device ;;
-        "L") lv_create ;;
-        "E") USE_CRYPT='TRUE'; lv_create ;;
+        "L") USE_LVM='TRUE'; lv_create ;;
+        "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; lv_create ;;
         "R") startmenu ;;
     esac
     done
@@ -513,5 +514,4 @@ startmenu(){
 }
 
 startmenu
-
 
