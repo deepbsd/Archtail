@@ -293,8 +293,21 @@ get_install_device(){
     part_disk "$device"
 }
 
-get_hostname(){
-    whiptail --title "Hostname" --inputbox "What is your new hostname?" 20 40 3>&2 2>&1 1>&3
+# HOSTNAME
+set_hostname(){
+    namevar=$(whiptail --title "Hostname" --inputbox "What is your new hostname?" 20 40 3>&2 2>&1 1>&3)
+    echo "$namevar" > /mnt/etc/hostname
+
+cat > /mnt/etc/hosts <<HOSTS
+127.0.0.1      localhost
+::1            localhost
+127.0.1.1      $namevar.localdomain     $namevar
+HOSTS
+
+    message="/etc/hostname and /etc/hosts files configured..."
+    message+=$(cat /mnt/etc/hostname)
+    message+=$(cat /mnt/etc/hosts)
+    whiptail --backtitle "/etc/hostname & /etc/hosts" --title "Files created" --msgbox "$message" 35 65
 }
 
 # VALIDATE PKG NAMES IN SCRIPT
@@ -347,7 +360,6 @@ diskmenu(){
 ##########################################
 
 #VIDEO_CARD=$(find_card)
-#HOSTNAME=$(get_hostname)
 ##validate_pkgs   # have to execute as root
 #
 #check_connect
