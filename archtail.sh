@@ -154,6 +154,110 @@ check_reflector(){
     done
 }
 
+# FOR MKINITCPIO.IMG
+lvm_hooks(){
+    message="added lvm2 to mkinitcpio hooks HOOKS=( base udev ... block lvm2 filesystems )"
+    sed -i 's/^HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)$/HOOKS=(base udev autodetect modconf block lvm2 filesystems keyboard fsck)/g' /mnt/etc/mkinitcpio.conf
+    arch-chroot /mnt mkinitcpio -P
+    whiptail --backtitle "updated mkinitcpio.conf with HOOKS" --title "updated mkinitcpio.conf with HOOKS" --msgbox "$message" 15 65
+}
+
+# FOR LOGICAL VOLUME PARTITIONS
+lv_create(){
+    #USE_LVM='TRUE'
+    VOL_GROUP=arch_vg
+    LV_ROOT="ArchRoot"
+    LV_HOME="ArchHome"
+    LV_SWAP="ArchSwap"
+
+    #lsblk
+    #show_disks
+
+    echo "What disk are you installing to? (nvme0n1, sda, sdb, etc)"; read disk
+    IN_DEVICE=/dev/"$disk"
+    echo "What partition is your Physical Device for your Volume Group? (sda2, nvme0n1p2, sdb2, etc)"; read root_dev
+    ROOT_DEVICE=/dev/"$root_dev"
+
+    echo "How big is your root partition or volume? (12G, 50G, 100G, etc)"; read rootsize
+    ROOT_SIZE="$rootsize"
+    echo "How big is your Swap partition or volume? (2G, 4G, 8G, 16G, etc)"; read swap_size
+    SWAP_SIZE="$swap_size"
+
+    if $(efi_boot_mode); then
+        echo "What partition is your EFI device? (nvme0n1p1, sda1, etc)"; read efi_dev
+        EFI_DEVICE=/dev/"$efi_dev"
+        EFI_SIZE=512M
+        # Create the physical partitions
+        sgdisk -Z "$IN_DEVICE"
+        sgdisk -n 1::+"$EFI_SIZE" -t 1:ef00 -c 1:EFI "$IN_DEVICE"
+        sgdisk -n 2 -t 2:8e00 -c 2:VOLGROUP "$IN_DEVICE"
+
+        # Format the EFI partition
+        mkfs.fat -F32 "$EFI_DEVICE"
+    else
+        echo "What partition is your BOOT device? (nvme0n1p1, sda1, etc)"; read boot_dev
+        BOOT_DEVICE=/dev/"$boot_dev"
+        BOOT_SIZE=512M
+
+cat > /tmp/sfdisk.cmd << EOF
+$BOOT_DEVICE : start= 2048, size=+$BOOT_SIZE, type=83, bootable
+$ROOT_DEVICE : type=83
+EOF
+        # Using sfdisk because we're talking MBR disktable now...
+        sfdisk /dev/sda < /tmp/sfdisk.cmd 
+
+        # format the boot partition
+        mkfs.ext4 "$BOOT_DEVICE"
+    fi
+
+    clear
+    
+    # run cryptsetup on root device
+    [[ "$USE_CRYPT" == 'TRUE' ]] && crypt_setup "$ROOT_DEVICE"
+
+    # create the physical volumes
+    pvcreate "$ROOT_DEVICE"
+    # create the volume group
+    vgcreate "$VOL_GROUP" "$ROOT_DEVICE" 
+    
+    # You can extend with 'vgextend' to other devices too
+
+    # create the volumes with specific size
+    lvcreate -L "$ROOT_SIZE" "$VOL_GROUP" -n "$LV_ROOT"
+    lvcreate -L "$SWAP_SIZE" "$VOL_GROUP" -n "$LV_SWAP"
+    lvcreate -l 100%FREE  "$VOL_GROUP" -n "$LV_HOME"
+    
+    # Format SWAP 
+    mkswap /dev/"$VOL_GROUP"/"$LV_SWAP"
+    swapon /dev/"$VOL_GROUP"/"$LV_SWAP"
+
+    # insert the vol group module
+    modprobe dm_mod
+    # activate the vol group
+    vgchange -ay
+    ## format the volumes
+    #mkfs.fat -F32 "$EFI_DEVICE"
+    mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_ROOT"
+    mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_HOME"
+    # mount the volumes
+    mount /dev/"$VOL_GROUP"/"$LV_ROOT" /mnt
+    mkdir /mnt/home
+    mount /dev/"$VOL_GROUP"/"$LV_HOME" /mnt/home
+    if $(efi_boot_mode); then
+        # mount the EFI partitions
+        mkdir /mnt/boot && mkdir /mnt/boot/efi
+        mount "$EFI_DEVICE" /mnt/boot/efi
+    else
+        mkdir /mnt/boot
+        mount "$BOOT_DEVICE" /mnt/boot
+    fi
+    lsblk
+    echo "LVs created and mounted. Press any key."; read empty;
+    startmenu
+}
+
+
+
 # SELECT INSTALLATION DISK
 choose_disk(){
        depth=$(lsblk | grep 'disk' | wc -l)
