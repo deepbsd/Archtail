@@ -227,9 +227,6 @@ part_disk(){
         startmenu
     fi
     
-    #echo "exiting..."
-    #exit 0
-
     if $(efi_boot_mode); then
             sgdisk -Z "$IN_DEVICE"
             sgdisk -n 1::+"$EFI_SIZE" -t 1:ef00 -c 1:EFI "$IN_DEVICE"
@@ -252,32 +249,37 @@ EOF
     status=$(fdisk -l "$IN_DEVICE"; lsblk -f "$IN_DEVICE")
     whiptail --backtitle "CREATED PARTITIONS" --title "Current Disk Status" --msgbox "$status  OK to continue." 30 75
 
-    #echo "Root device name?"; read root_device
+    # ROOT DEVICE
     root_device=$(whiptail --title "ROOT DEVICE" --inputbox "What's your rootdevice?" 30 75 3>&1 1>&2 2>&3)
     ROOT_SLICE="/dev/$root_device"
     [[ -n "$root_device" ]] && format_disk "$ROOT_SLICE" root
 
 
-        # Continue from here:
-
-    lsblk -f "$IN_DEVICE" && echo "EFI device name (leave empty if not EFI/GPT)?"; read efi_device
+    # EFI_DEVICE
+    efi_dev_message=$(echo "EFI device name (leave empty if not EFI/GPT)?" && lsblk -f "$IN_DEVICE")
+    efi_device=$(whiptail --title "Get EFI Device Name" --inputbox 10 50 3>&1 1>&2 2>&3)
     EFI_SLICE="/dev/$efi_device"
-    echo "Formatting $EFI_SLICE" && sleep 2
+    #echo "Formatting $EFI_SLICE" && sleep 2
     [[ -n "$efi_device" ]] && format_disk "$EFI_SLICE" efi
 
-    lsblk -f "$IN_DEVICE" && echo "Swap device name? (leave empty if no swap device)"; read swap_device
+    # SWAP_DEVICE
+    swap_dev_message=$(lsblk -f "$IN_DEVICE" && echo "Swap device name? (leave empty if no swap device)")
+    swap_device=$(whiptail --title "Get Swap Device" --inputbox 10 50 3>&1 1>&2 2>&3)
     SWAP_SLICE="/dev/$swap_device"
-    echo "Formatting $SWAP_SLICE" && sleep 2
+    #echo "Formatting $SWAP_SLICE" && sleep 2
     [[ -n "$swap_device" ]] && format_disk "$SWAP_SLICE" swap
 
-    lsblk -f "$IN_DEVICE" && echo "Home device name? (leave empty if no home device)"; read home_device
+    # HOME_DEVICE
+    home_dev_message=$(echo "Home device name? (leave empty if no home device)" && lsblk -f "$IN_DEVICE")
     HOME_SLICE="/dev/$home_device"
-    echo "Formatting $HOME_SLICE" && sleep 2
+    #echo "Formatting $HOME_SLICE" && sleep 2
     [[ -n "$home_device" ]] && format_disk "$HOME_SLICE" home
 
-    lsblk -f "$IN_DEVICE"
-    echo && echo "Disks should be partioned and mounted.  Continue?"; lsblk ; read more
-    [[ ! "$more" =~ [yY] ]] && exit 1
+    # CHECK IF IT HAPPENED CORRECTLY
+    message=$(lsblk -f "$IN_DEVICE" && echo "Disks should be partitioned and mounted. OK to continue")
+    whiptail --backtitle "DISKS PARTITIONED, FORMATTED and MOUNTED" --title "DISKS OKAY?" --msgbox "$message" 25 75 
+    #echo && echo "Disks should be partioned and mounted.  Continue?"; lsblk ; read more
+    #[[ ! "$more" =~ [yY] ]] && exit 1
 }
 
 # INSTALL TO WHAT DEVICE?
