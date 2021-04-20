@@ -239,12 +239,15 @@ EOF
 
     # insert the vol group module
     modprobe dm_mod
+    
     # activate the vol group
     vgchange -ay
+
     ## format the volumes
-    #mkfs.fat -F32 "$EFI_DEVICE"
+    ###  EFI or BOOT partition already handled
     mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_ROOT"
     mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_HOME"
+
     # mount the volumes
     mount /dev/"$VOL_GROUP"/"$LV_ROOT" /mnt
     mkdir /mnt/home
@@ -257,8 +260,9 @@ EOF
         mkdir /mnt/boot
         mount "$BOOT_DEVICE" /mnt/boot
     fi
-    lsblk
-    echo "LVs created and mounted. Press any key."; read empty;
+    lsblk > /tmp/filesystems_created
+    #echo "LVs created and mounted. Press any key."; read empty;
+    whiptail --title "LV's Created and Mounted" --backtitle "Filesystem Created" --textbox /tmp/filesystems_created
     startmenu
 }
 
