@@ -177,20 +177,20 @@ lv_create(){
     #echo "What disk are you installing to? (nvme0n1, sda, sdb, etc)"; read disk
     disk=$(choose_disk)
     IN_DEVICE=/dev/"$disk"
-    root_dev=$(whiptail --title "Get Physical Volume Device" --inputbox "What partition for your Physical Volume Group?  (sda2 nvme0n1p2, sdb2, etc) 8 50" 3>&1 1>&2 2>&3) 
+    root_dev=$(whiptail --title "Get Physical Volume Device" --inputbox "What partition for your Physical Volume Group?  (sda2 nvme0n1p2, sdb2, etc) 8 50" 3>&2 2>&1 1>&3) 
     ROOT_DEVICE=/dev/"$root_dev"
 
     #echo "How big is your root partition or volume? (12G, 50G, 100G, etc)"; read rootsize
-    rootsize=$(whiptail --title "Get Size of Root Partition or Volume" --inputbox "What size for your root partition? (12G, 50G, 100G, etc)" 8 50 3>&1 1>&2 2>&3)
+    rootsize=$(whiptail --title "Get Size of Root Partition or Volume" --inputbox "What size for your root partition? (12G, 50G, 100G, etc)" 8 50 3>&2 2>&1 1>&3)
     ROOT_SIZE="$rootsize"
 
     #echo "How big is your Swap partition or volume? (2G, 4G, 8G, 16G, etc)"; read swap_size
-    swapsize=$(whiptail --title "Get Size of Swap Partition or Volume" --inputbox "What size for your swap partition? (4G, 8G, 16G, etc)" 8 50 3>&1 1>&2 2>&3)
+    swapsize=$(whiptail --title "Get Size of Swap Partition or Volume" --inputbox "What size for your swap partition? (4G, 8G, 16G, etc)" 8 50 3>&2 2>&1 1>&3)
     SWAP_SIZE="$swap_size"
 
     if $(efi_boot_mode); then
         #echo "What partition is your EFI device? (nvme0n1p1, sda1, etc)"; read efi_dev
-        efi_dev=$(whiptail --title "Get EFI Device" --inputbox "What partition for your EFI Device?  (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&1 1>&2 2>&3) 
+        efi_dev=$(whiptail --title "Get EFI Device" --inputbox "What partition for your EFI Device?  (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&2 2>&1 1>&3) 
         EFI_DEVICE=/dev/"$efi_dev"
         EFI_SIZE=512M
         # Create the physical partitions
@@ -202,7 +202,7 @@ lv_create(){
         mkfs.fat -F32 "$EFI_DEVICE"
     else
         #echo "What partition is your BOOT device? (nvme0n1p1, sda1, etc)"; read boot_dev
-        boot_dev=$(whiptail --title "Get Boot Device" --inputbox "What partition for your Boot Device?  (sda1 nvme0n1p1, sdb1, etc) 8 50" 3>&1 1>&2 2>&3) 
+        boot_dev=$(whiptail --title "Get Boot Device" --inputbox "What partition for your Boot Device?  (sda1 nvme0n1p1, sdb1, etc) 8 50" 3>&2 2>&1 1>&3) 
         BOOT_DEVICE=/dev/"$boot_dev"
         BOOT_SIZE=512M
 
