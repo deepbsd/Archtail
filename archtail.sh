@@ -146,13 +146,13 @@ check_tasks(){
 # FIND CLOSEST MIRROR
 check_reflector(){
     
-    #whiptail --title "Finding closes mirror" --infobox "Evaluating and finding closest mirrors for Arch repos..." 10 65
+    whiptail --title "Finding closes mirror" --infobox "Evaluating and finding closest mirrors for Arch repos..." 10 65
     #whiptail --title "Finding closes mirror" --gauge "Evaluating and finding closest mirrors for Arch repos..." 10 65 0
     
     while true; do
         pgrep -x reflector &>/dev/null || break
         sleep 2
-    done | whiptail --title "Finding closest mirrors" --gauge "Evaluating and finding closest mirrors for Arch Linux repositories" 10 75 0
+    done #| whiptail --title "Finding closest mirrors" --gauge "Evaluating and finding closest mirrors for Arch Linux repositories" 10 75 0
 }
 
 # FOR MKINITCPIO.IMG
