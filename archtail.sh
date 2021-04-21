@@ -173,7 +173,7 @@ lv_create(){
     # Choose your installation device
     disk=$(choose_disk)
     IN_DEVICE=/dev/"$disk"
-    root_dev=$(whiptail --title "Get Physical Volume Device" --inputbox "What partition for your Physical Volume Group?  (sda2, nvme0n1p2, sdb2, etc) 8 50" 3>&1 1>&2 2>&3) 
+    root_dev=$(whiptail --title "Get Physical Volume Device" --inputbox "What partition for your Physical Volume Group?  (sda2, nvme0n1p2, sdb2, etc)" 8 50 3>&1 1>&2 2>&3) 
     ROOT_DEVICE=/dev/"$root_dev"
 
     # get root partition or volume
@@ -182,7 +182,7 @@ lv_create(){
 
     # get size of swap partition or volume
     swapsize=$(whiptail --title "Get Size of Swap Partition or Volume" --inputbox "What size for your swap partition? (4G, 8G, 16G, etc)" 8 50 3>&1 1>&2 2>&3)
-    SWAP_SIZE="$swap_size"
+    SWAP_SIZE="$swapsize"
 
     # Get EFI or BOOT partition
     if $(efi_boot_mode); then
@@ -512,7 +512,7 @@ startmenu(){
             "I")  install_extra_stuff; check_tasks 12 ;;
             "V")  set_variables ;;
             "P")  validate_pkgs ;;
-            "L") TERM=ansi whiptail --title "exit installer" --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; sleep 3; exit 0 ;;
+            "L") TERM=ansi whiptail --title "exit installer" --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; sleep 2; exit 0 ;;
         esac
     done
 }
