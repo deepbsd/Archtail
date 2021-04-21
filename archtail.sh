@@ -478,8 +478,8 @@ diskmenu(){
 ##validate_pkgs   # have to execute as root
 
 startmenu(){
-    check_reflector
     welcome
+    check_reflector
     while true ; do
         menupick=$(
         whiptail --backtitle "Daves ARCHlinux Installer" --title "Main Menu" --menu "Your choice?" 25 70 16 \
