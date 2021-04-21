@@ -366,20 +366,21 @@ EOF
 
     # EFI_DEVICE
     efi_dev_message=$(echo "EFI device name (leave empty if not EFI/GPT)?" && lsblk -f "$IN_DEVICE")
-    efi_device=$(whiptail --title "Get EFI Device Name" --inputbox 10 50 3>&1 1>&2 2>&3)
+    efi_device=$(whiptail --title "Get EFI Device Name" --inputbox "$efi_dev_message" 10 50 3>&1 1>&2 2>&3)
     EFI_SLICE="/dev/$efi_device"
     #echo "Formatting $EFI_SLICE" && sleep 2
     [[ -n "$efi_device" ]] && format_disk "$EFI_SLICE" efi
 
     # SWAP_DEVICE
     swap_dev_message=$(lsblk -f "$IN_DEVICE" && echo "Swap device name? (leave empty if no swap device)")
-    swap_device=$(whiptail --title "Get Swap Device" --inputbox 10 50 3>&1 1>&2 2>&3)
+    swap_device=$(whiptail --title "Get Swap Device" --inputbox "$swap_dev_message" 10 50 3>&1 1>&2 2>&3)
     SWAP_SLICE="/dev/$swap_device"
     #echo "Formatting $SWAP_SLICE" && sleep 2
     [[ -n "$swap_device" ]] && format_disk "$SWAP_SLICE" swap
 
     # HOME_DEVICE
     home_dev_message=$(echo "Home device name? (leave empty if no home device)" && lsblk -f "$IN_DEVICE")
+    home_device=$(whiptail --title "Get Home Device" --inputbox "$home_dev_message" 10 50 3>&1 1>&2 2>&3)
     HOME_SLICE="/dev/$home_device"
     #echo "Formatting $HOME_SLICE" && sleep 2
     [[ -n "$home_device" ]] && format_disk "$HOME_SLICE" home
