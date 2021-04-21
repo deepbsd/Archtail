@@ -104,7 +104,7 @@ efi_boot_mode(){
 # FIND GRAPHICS CARD
 find_card(){
     card=$(lspci | grep VGA | sed 's/^.*: //g')
-    whiptail --title "Your Video Card" --msgbox  "You're using a $card  Write this down and hit OK to continue." 8 65 3>&2 2>&1 1>&3
+    whiptail --title "Your Video Card" --msgbox  "You're using a $card  Write this down and hit OK to continue." 8 65 3>&1 1>&2 2>&3
 }
 
 # IF NOT CONNTECTED
@@ -173,20 +173,20 @@ lv_create(){
     # Choose your installation device
     disk=$(choose_disk)
     IN_DEVICE=/dev/"$disk"
-    root_dev=$(whiptail --title "Get Physical Volume Device" --inputbox "What partition for your Physical Volume Group?  (sda2, nvme0n1p2, sdb2, etc) 8 50" 3>&2 2>&1 1>&3) 
+    root_dev=$(whiptail --title "Get Physical Volume Device" --inputbox "What partition for your Physical Volume Group?  (sda2, nvme0n1p2, sdb2, etc) 8 50" 3>&1 1>&2 2>&3) 
     ROOT_DEVICE=/dev/"$root_dev"
 
     # get root partition or volume
-    rootsize=$(whiptail --title "Get Size of Root Partition or Volume" --inputbox "What size for your root partition? (12G, 50G, 100G, etc)" 8 50 3>&2 2>&1 1>&3)
+    rootsize=$(whiptail --title "Get Size of Root Partition or Volume" --inputbox "What size for your root partition? (12G, 50G, 100G, etc)" 8 50 3>&1 1>&2 2>&3)
     ROOT_SIZE="$rootsize"
 
     # get size of swap partition or volume
-    swapsize=$(whiptail --title "Get Size of Swap Partition or Volume" --inputbox "What size for your swap partition? (4G, 8G, 16G, etc)" 8 50 3>&2 2>&1 1>&3)
+    swapsize=$(whiptail --title "Get Size of Swap Partition or Volume" --inputbox "What size for your swap partition? (4G, 8G, 16G, etc)" 8 50 3>&1 1>&2 2>&3)
     SWAP_SIZE="$swap_size"
 
     # Get EFI or BOOT partition
     if $(efi_boot_mode); then
-        efi_dev=$(whiptail --title "Get EFI Device" --inputbox "What partition for your EFI Device?  (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&2 2>&1 1>&3) 
+        efi_dev=$(whiptail --title "Get EFI Device" --inputbox "What partition for your EFI Device?  (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&1 1>&2 2>&3) 
         EFI_DEVICE=/dev/"$efi_dev"
         EFI_SIZE=512M
         # Create the physical partitions
@@ -198,7 +198,7 @@ lv_create(){
         mkfs.fat -F32 "$EFI_DEVICE"
     else
         # get boot partition (we're using MBR with LVM here)
-        boot_dev=$(whiptail --title "Get Boot Device" --inputbox "What partition for your Boot Device?  (sda1 nvme0n1p1, sdb1, etc) 8 50" 3>&2 2>&1 1>&3) 
+        boot_dev=$(whiptail --title "Get Boot Device" --inputbox "What partition for your Boot Device?  (sda1 nvme0n1p1, sdb1, etc) 8 50" 3>&1 1>&2 2>&3) 
         BOOT_DEVICE=/dev/"$boot_dev"
         BOOT_SIZE=512M
 
@@ -274,7 +274,7 @@ choose_disk(){
        done
 
        whiptail --title "CHOOSE AN INSTALLATION DISK"  --radiolist " Your Installation Disk: " 20 70 "$depth" \
-           "${DISKS[@]}" 3>&2 2>&1 1>&3
+           "${DISKS[@]}" 3>&1 1>&2 2>&3
             
 }
 
@@ -408,7 +408,7 @@ get_install_device(){
 
 # HOSTNAME
 set_hostname(){
-    namevar=$(whiptail --title "Hostname" --inputbox "What is your new hostname?" 20 40 3>&2 2>&1 1>&3)
+    namevar=$(whiptail --title "Hostname" --inputbox "What is your new hostname?" 20 40 3>&1 1>&2 2>&3)
     echo "$namevar" > /mnt/etc/hostname
 
 cat > /mnt/etc/hosts <<HOSTS
@@ -455,7 +455,7 @@ diskmenu(){
         "N"   "Prepare Installation Disk with Normal Partitions" \
         "L"   "Prepare Installation Disk with LVM"   \
         "E"   "Prepare Installation Disk Encryption and LVM"   \
-        "R"   "Return to previous menu"   3>&2 2>&1 1>&3
+        "R"   "Return to previous menu"   3>&1 1>&2 2>&3
         ) 
 
     case $diskmenupick in
@@ -494,7 +494,7 @@ startmenu(){
             "I"   "Install Extra Window Mgrs"  \
             "V"   "Repopulate Variables "      \
             "P"   "Check for pkg name changes" \
-            "L"   "Exit Script "  3>&2 2>&1 1>&3
+            "L"   "Exit Script "  3>&1 1>&2 2>&3
         )
 
         case $menupick in
