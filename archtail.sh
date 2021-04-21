@@ -166,7 +166,7 @@ lvm_hooks(){
 # FOR LOGICAL VOLUME PARTITIONS
 lv_create(){
     #USE_LVM='TRUE'
-    VOL_GROUP=arch_vg
+    VOL_GROUP="arch_vg"
     LV_ROOT="ArchRoot"
     LV_HOME="ArchHome"
     LV_SWAP="ArchSwap"
@@ -222,6 +222,7 @@ EOF
 
     # create the physical volumes
     pvcreate "$ROOT_DEVICE"
+
     # create the volume group
     vgcreate "$VOL_GROUP" "$ROOT_DEVICE" 
     
@@ -478,7 +479,6 @@ diskmenu(){
 ##validate_pkgs   # have to execute as root
 
 startmenu(){
-    welcome
     check_reflector
     while true ; do
         menupick=$(
@@ -521,5 +521,6 @@ startmenu(){
     done
 }
 
+welcome
 startmenu
 
