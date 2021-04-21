@@ -190,7 +190,7 @@ lv_create(){
 
     if $(efi_boot_mode); then
         #echo "What partition is your EFI device? (nvme0n1p1, sda1, etc)"; read efi_dev
-        efi_dev=$(whiptail --title "Get EFI Device" --inputbox "What partition for your EFI Device?  (sda1 nvme0n1p1, sdb1, etc) 8 50" 3>&1 1>&2 2>&3) 
+        efi_dev=$(whiptail --title "Get EFI Device" --inputbox "What partition for your EFI Device?  (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&1 1>&2 2>&3) 
         EFI_DEVICE=/dev/"$efi_dev"
         EFI_SIZE=512M
         # Create the physical partitions
