@@ -217,7 +217,7 @@ EOF
     #[[ "$USE_CRYPT" == 'TRUE' ]] && crypt_setup "$ROOT_DEVICE"
 
     # create the physical volumes
-    # why is this failing currently with whiptail?
+    ########### why is this failing currently with whiptail? ########
     pvcreate "$ROOT_DEVICE"
 
     # create the volume group
@@ -258,7 +258,6 @@ EOF
         mount "$BOOT_DEVICE" /mnt/boot
     fi
     lsblk > /tmp/filesystems_created
-    #echo "LVs created and mounted. Press any key."; read empty;
     whiptail --title "LV's Created and Mounted" --backtitle "Filesystem Created" --textbox /tmp/filesystems_created 30 70
     startmenu
 }
