@@ -198,7 +198,7 @@ lv_create(){
         mkfs.fat -F32 "$EFI_DEVICE"
     else
         # get boot partition (we're using MBR with LVM here)
-        boot_dev=$(whiptail --title "Get Boot Device" --inputbox "What partition for your Boot Device?  (sda1 nvme0n1p1, sdb1, etc) 8 50" 3>&1 1>&2 2>&3) 
+        boot_dev=$(whiptail --title "Get Boot Device" --inputbox "What partition for your Boot Device?  (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&1 1>&2 2>&3) 
         BOOT_DEVICE=/dev/"$boot_dev"
         BOOT_SIZE=512M
 
