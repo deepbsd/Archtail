@@ -217,7 +217,6 @@ EOF
     #[[ "$USE_CRYPT" == 'TRUE' ]] && crypt_setup "$ROOT_DEVICE"
 
     # create the physical volumes
-    ########### why is this failing currently with whiptail? ########
     pvcreate "$ROOT_DEVICE"
 
     # create the volume group
