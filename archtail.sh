@@ -217,10 +217,8 @@ EOF
         mkfs.ext4 "$BOOT_DEVICE"
     fi
 
-    clear
-    
     # run cryptsetup on root device
-    [[ "$USE_CRYPT" == 'TRUE' ]] && crypt_setup "$ROOT_DEVICE"
+    #[[ "$USE_CRYPT" == 'TRUE' ]] && crypt_setup "$ROOT_DEVICE"
 
     # create the physical volumes
     pvcreate "$ROOT_DEVICE"
@@ -263,7 +261,7 @@ EOF
     fi
     lsblk > /tmp/filesystems_created
     #echo "LVs created and mounted. Press any key."; read empty;
-    whiptail --title "LV's Created and Mounted" --backtitle "Filesystem Created" --textbox /tmp/filesystems_created
+    whiptail --title "LV's Created and Mounted" --backtitle "Filesystem Created" --textbox /tmp/filesystems_created 30 70
     startmenu
 }
 
