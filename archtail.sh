@@ -467,6 +467,37 @@ HOSTS
     whiptail --backtitle "/etc/hostname & /etc/hosts" --title "Files created" --msgbox "$message" 25 75
 }
 
+# SOME MORE ESSENTIAL NETWORK STUFF
+install_essential(){
+
+    message=$(echo "Installing dhcpcd, sshd and NetworkManager services...")
+    TERM=ansi whiptail --backtitle "INSTALLING NETWORK ESSENTIALS" --title "Installing Network Essentials..." --infobox "$message" 10 75
+    arch-chroot /mnt pacman -S "${base_essentials[@]}"
+    arch-chroot /mnt pacman -S "${network_essentials[@]}"
+
+    # ENABLE SERVICES
+    for service in "${my_services[@]}"; do
+        arch-chroot /mnt systemctl enable "$service"
+    done
+    
+    whiptail --title "Network Essentials Installed" --msgbox "Network Essentials Installed.  OK to continue." 8 78
+}
+
+# ADD A USER ACCT
+add_user_acct(){
+    clear
+    echo && echo "Adding sudo + user acct..."
+    sleep 2
+    arch-chroot /mnt pacman -S sudo bash-completion sshpass
+    arch-chroot /mnt sed -i 's/# %wheel/%wheel/g' /etc/sudoers
+    arch-chroot /mnt sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
+    echo && echo "Please provide a username: "; read sudo_user
+    echo && echo "Creating $sudo_user and adding $sudo_user to sudoers..."
+    arch-chroot /mnt useradd -m -G wheel "$sudo_user"
+    echo && echo "Password for $sudo_user?"
+    arch-chroot /mnt passwd "$sudo_user"
+}
+
 # VALIDATE PKG NAMES IN SCRIPT
 validate_pkgs(){
     missing_pkgs=()
