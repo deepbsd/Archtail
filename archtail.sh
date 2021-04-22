@@ -534,6 +534,28 @@ wl_wifi(){
     sleep 3
 }
 
+# INSTALL XORG AND DESKTOP
+install_desktop(){
+    # XORG AND DESKTOP
+    message="Installing Xorg and Desktop..."
+    TERM=ansi whiptail --backtitle "INSTALLING XORG AND DESKTOPS" --title "Installing Xorg and Desktops" --infobox "Installing X and Desktops and Extras" 8 75
+    # EXTRA PACKAGES, FONTS, THEMES, CURSORS
+    arch-chroot /mnt pacman -S "${basic_x[@]}" --noconfirm
+    arch-chroot /mnt pacman -S "${extra_x1[@]}" --noconfirm 
+    arch-chroot /mnt pacman -S "${extra_x2[@]}" --noconfirm
+    arch-chroot /mnt pacman -S "${extra_x3[@]}" --noconfirm
+    arch-chroot /mnt pacman -S "${extra_x4[@]}" --noconfirm
+
+    # DRIVER FOR GRAPHICS CARD, DESKTOP, DISPLAY MGR
+    arch-chroot /mnt pacman -S "${display_mgr[@]}" --noconfirm
+    arch-chroot /mnt pacman -S "${graphics_driver[@]}" --noconfirm
+
+    ## Insert your default desktop here...
+    arch-chroot /mnt pacman -S "${cinnamon_desktop[@]}" --noconfirm
+    arch-chroot /mnt systemctl enable "${display_mgr[@]}" --noconfirm
+
+    
+}
 # VALIDATE PKG NAMES IN SCRIPT
 validate_pkgs(){
     missing_pkgs=()
