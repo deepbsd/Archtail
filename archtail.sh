@@ -330,19 +330,15 @@ part_disk(){
     device=$1 ; IN_DEVICE="/dev/$device"
 
     if $( whiptail --backtitle "DISK FORMATTING" --title "Formatting Drive" --yesno "Partitioning Drive EFI: $EFI_SIZE ROOT: $ROOT_SIZE SWAP: $SWAP_SIZE HOME: $HOME_SIZE  OK to proceed?" 10 89 3>&1 1>&2 2>&3 ) ; then
-        continue
-    else
-        whiptail --title "Not Partitioning Disk" --msgbox "Sending you back to startmenu. OK?"  8 60
-        startmenu
-    fi
     
-    if $(efi_boot_mode); then
-            sgdisk -Z "$IN_DEVICE"
-            sgdisk -n 1::+"$EFI_SIZE" -t 1:ef00 -c 1:EFI "$IN_DEVICE"
-            sgdisk -n 2::+"$ROOT_SIZE" -t 2:8300 -c 2:ROOT "$IN_DEVICE"
-            sgdisk -n 3::+"$SWAP_SIZE" -t 3:8200 -c 3:SWAP "$IN_DEVICE"
-            sgdisk -n 4 -c 4:HOME "$IN_DEVICE"
-    else
+    
+        if $(efi_boot_mode); then
+                sgdisk -Z "$IN_DEVICE"
+                sgdisk -n 1::+"$EFI_SIZE" -t 1:ef00 -c 1:EFI "$IN_DEVICE"
+                sgdisk -n 2::+"$ROOT_SIZE" -t 2:8300 -c 2:ROOT "$IN_DEVICE"
+                sgdisk -n 3::+"$SWAP_SIZE" -t 3:8200 -c 3:SWAP "$IN_DEVICE"
+                sgdisk -n 4 -c 4:HOME "$IN_DEVICE"
+        else
         # For non-EFI. Eg. for MBR systems 
 cat > /tmp/sfdisk.cmd << EOF
 $BOOT_DEVICE : start= 2048, size=+$BOOT_SIZE, type=83, bootable
@@ -352,6 +348,11 @@ $HOME_DEVICE : type=83
 EOF
         # Using sfdisk because we're talking MBR disktable now...
         sfdisk /dev/sda < /tmp/sfdisk.cmd 
+        fi
+    
+    else
+        whiptail --title "Not Partitioning Disk" --msgbox "Sending you back to startmenu. OK?"  8 60
+        startmenu
     fi
 
     # SHOW RESULTS:
