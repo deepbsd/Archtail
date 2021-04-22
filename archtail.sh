@@ -461,9 +461,9 @@ cat > /mnt/etc/hosts <<HOSTS
 127.0.1.1      $namevar.localdomain     $namevar
 HOSTS
 
-    message=$(echo "/etc/hostname and /etc/hosts files configured...")
-    message+=$(cat /mnt/etc/hostname)
-    message+=$(echo && cat /mnt/etc/hosts)
+    message=$(echo "/etc/hostname and /etc/hosts files configured..." && echo)
+    message+=$(echo -e "/etc/hostname: \n" && cat /mnt/etc/hostname)
+    message+=$(echo -e "\n" && cat /mnt/etc/hosts)
     whiptail --backtitle "/etc/hostname & /etc/hosts" --title "Files created" --msgbox "$message" 35 75
 }
 
