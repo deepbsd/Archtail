@@ -501,6 +501,31 @@ add_user_acct(){
     sleep 3
 }
 
+# INSTALL BOOTLOADER
+install_grub(){
+    TERM=ansi whiptail --backtitle "INSTALLING GRUB" --title "Installing GRUB" --infobox "Installing GRUB" 9 70
+    sleep 2
+    arch-chroot /mnt pacman -S grub os-prober
+
+    if $(efi_boot_mode); then
+        arch-chroot /mnt pacman -S efibootmgr
+        # /boot/efi should aready be mounted
+        [[ ! -d /mnt/boot/efi ]] && echo "no /mnt/boot/efi directory!!!" && exit 1
+        arch-chroot /mnt grub-install "$IN_DEVICE" --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi
+        TERM=ansi whiptail --backtitle "GRUB INSTALLED" --title "GRUB Installed" --infobox "GRUB Installed!" 9 70
+        sleep 2
+    else
+        arch-chroot /mnt grub-install "$IN_DEVICE"
+        TERM=ansi whiptail --backtitle "BOOT LOADER INSTALLED" --title "MBR Bootloader Installed" --infobox "MBR Bootloader Installed Successfully!" 9 70
+        sleep 2
+    fi
+
+    #echo "configuring /boot/grub/grub.cfg..."
+    arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+        
+    whiptail --backtitle "GRUB.CFG INSTALLED" --title "/boot/grub/grub.cfg installed" --msgbox "OK to proceed." 8 70
+}
+
 # WIFI (BCM4360) IF NECESSARY
 wl_wifi(){
     TERM=ansi whiptail --title "Installing $wifi_drivers" --infobox "Installing $wifi_drivers..." 10 70 
