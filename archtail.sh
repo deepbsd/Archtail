@@ -329,7 +329,7 @@ format_disk(){
 part_disk(){
     device=$1 ; IN_DEVICE="/dev/$device"
 
-    if $( whiptail --backtitle "DISK FORMATTING" --title "Formatting Drive" --yesno "Partitioning Drive EFI: $EFI_SIZE ROOT: $ROOT_SIZE SWAP: $SWAP_SIZE HOME: $HOME_SIZE  OK to proceed?" 10 89 3>&1 1>&2 2>&3 ) ; then
+    if $( whiptail --backtitle "DISK FORMATTING" --title "Formatting Drive" --yesno "Partitioning Drive EFI: $EFI_SIZE ROOT: $ROOT_SIZE SWAP: $SWAP_SIZE HOME: $HOME_SIZE  OK to proceed?" 10 59 3>&1 1>&2 2>&3 ) ; then
     
     
         if $(efi_boot_mode); then
@@ -389,8 +389,6 @@ EOF
     # CHECK IF IT HAPPENED CORRECTLY
     message=$(lsblk -f "$IN_DEVICE" && echo "Disks should be partitioned and mounted. OK to continue")
     whiptail --backtitle "DISKS PARTITIONED, FORMATTED and MOUNTED" --title "DISKS OKAY?" --msgbox "$message" 25 75 
-    #echo && echo "Disks should be partioned and mounted.  Continue?"; lsblk ; read more
-    #[[ ! "$more" =~ [yY] ]] && exit 1
 }
 
 # INSTALL TO WHAT DEVICE?
