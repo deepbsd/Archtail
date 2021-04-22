@@ -501,6 +501,14 @@ add_user_acct(){
     sleep 3
 }
 
+# WIFI (BCM4360) IF NECESSARY
+wl_wifi(){
+    TERM=ansi whiptail --title "Installing $wifi_drivers" --infobox "Installing $wifi_drivers..." 10 70 
+    arch-chroot /mnt pacman -S "${wifi_drivers[@]}"
+    [[ "$?" -eq 0 ]] && whiptail --title "Success!" --infobox "$wifi_drivers Installed!" 10 70
+    sleep 3
+}
+
 # VALIDATE PKG NAMES IN SCRIPT
 validate_pkgs(){
     missing_pkgs=()
