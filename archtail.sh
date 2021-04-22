@@ -463,8 +463,8 @@ HOSTS
 
     message="/etc/hostname and /etc/hosts files configured..."
     message+=$(cat /mnt/etc/hostname)
-    message+=$(cat /mnt/etc/hosts)
-    whiptail --backtitle "/etc/hostname & /etc/hosts" --title "Files created" --msgbox "$message" 35 65
+    message+=$(echo && cat /mnt/etc/hosts)
+    whiptail --backtitle "/etc/hostname & /etc/hosts" --title "Files created" --msgbox "$message" 35 75
 }
 
 # VALIDATE PKG NAMES IN SCRIPT
