@@ -480,22 +480,25 @@ install_essential(){
         arch-chroot /mnt systemctl enable "$service"
     done
     
+    # INFORM USER
     whiptail --title "Network Essentials Installed" --msgbox "Network Essentials Installed.  OK to continue." 8 78
 }
 
 # ADD A USER ACCT
 add_user_acct(){
-    clear
-    echo && echo "Adding sudo + user acct..."
-    sleep 2
+    whiptail --backtitle "ADDING SUDO USER" --title "Adding sudo + user acct..." --msgbox "Please type OK to add a sudo user account" 20 50 3>&1 2>&2 2>&3
     arch-chroot /mnt pacman -S sudo bash-completion sshpass
     arch-chroot /mnt sed -i 's/# %wheel/%wheel/g' /etc/sudoers
     arch-chroot /mnt sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
-    echo && echo "Please provide a username: "; read sudo_user
-    echo && echo "Creating $sudo_user and adding $sudo_user to sudoers..."
+    sudo_user=$(whiptail --backtitle "SUDO USERNAME" --title "Please provide sudo username" --inputbox "Please provide a sudo username: " 8 40 3>&1 1>&2 2>&3 )
+
+    TERM=ansi whiptail --title "Creating sudo user and adding to wheel" --infobox "Creating $sudo_user and adding $sudo_user to sudoers..." 10 70
     arch-chroot /mnt useradd -m -G wheel "$sudo_user"
-    echo && echo "Password for $sudo_user?"
-    arch-chroot /mnt passwd "$sudo_user"
+    sleep 2
+    user_pass=$(whiptail --passwordbox "Please enter your new user's password: " --title "Getting user password" 8 78 3>&1 1>&2 2>&3 )
+    echo -e "$user_pass\n$user_pass" | arch-chroot /mnt passwd "$sudo_user"
+    TERM=ansi whiptail --title "Sudo User Password Created" --infobox "sudo user password updated" 10 70
+    sleep 3
 }
 
 # VALIDATE PKG NAMES IN SCRIPT
