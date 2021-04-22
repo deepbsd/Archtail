@@ -461,10 +461,10 @@ cat > /mnt/etc/hosts <<HOSTS
 127.0.1.1      $namevar.localdomain     $namevar
 HOSTS
 
-    message=$(echo "/etc/hostname and /etc/hosts files configured..." && echo)
-    message+=$(echo -e "/etc/hostname: \n" && cat /mnt/etc/hostname)
-    message+=$(echo -e "\n" && cat /mnt/etc/hosts)
-    whiptail --backtitle "/etc/hostname & /etc/hosts" --title "Files created" --msgbox "$message" 35 75
+    message=$(echo -e "/etc/hostname and /etc/hosts files configured...\n" && echo)
+    message+=$(echo -e "\n/etc/hostname: \n" && cat /mnt/etc/hostname)
+    message+=$(echo -e "\n\n/etc/hosts: \n" && cat /mnt/etc/hosts)
+    whiptail --backtitle "/etc/hostname & /etc/hosts" --title "Files created" --msgbox "$message" 25 75
 }
 
 # VALIDATE PKG NAMES IN SCRIPT
