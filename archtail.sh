@@ -140,7 +140,6 @@ check_tasks(){
     # Function takes a task number as an argument
     [[ "${completed_tasks[@]}" =~ $1 ]] && return 1
     completed_tasks+=( "$1" )
-    return 0
 }
 
 # FIND CLOSEST MIRROR
@@ -411,6 +410,44 @@ install_base(){
     #echo && echo "Base system installed.  Press any key to continue..."; read empty
     whiptail --backtitle "BASE SYSTEM INSTALLED" --title "Base system installed!" --msgbox "Your base system has been installed.  Click OK to continue." 3>&1 1>&2 2>&3 
     startmenu
+}
+
+# GENERATE FSTAB
+gen_fstab(){
+    clear
+    #echo "Generating fstab..."
+    TERM=ansi whiptail --title "Generating FSTAB" --infobox "Generating /mnt/etc/fstab" 20 75
+    genfstab -U /mnt >> /mnt/etc/fstab
+    sleep 3
+
+    # take a look at new fstab file
+    whiptail --backtitle "Checkout New /etc/fstab" --title "Here's your new /etc/fstab" --textbox /mnt/etc/fstab 25 75
+}
+
+# TIMEZONE
+set_tz(){
+    
+    TERM=ansi whiptail --title "Setting timezone to $TIMEZONE" --infobox "Setting Timezone to $TIMEZONE" 8 75
+    arch-chroot /mnt ln -sf /usr/share/zoneinfo/"$TIMEZONE" /etc/localtime
+    arch-chroot /mnt hwclock --systohc --utc
+    #arch-chroot /mnt date
+    message=$(arch-chroot /mnt date)
+    whiptail --backtitle "SETTING HWCLOCK and TIMEZONE and Hardware Date" --title "HW CLOCK AND TIMEZONE SET to $TIMEZONE" --msgbox "$message" 25 78
+}
+
+# LOCALE
+set_locale(){
+    #echo && echo "setting locale to $LOCALE..."
+    TERM=ansi whiptail --backtitle "SETTING LOCALE" --title "Setting Locale to $LOCALE" --infobox "Setting Locale to $LOCALE" 25 78
+    sleep 2
+    arch-chroot /mnt sed -i "s/#$LOCALE/$LOCALE/g" /etc/locale.gen
+    arch-chroot /mnt locale-gen
+    sleep 2
+    echo "LANG=$LOCALE" > /mnt/etc/locale.conf
+    export LANG="$LOCALE"
+    sleep 2
+    result=$(cat /mnt/etc/locale.conf)
+    whiptail --backtitle "LOCALE SET TO $LOCALE" --title "Locale: $LOCALE" --msgbox "$result" 24 79
 }
 
 # HOSTNAME
