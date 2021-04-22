@@ -547,8 +547,8 @@ startmenu(){
             "B")  install_base; check_tasks 3 ;;
             "F")  gen_fstab; set_tz; set_locale; check_tasks 4 ;;
             "H")  set_hostname; check_tasks 5 ;;
-            "R")  echo "Setting ROOT password..."; 
-                  arch-chroot /mnt passwd ;; 
+            "R")  password=$(whiptail --backtitle "SETTING ROOT PASSWORD" --title "Set new root password"   8 78 3>&1 1>&2 2>&3);
+                  echo -e "$password\n$password" | arch-chroot /mnt passwd ;; 
             "M")  install_essential; check_tasks 7 ;;
             "U")  add_user_acct; check_tasks 8 ;;
             "W")  wl_wifi; check_tasks 9 ;;
