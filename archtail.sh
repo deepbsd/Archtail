@@ -384,7 +384,7 @@ EOF
     [[ -n "$home_device" ]] && format_disk "$HOME_SLICE" home
 
     # CHECK IF IT HAPPENED CORRECTLY
-    message=$(lsblk -f "$IN_DEVICE" && echo "Disks should be partitioned and mounted. OK to continue")
+    message=$(lsblk "$IN_DEVICE" && echo "Disks should be partitioned and mounted. OK to continue")
     whiptail --backtitle "DISKS PARTITIONED, FORMATTED and MOUNTED" --title "DISKS OKAY?" --msgbox "$message" 25 75 
 }
 
