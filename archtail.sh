@@ -329,7 +329,7 @@ format_disk(){
 part_disk(){
     device=$1 ; IN_DEVICE="/dev/$device"
 
-    if $( whiptail --backtitle "DISK FORMATTING" --title "Formatting Drive" --yesno "Partitioning Drive EFI: $EFI_SIZE ROOT: $ROOT_SIZE SWAP: $SWAP_SIZE HOME: $HOME_SIZE  OK to proceed?" 10 89 ) ; then
+    if $( whiptail --backtitle "DISK FORMATTING" --title "Formatting Drive" --yesno "Partitioning Drive EFI: $EFI_SIZE ROOT: $ROOT_SIZE SWAP: $SWAP_SIZE HOME: $HOME_SIZE  OK to proceed?" 10 89 3>&1 1>&2 2>&3 ) ; then
         continue
     else
         whiptail --title "Not Partitioning Disk" --msgbox "Sending you back to startmenu. OK?"  8 60
