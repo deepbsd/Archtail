@@ -401,6 +401,18 @@ get_install_device(){
     part_disk "$device"
 }
 
+# INSTALL ESSENTIAL PACKAGES
+install_base(){
+    clear
+    # install lvm2 hook if we're using LVM
+    [[ $USE_LVM == 'TRUE'  ]] && base_system+=( "lvm2" )
+    pacstrap /mnt "${base_system[@]}"
+    [[ -L /dev/mapper/arch_vg-ArchRoot ]] && lvm_hooks
+    #echo && echo "Base system installed.  Press any key to continue..."; read empty
+    whiptail --backtitle "BASE SYSTEM INSTALLED" --title "Base system installed!" --msgbox "Your base system has been installed.  Click OK to continue." 3>&1 1>&2 2>&3 
+    startmenu
+}
+
 # HOSTNAME
 set_hostname(){
     namevar=$(whiptail --title "Hostname" --inputbox "What is your new hostname?" 20 40 3>&1 1>&2 2>&3)
