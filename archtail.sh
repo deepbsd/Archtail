@@ -360,27 +360,26 @@ EOF
     whiptail --backtitle "CREATED PARTITIONS" --title "Current Disk Status" --msgbox "$status  OK to continue." 30 75
 
     # ROOT DEVICE
-    root_device=$(whiptail --title "ROOT DEVICE" --inputbox "What's your rootdevice?" 30 75 3>&1 1>&2 2>&3)
+    root_device=$(whiptail --title "ROOT DEVICE" --inputbox "What's your rootdevice? (sda2, nvmen1p2, sdb2, etc)" 30 75 3>&1 1>&2 2>&3)
     ROOT_SLICE="/dev/$root_device"
     [[ -n "$root_device" ]] && format_disk "$ROOT_SLICE" root
 
 
     # EFI_DEVICE
-    efi_dev_message=$(echo "EFI device name (leave empty if not EFI/GPT)?" && lsblk -f "$IN_DEVICE")
+    efi_dev_message=$(echo "EFI device name (leave empty if not EFI/GPT) (sda1, nvmen1p1, etc)?" && lsblk -f "$IN_DEVICE")
     efi_device=$(whiptail --title "Get EFI Device Name" --inputbox "$efi_dev_message" 10 50 3>&1 1>&2 2>&3)
     EFI_SLICE="/dev/$efi_device"
-    #echo "Formatting $EFI_SLICE" && sleep 2
     [[ -n "$efi_device" ]] && format_disk "$EFI_SLICE" efi
 
     # SWAP_DEVICE
-    swap_dev_message=$(lsblk -f "$IN_DEVICE" && echo "Swap device name? (leave empty if no swap device)")
+    swap_dev_message=$(lsblk -f "$IN_DEVICE" && echo "Swap device name? (sda3, nvmen1p3, etc) (leave empty if no swap device)")
     swap_device=$(whiptail --title "Get Swap Device" --inputbox "$swap_dev_message" 10 50 3>&1 1>&2 2>&3)
     SWAP_SLICE="/dev/$swap_device"
     #echo "Formatting $SWAP_SLICE" && sleep 2
     [[ -n "$swap_device" ]] && format_disk "$SWAP_SLICE" swap
 
     # HOME_DEVICE
-    home_dev_message=$(echo "Home device name? (leave empty if no home device)" && lsblk -f "$IN_DEVICE")
+    home_dev_message=$(echo "Home device name? (sda4, nvmen1p4, etc) (leave empty if no home device)" && lsblk -f "$IN_DEVICE")
     home_device=$(whiptail --title "Get Home Device" --inputbox "$home_dev_message" 10 50 3>&1 1>&2 2>&3)
     HOME_SLICE="/dev/$home_device"
     #echo "Formatting $HOME_SLICE" && sleep 2
