@@ -402,7 +402,7 @@ get_install_device(){
         echo && echo "Formatting with BIOS/MBR"
         DISKTABLE='MBR'
     fi
-    part_disk "$device"
+    part_disk /dev/"$device"
 }
 
 # HOSTNAME
