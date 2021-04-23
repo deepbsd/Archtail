@@ -429,8 +429,8 @@ gen_fstab(){
 set_tz(){
     
     TERM=ansi whiptail --title "Setting timezone to $TIMEZONE" --infobox "Setting Timezone to $TIMEZONE" 8 75
-    arch-chroot /mnt ln -sf /usr/share/zoneinfo/"$TIMEZONE" /etc/localtime
-    arch-chroot /mnt hwclock --systohc --utc
+    arch-chroot /mnt ln -sf /usr/share/zoneinfo/"$TIMEZONE" /etc/localtime &>>$LOGFILE
+    arch-chroot /mnt hwclock --systohc --utc                               &>>$LOGFILE
     #arch-chroot /mnt date
     message=$(arch-chroot /mnt date)
     whiptail --backtitle "SETTING HWCLOCK and TIMEZONE and Hardware Date" --title "HW CLOCK AND TIMEZONE SET to $TIMEZONE" --msgbox "$message" 25 78
@@ -441,10 +441,10 @@ set_locale(){
     #echo && echo "setting locale to $LOCALE..."
     TERM=ansi whiptail --backtitle "SETTING LOCALE" --title "Setting Locale to $LOCALE" --infobox "Setting Locale to $LOCALE" 25 78
     sleep 2
-    arch-chroot /mnt sed -i "s/#$LOCALE/$LOCALE/g" /etc/locale.gen
-    arch-chroot /mnt locale-gen
+    arch-chroot /mnt sed -i "s/#$LOCALE/$LOCALE/g" /etc/locale.gen         &>>$LOGFILE
+    arch-chroot /mnt locale-gen                                            &>>$LOGFILE
     sleep 2
-    echo "LANG=$LOCALE" > /mnt/etc/locale.conf
+    echo "LANG=$LOCALE" > /mnt/etc/locale.conf                             &>>$LOGFILE
     export LANG="$LOCALE"
     sleep 2
     result=$(cat /mnt/etc/locale.conf)
@@ -473,12 +473,12 @@ install_essential(){
 
     message=$(echo "Installing dhcpcd, sshd and NetworkManager services...")
     TERM=ansi whiptail --backtitle "INSTALLING NETWORK ESSENTIALS" --title "Installing Network Essentials..." --infobox "$message" 10 75
-    arch-chroot /mnt pacman -S "${base_essentials[@]}"
-    arch-chroot /mnt pacman -S "${network_essentials[@]}"
+    arch-chroot /mnt pacman -S "${base_essentials[@]}"            &>>$LOGFILE
+    arch-chroot /mnt pacman -S "${network_essentials[@]}"         &>>$LOGFILE
 
     # ENABLE SERVICES
     for service in "${my_services[@]}"; do
-        arch-chroot /mnt systemctl enable "$service"
+        arch-chroot /mnt systemctl enable "$service"              &>>$LOGFILE
     done
     
     # INFORM USER
@@ -488,16 +488,16 @@ install_essential(){
 # ADD A USER ACCT
 add_user_acct(){
     whiptail --backtitle "ADDING SUDO USER" --title "Adding sudo + user acct..." --msgbox "Please type OK to add a sudo user account" 20 50 3>&1 2>&2 2>&3
-    arch-chroot /mnt pacman -S sudo bash-completion sshpass
-    arch-chroot /mnt sed -i 's/# %wheel/%wheel/g' /etc/sudoers
-    arch-chroot /mnt sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
+    arch-chroot /mnt pacman -S sudo bash-completion sshpass        &>>$LOGFILE
+    arch-chroot /mnt sed -i 's/# %wheel/%wheel/g' /etc/sudoers     &>>$LOGFILE
+    arch-chroot /mnt sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers  &>>$LOGFILE
     sudo_user=$(whiptail --backtitle "SUDO USERNAME" --title "Please provide sudo username" --inputbox "Please provide a sudo username: " 8 40 3>&1 1>&2 2>&3 )
 
     TERM=ansi whiptail --title "Creating sudo user and adding to wheel" --infobox "Creating $sudo_user and adding $sudo_user to sudoers..." 10 70
-    arch-chroot /mnt useradd -m -G wheel "$sudo_user"
+    arch-chroot /mnt useradd -m -G wheel "$sudo_user"              &>>$LOGFILE
     sleep 2
     user_pass=$(whiptail --passwordbox "Please enter your new user's password: " --title "Getting user password" 8 78 3>&1 1>&2 2>&3 )
-    echo -e "$user_pass\n$user_pass" | arch-chroot /mnt passwd "$sudo_user"
+    echo -e "$user_pass\n$user_pass" | arch-chroot /mnt passwd "$sudo_user"  &>>$LOGFILE
     TERM=ansi whiptail --title "Sudo User Password Created" --infobox "sudo user password updated" 10 70
     sleep 3
 }
