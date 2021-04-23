@@ -279,9 +279,9 @@ choose_disk(){
 # MOUNT PARTION
 mount_part(){
     device=$1; mt_pt=$2
-    [[ ! -d /mnt/boot ]] && mkdir /mnt/boot
-    $(efi_boot_mode) && ! [ -d /mnt/boot/efi ] && mkdir /mnt/boot/efi
-    [[ ! -d "$mt_pt" ]] && mkdir "$mt_pt" 
+    [[ ! -d /mnt/boot ]] && mkdir /mnt/boot &>> $LOGFILE
+    $(efi_boot_mode) && ! [ -d /mnt/boot/efi ] && mkdir /mnt/boot/efi &>> $LOGFILE
+    [[ ! -d "$mt_pt" ]] && mkdir "$mt_pt"   &>>$LOGFILE
     
     mount "$device" "$mt_pt"
     if [[ "$?" -eq 0 ]]; then
@@ -307,16 +307,16 @@ format_disk(){
     sleep 3
     case $slice in 
         efi ) mkfs.fat -F32 "$device"
-            mount_part "$device" /mnt/boot/efi
+            mount_part "$device" /mnt/boot/efi  &>> $LOGFILE
             ;;
         home  ) mkfs.ext4 "$device"
-            mount_part "$device" /mnt/home
+            mount_part "$device" /mnt/home      &>> $LOGFILE
             ;;
         root  ) mkfs.ext4 "$device"
-            mount_part "$device" /mnt
+            mount_part "$device" /mnt           &>> $LOGFILE
             ;;
-        swap  ) mkswap "$device"
-                swapon "$device"
+        swap  ) mkswap "$device"                &>> $LOGFILE
+                swapon "$device"                &>> $LOGFILE
                 #echo && echo "Swap space should be turned on now..."
                 TERM=ansi whiptail --title "Swap space now on" --infobox "Swap space should now be turned on..." 8 50
                 sleep 3
@@ -333,11 +333,11 @@ part_disk(){
     
     
         if $(efi_boot_mode); then
-                sgdisk -Z "$IN_DEVICE"
-                sgdisk -n 1::+"$EFI_SIZE" -t 1:ef00 -c 1:EFI "$IN_DEVICE"
-                sgdisk -n 2::+"$ROOT_SIZE" -t 2:8300 -c 2:ROOT "$IN_DEVICE"
-                sgdisk -n 3::+"$SWAP_SIZE" -t 3:8200 -c 3:SWAP "$IN_DEVICE"
-                sgdisk -n 4 -c 4:HOME "$IN_DEVICE"
+                sgdisk -Z "$IN_DEVICE"                                         &>> $LOGFILE
+                sgdisk -n 1::+"$EFI_SIZE" -t 1:ef00 -c 1:EFI "$IN_DEVICE"      &>> $LOGFILE
+                sgdisk -n 2::+"$ROOT_SIZE" -t 2:8300 -c 2:ROOT "$IN_DEVICE"    &>> $LOGFILE
+                sgdisk -n 3::+"$SWAP_SIZE" -t 3:8200 -c 3:SWAP "$IN_DEVICE"    &>> $LOGFILE
+                sgdisk -n 4 -c 4:HOME "$IN_DEVICE"                             &>> $LOGFILE
         else
         # For non-EFI. Eg. for MBR systems 
 cat > /tmp/sfdisk.cmd << EOF
@@ -347,7 +347,7 @@ $SWAP_DEVICE : size=+$SWAP_SIZE, type=82
 $HOME_DEVICE : type=83
 EOF
         # Using sfdisk because we're talking MBR disktable now...
-        sfdisk /dev/sda < /tmp/sfdisk.cmd 
+        sfdisk /dev/sda < /tmp/sfdisk.cmd   &>> $LOGFILE
         fi
     
     else
@@ -406,7 +406,7 @@ install_base(){
     clear
     # install lvm2 hook if we're using LVM
     [[ $USE_LVM == 'TRUE'  ]] && base_system+=( "lvm2" )
-    pacstrap /mnt "${base_system[@]}"
+    pacstrap /mnt "${base_system[@]}"  &>> $LOGFILE
     [[ -L /dev/mapper/arch_vg-ArchRoot ]] && lvm_hooks
     #echo && echo "Base system installed.  Press any key to continue..."; read empty
     whiptail --backtitle "BASE SYSTEM INSTALLED" --title "Base system installed!" --msgbox "Your base system has been installed.  Click OK to continue." 3>&1 1>&2 2>&3 
@@ -418,7 +418,7 @@ gen_fstab(){
     clear
     #echo "Generating fstab..."
     TERM=ansi whiptail --title "Generating FSTAB" --infobox "Generating /mnt/etc/fstab" 20 75
-    genfstab -U /mnt >> /mnt/etc/fstab
+    genfstab -U /mnt >> /mnt/etc/fstab  &>>$LOGFILE
     sleep 3
 
     # take a look at new fstab file
