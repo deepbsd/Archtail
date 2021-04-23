@@ -159,7 +159,7 @@ check_reflector(){
 lvm_hooks(){
     message="added lvm2 to mkinitcpio hooks HOOKS=( base udev ... block lvm2 filesystems )"
     sed -i 's/^HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)$/HOOKS=(base udev autodetect modconf block lvm2 filesystems keyboard fsck)/g' /mnt/etc/mkinitcpio.conf
-    arch-chroot /mnt mkinitcpio -P
+    arch-chroot /mnt mkinitcpio -P > $LOGFILE 2>&1
     whiptail --backtitle "updated mkinitcpio.conf with HOOKS" --title "updated mkinitcpio.conf with HOOKS" --msgbox "$message" 15 65
 }
 
@@ -190,12 +190,12 @@ lv_create(){
         EFI_DEVICE=/dev/"$efi_dev"
         EFI_SIZE=512M
         # Create the physical partitions
-        sgdisk -Z "$IN_DEVICE"
-        sgdisk -n 1::+"$EFI_SIZE" -t 1:ef00 -c 1:EFI "$IN_DEVICE"
-        sgdisk -n 2 -t 2:8e00 -c 2:VOLGROUP "$IN_DEVICE"
+        sgdisk -Z "$IN_DEVICE" > $LOGFILE 2>&1
+        sgdisk -n 1::+"$EFI_SIZE" -t 1:ef00 -c 1:EFI "$IN_DEVICE" > $LOGFILE 2>&1
+        sgdisk -n 2 -t 2:8e00 -c 2:VOLGROUP "$IN_DEVICE"  > $LOGFILE 2>&1
 
         # Format the EFI partition
-        mkfs.fat -F32 "$EFI_DEVICE"
+        mkfs.fat -F32 "$EFI_DEVICE"  > $LOGFILE 2>&1
     else
         # get boot partition (we're using MBR with LVM here)
         boot_dev=$(whiptail --title "Get Boot Device" --inputbox "What partition for your Boot Device?  (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&1 1>&2 2>&3) 
@@ -207,54 +207,54 @@ $BOOT_DEVICE : start= 2048, size=+$BOOT_SIZE, type=83, bootable
 $ROOT_DEVICE : type=83
 EOF
         # Using sfdisk because we're talking MBR disktable now...
-        sfdisk /dev/sda < /tmp/sfdisk.cmd 
+        sfdisk /dev/sda < /tmp/sfdisk.cmd   > $LOGFILE 2>&1
 
         # format the boot partition
-        mkfs.ext4 "$BOOT_DEVICE"
+        mkfs.ext4 "$BOOT_DEVICE"  > $LOGFILE 2>&1
     fi
 
     # run cryptsetup on root device  # uncomment this later
     #[[ "$USE_CRYPT" == 'TRUE' ]] && crypt_setup "$ROOT_DEVICE"
 
     # create the physical volumes
-    pvcreate "$ROOT_DEVICE"
+    pvcreate "$ROOT_DEVICE"    > $LOGFILE 2>&1
 
     # create the volume group
-    vgcreate "$VOL_GROUP" "$ROOT_DEVICE" 
+    vgcreate "$VOL_GROUP" "$ROOT_DEVICE"   > $LOGFILE 2>&1
     
     # You can extend with 'vgextend' to other devices too
 
     # create the volumes with specific size
-    lvcreate -L "$ROOT_SIZE" "$VOL_GROUP" -n "$LV_ROOT"
-    lvcreate -L "$SWAP_SIZE" "$VOL_GROUP" -n "$LV_SWAP"
-    lvcreate -l 100%FREE  "$VOL_GROUP" -n "$LV_HOME"
+    lvcreate -L "$ROOT_SIZE" "$VOL_GROUP" -n "$LV_ROOT"   > $LOGFILE 2>&1
+    lvcreate -L "$SWAP_SIZE" "$VOL_GROUP" -n "$LV_SWAP"   > $LOGFILE 2>&1 
+    lvcreate -l 100%FREE  "$VOL_GROUP" -n "$LV_HOME"      > $LOGFILE 2>&1
     
     # Format SWAP 
-    mkswap /dev/"$VOL_GROUP"/"$LV_SWAP"
-    swapon /dev/"$VOL_GROUP"/"$LV_SWAP"
+    mkswap /dev/"$VOL_GROUP"/"$LV_SWAP"                   > $LOGFILE 2>&1
+    swapon /dev/"$VOL_GROUP"/"$LV_SWAP"                   > $LOGFILE 2>&1
 
     # insert the vol group module
-    modprobe dm_mod
+    modprobe dm_mod                                       > $LOGFILE 2>&1
     
     # activate the vol group
-    vgchange -ay
+    vgchange -ay                                          > $LOGFILE 2>&1
 
     ## format the volumes
     ###  EFI or BOOT partition already handled
-    mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_ROOT"
-    mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_HOME"
+    mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_ROOT"                > $LOGFILE 2>&1
+    mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_HOME"                > $LOGFILE 2>&1
 
     # mount the volumes
-    mount /dev/"$VOL_GROUP"/"$LV_ROOT" /mnt
-    mkdir /mnt/home
-    mount /dev/"$VOL_GROUP"/"$LV_HOME" /mnt/home
+    mount /dev/"$VOL_GROUP"/"$LV_ROOT" /mnt               > $LOGFILE 2>&1
+    mkdir /mnt/home                                       > $LOGFILE 2>&1
+    mount /dev/"$VOL_GROUP"/"$LV_HOME" /mnt/home          > $LOGFILE 2>&1
     if $(efi_boot_mode); then
         # mount the EFI partitions
-        mkdir /mnt/boot && mkdir /mnt/boot/efi
-        mount "$EFI_DEVICE" /mnt/boot/efi
+        mkdir /mnt/boot && mkdir /mnt/boot/efi            > $LOGFILE 2>&1
+        mount "$EFI_DEVICE" /mnt/boot/efi                 > $LOGFILE 2>&1
     else
-        mkdir /mnt/boot
-        mount "$BOOT_DEVICE" /mnt/boot
+        mkdir /mnt/boot                                   > $LOGFILE 2>&1
+        mount "$BOOT_DEVICE" /mnt/boot                    > $LOGFILE 2>&1
     fi
     lsblk > /tmp/filesystems_created
     whiptail --title "LV's Created and Mounted" --backtitle "Filesystem Created" --textbox /tmp/filesystems_created 30 70
