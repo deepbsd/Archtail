@@ -636,7 +636,7 @@ startmenu(){
         case $menupick in
             "C")  check_connect; time_date ;;
             "D")  diskmenu;;
-            "B")  install_base; check_tasks 3 ;;
+            "B")  USE_LVM='TRUE'; install_base; check_tasks 3 ;;
             "F")  gen_fstab; set_tz; set_locale; check_tasks 4 ;;
             "H")  set_hostname; check_tasks 5 ;;
             "R")  password=$(whiptail --passwordbox "Please set your new root password..." --backtitle "SETTING ROOT PASSWORD" --title "Set new root password"   8 48 3>&1 1>&2 2>&3);
