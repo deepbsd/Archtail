@@ -190,12 +190,12 @@ lv_create(){
         EFI_DEVICE=/dev/"$efi_dev"
         EFI_SIZE=512M
         # Create the physical partitions
-        sgdisk -Z "$IN_DEVICE"                                    >> $LOGFILE 2>&1
-        sgdisk -n 1::+"$EFI_SIZE" -t 1:ef00 -c 1:EFI "$IN_DEVICE" >> $LOGFILE 2>&1
-        sgdisk -n 2 -t 2:8e00 -c 2:VOLGROUP "$IN_DEVICE"          >> $LOGFILE 2>&1
+        sgdisk -Z "$IN_DEVICE"                                    &>> $LOGFILE
+        sgdisk -n 1::+"$EFI_SIZE" -t 1:ef00 -c 1:EFI "$IN_DEVICE" &>> $LOGFILE
+        sgdisk -n 2 -t 2:8e00 -c 2:VOLGROUP "$IN_DEVICE"          &>> $LOGFILE
 
         # Format the EFI partition
-        mkfs.fat -F32 "$EFI_DEVICE"                               >> $LOGFILE 2>&1
+        mkfs.fat -F32 "$EFI_DEVICE"                               &>> $LOGFILE
     else
         # get boot partition (we're using MBR with LVM here)
         boot_dev=$(whiptail --title "Get Boot Device" --inputbox "What partition for your Boot Device?  (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&1 1>&2 2>&3) 
@@ -207,54 +207,54 @@ $BOOT_DEVICE : start= 2048, size=+$BOOT_SIZE, type=83, bootable
 $ROOT_DEVICE : type=83
 EOF
         # Using sfdisk because we're talking MBR disktable now...
-        sfdisk /dev/sda < /tmp/sfdisk.cmd   >> $LOGFILE 2>&1
+        sfdisk /dev/sda < /tmp/sfdisk.cmd   &>> $LOGFILE
 
         # format the boot partition
-        mkfs.ext4 "$BOOT_DEVICE"            >> $LOGFILE 2>&1
+        mkfs.ext4 "$BOOT_DEVICE"            &>> $LOGFILE
     fi
 
     # run cryptsetup on root device  # uncomment this later
     #[[ "$USE_CRYPT" == 'TRUE' ]] && crypt_setup "$ROOT_DEVICE"
 
     # create the physical volumes
-    pvcreate "$ROOT_DEVICE"                >> $LOGFILE 2>&1
+    pvcreate "$ROOT_DEVICE"                &>> $LOGFILE
 
     # create the volume group
-    vgcreate "$VOL_GROUP" "$ROOT_DEVICE"   >> $LOGFILE 2>&1
+    vgcreate "$VOL_GROUP" "$ROOT_DEVICE"   &>> $LOGFILE
     
     # You can extend with 'vgextend' to other devices too
 
     # create the volumes with specific size
-    lvcreate -L "$ROOT_SIZE" "$VOL_GROUP" -n "$LV_ROOT"   >> $LOGFILE 2>&1
-    lvcreate -L "$SWAP_SIZE" "$VOL_GROUP" -n "$LV_SWAP"   >> $LOGFILE 2>&1 
-    lvcreate -l 100%FREE  "$VOL_GROUP" -n "$LV_HOME"      >> $LOGFILE 2>&1
+    lvcreate -L "$ROOT_SIZE" "$VOL_GROUP" -n "$LV_ROOT"   &>> $LOGFILE
+    lvcreate -L "$SWAP_SIZE" "$VOL_GROUP" -n "$LV_SWAP"   &>> $LOGFILE
+    lvcreate -l 100%FREE  "$VOL_GROUP" -n "$LV_HOME"      &>> $LOGFILE
     
     # Format SWAP 
-    mkswap /dev/"$VOL_GROUP"/"$LV_SWAP"                   >> $LOGFILE 2>&1
-    swapon /dev/"$VOL_GROUP"/"$LV_SWAP"                   >> $LOGFILE 2>&1
+    mkswap /dev/"$VOL_GROUP"/"$LV_SWAP"                   &>> $LOGFILE
+    swapon /dev/"$VOL_GROUP"/"$LV_SWAP"                   &>> $LOGFILE
 
     # insert the vol group module
-    modprobe dm_mod                                       >> $LOGFILE 2>&1
+    modprobe dm_mod                                       &>> $LOGFILE
     
     # activate the vol group
-    vgchange -ay                                          >> $LOGFILE 2>&1
+    vgchange -ay                                          &>> $LOGFILE
 
     ## format the volumes
     ###  EFI or BOOT partition already handled
-    mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_ROOT"                >> $LOGFILE 2>&1
-    mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_HOME"                >> $LOGFILE 2>&1
+    mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_ROOT"                &>> $LOGFILE
+    mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_HOME"                &>> $LOGFILE
 
     # mount the volumes
-    mount /dev/"$VOL_GROUP"/"$LV_ROOT" /mnt               >> $LOGFILE 2>&1
-    mkdir /mnt/home                                       >> $LOGFILE 2>&1
-    mount /dev/"$VOL_GROUP"/"$LV_HOME" /mnt/home          >> $LOGFILE 2>&1
+    mount /dev/"$VOL_GROUP"/"$LV_ROOT" /mnt               &>> $LOGFILE
+    mkdir /mnt/home                                       &>> $LOGFILE
+    mount /dev/"$VOL_GROUP"/"$LV_HOME" /mnt/home          &>> $LOGFILE
     if $(efi_boot_mode); then
         # mount the EFI partitions
-        mkdir /mnt/boot && mkdir /mnt/boot/efi            >> $LOGFILE 2>&1
-        mount "$EFI_DEVICE" /mnt/boot/efi                 >> $LOGFILE 2>&1
+        mkdir /mnt/boot && mkdir /mnt/boot/efi            &>> $LOGFILE
+        mount "$EFI_DEVICE" /mnt/boot/efi                 &>> $LOGFILE
     else
-        mkdir /mnt/boot                                   >> $LOGFILE 2>&1
-        mount "$BOOT_DEVICE" /mnt/boot                    >> $LOGFILE 2>&1
+        mkdir /mnt/boot                                   &>> $LOGFILE
+        mount "$BOOT_DEVICE" /mnt/boot                    &>> $LOGFILE
     fi
     lsblk > /tmp/filesystems_created
     whiptail --title "LV's Created and Mounted" --backtitle "Filesystem Created" --textbox /tmp/filesystems_created 30 70
