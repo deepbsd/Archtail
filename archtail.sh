@@ -146,7 +146,7 @@ check_tasks(){
 # FIND CLOSEST MIRROR
 check_reflector(){
     
-    whiptail --title "Finding closest mirror" --infobox "Evaluating and finding closest mirrors for Arch repos. This may take a while, but you'll be returned to the menu as soon as possible." 10 65
+    whiptail --backtitle "REFLECTOR RUNNING" --title "Finding closest mirror" --infobox "Evaluating and finding closest mirrors for Arch repos. This may take a while, but you'll be returned to the menu as soon as possible." 10 65
     #whiptail --title "Finding closes mirror" --gauge "Evaluating and finding closest mirrors for Arch repos..." 10 65 0
     
     while true; do
