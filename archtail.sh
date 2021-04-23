@@ -407,7 +407,7 @@ install_base(){
     # install lvm2 hook if we're using LVM
     [[ $USE_LVM == 'TRUE'  ]] && base_system+=( "lvm2" )
     pacstrap /mnt "${base_system[@]}"  &>> $LOGFILE
-    [[ -L /dev/mapper/arch_vg-ArchRoot ]] && lvm_hooks
+    [[ -L /dev/mapper/arch_vg-ArchRoot ]] && lvm_hooks &>>$LOGFILE
     #echo && echo "Base system installed.  Press any key to continue..."; read empty
     whiptail --backtitle "BASE SYSTEM INSTALLED" --title "Base system installed!" --msgbox "Your base system has been installed.  Click OK to continue." 3>&1 1>&2 2>&3 
     startmenu
@@ -473,12 +473,12 @@ install_essential(){
 
     message=$(echo "Installing dhcpcd, sshd and NetworkManager services...")
     TERM=ansi whiptail --backtitle "INSTALLING NETWORK ESSENTIALS" --title "Installing Network Essentials..." --infobox "$message" 10 75
-    arch-chroot /mnt pacman -S "${base_essentials[@]}"            &>>$LOGFILE
-    arch-chroot /mnt pacman -S "${network_essentials[@]}"         &>>$LOGFILE
+    arch-chroot /mnt pacman -S "${base_essentials[@]}"  --noconfirm          &>>$LOGFILE
+    arch-chroot /mnt pacman -S "${network_essentials[@]}" --noconfirm        &>>$LOGFILE
 
     # ENABLE SERVICES
     for service in "${my_services[@]}"; do
-        arch-chroot /mnt systemctl enable "$service"              &>>$LOGFILE
+        arch-chroot /mnt systemctl enable "$service"  --noconfirm            &>>$LOGFILE
     done
     
     # INFORM USER
@@ -488,13 +488,13 @@ install_essential(){
 # ADD A USER ACCT
 add_user_acct(){
     whiptail --backtitle "ADDING SUDO USER" --title "Adding sudo + user acct..." --msgbox "Please type OK to add a sudo user account" 20 50 3>&1 2>&2 2>&3
-    arch-chroot /mnt pacman -S sudo bash-completion sshpass        &>>$LOGFILE
-    arch-chroot /mnt sed -i 's/# %wheel/%wheel/g' /etc/sudoers     &>>$LOGFILE
+    arch-chroot /mnt pacman -S sudo bash-completion sshpass  --noconfirm      &>>$LOGFILE
+    arch-chroot /mnt sed -i 's/# %wheel/%wheel/g' /etc/sudoers --noconfirm    &>>$LOGFILE
     arch-chroot /mnt sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers  &>>$LOGFILE
     sudo_user=$(whiptail --backtitle "SUDO USERNAME" --title "Please provide sudo username" --inputbox "Please provide a sudo username: " 8 40 3>&1 1>&2 2>&3 )
 
     TERM=ansi whiptail --title "Creating sudo user and adding to wheel" --infobox "Creating $sudo_user and adding $sudo_user to sudoers..." 10 70
-    arch-chroot /mnt useradd -m -G wheel "$sudo_user"              &>>$LOGFILE
+    arch-chroot /mnt useradd -m -G wheel "$sudo_user"  --noconfirm            &>>$LOGFILE
     sleep 2
     user_pass=$(whiptail --passwordbox "Please enter your new user's password: " --title "Getting user password" 8 78 3>&1 1>&2 2>&3 )
     echo -e "$user_pass\n$user_pass" | arch-chroot /mnt passwd "$sudo_user"  &>>$LOGFILE
