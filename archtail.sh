@@ -5,6 +5,7 @@
 ################################
 
 
+LOGFILE='/tmp/install.log'
 DISKTABLE=''
 IN_DEVICE=''
 EFI_SLICE=''
