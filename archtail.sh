@@ -130,7 +130,7 @@ check_connect(){
 
 # UPDATE SYSTEM CLOCK
 time_date(){
-    timedatectl set-ntp true >"$LOGFILE"
+    timedatectl set-ntp true >"$LOGFILE" 2>&1
     time_date_status=$(timedatectl status)
     whiptail --backtitle "Timedate Status" --title "Time and Date Status" --msgbox "$time_date_status" 10 70
 }
