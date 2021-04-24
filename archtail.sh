@@ -406,7 +406,7 @@ install_base(){
     TERM=ansi whiptail --backtitle "INSTALLING BASE SYSTEM" --title "Installing the Base System" --infobox "The main menu will reappear after the base system is installed" 20 70
     # install lvm2 hook if we're using LVM
     [[ $USE_LVM == 'TRUE'  ]] && base_system+=( "lvm2" )
-    pacstrap /mnt "${base_system[@]}"  &>> $LOGFILE
+    pacstrap /mnt "${base_system[@]}"   &>> $LOGFILE
     [[ -L /dev/mapper/arch_vg-ArchRoot ]] && lvm_hooks &>>$LOGFILE
     #echo && echo "Base system installed.  Press any key to continue..."; read empty
     whiptail --backtitle "BASE SYSTEM INSTALLED" --title "Base system installed!" --msgbox "Your base system has been installed.  Click OK to continue." 3>&1 1>&2 2>&3 
