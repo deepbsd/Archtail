@@ -562,6 +562,23 @@ install_desktop(){
     whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Xorg Install Log" --textbox /tmp/install.log --scrolltext 25 80
 }
 
+install_extra_stuff(){
+    message="Installing Extra Window Managers and Stuff"
+    TERM=ansi whiptail --backtitle "EXTRA WINDOW MANAGERS" --title "Extra Window Managers" --infobox "$message" 8 75
+
+    arch-chroot /mnt pacman -S "${all_extras[@]}" --noconfirm   &>>$LOGFILE
+
+    # restart services so lightdm gets all WM picks
+    for service in "${my_services[@]}"; do
+        arch-chroot /mnt systemctl enable "$service"   &>>$LOGFILE
+    done
+    
+    whiptail --backtitle "XTRA X STUFF INSTALLED" --title "Extra Desktops Installed" --msgbox "Extra Goodies Installed.  Click OK to see Install Log." 8 70
+    
+    whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Extra Xorg Stuff Install Log" --textbox /tmp/install.log --scrolltext 25 80
+}
+
+
 # VALIDATE PKG NAMES IN SCRIPT
 validate_pkgs(){
     missing_pkgs=()
