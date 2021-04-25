@@ -479,7 +479,7 @@ install_essential(){
 
     # ENABLE SERVICES
     for service in "${my_services[@]}"; do
-        arch-chroot /mnt systemctl enable "$service"                         &>>$LOGFILE
+        arch-chroot /mnt systemctl enable "$service"  
     done
     
     # INFORM USER
@@ -542,7 +542,7 @@ wl_wifi(){
 install_desktop(){
     # XORG AND DESKTOP
     message="Installing Xorg and Desktop..."
-    TERM=ansi whiptail --backtitle "INSTALLING XORG AND DESKTOPS" --title "$message" --infobox "Installing X and Desktops and Extras" 8 75
+    TERM=ansi whiptail --backtitle "INSTALLING XORG AND DESKTOPS" --title "$message" --infobox "Installing X and Desktops and Extras in background..." 8 75
     # EXTRA PACKAGES, FONTS, THEMES, CURSORS
     arch-chroot /mnt pacman -S "${basic_x[@]}" --noconfirm   &>>$LOGFILE
     arch-chroot /mnt pacman -S "${extra_x1[@]}" --noconfirm    &>>$LOGFILE
