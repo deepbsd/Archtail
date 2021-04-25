@@ -162,7 +162,7 @@ check_reflector(){
 lvm_hooks(){
     message="added lvm2 to mkinitcpio hooks HOOKS=( base udev ... block lvm2 filesystems )"
     sed -i 's/^HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)$/HOOKS=(base udev autodetect modconf block lvm2 filesystems keyboard fsck)/g' /mnt/etc/mkinitcpio.conf
-    arch-chroot /mnt mkinitcpio -P > $LOGFILE 2>&1
+    arch-chroot /mnt mkinitcpio -P 
     whiptail --backtitle "updated mkinitcpio.conf with HOOKS" --title "updated mkinitcpio.conf with HOOKS" --msgbox "$message" 15 65
 }
 
