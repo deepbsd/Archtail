@@ -418,38 +418,38 @@ install_base(){
 gen_fstab(){
     clear
     #echo "Generating fstab..."
-    TERM=ansi whiptail --title "Generating FSTAB" --infobox "Generating /mnt/etc/fstab" 20 75
-    genfstab -U /mnt >> /mnt/etc/fstab  &>>$LOGFILE
+    TERM=ansi whiptail --title "Generating FSTAB" --infobox "Generating /mnt/etc/fstab" 8 75
+    genfstab -U /mnt >> /mnt/etc/fstab
     sleep 3
 
     # take a look at new fstab file
-    whiptail --backtitle "Checkout New /etc/fstab" --title "Here's your new /etc/fstab" --textbox /mnt/etc/fstab 25 75
+    whiptail --backtitle "Checkout New /etc/fstab" --title "Here's your new /etc/fstab" --textbox /mnt/etc/fstab 25 85
 }
 
 # TIMEZONE
 set_tz(){
     
     TERM=ansi whiptail --title "Setting timezone to $TIMEZONE" --infobox "Setting Timezone to $TIMEZONE" 8 75
-    arch-chroot /mnt ln -sf /usr/share/zoneinfo/"$TIMEZONE" /etc/localtime &>>$LOGFILE
-    arch-chroot /mnt hwclock --systohc --utc                               &>>$LOGFILE
+    arch-chroot /mnt ln -sf /usr/share/zoneinfo/"$TIMEZONE" /etc/localtime
+    arch-chroot /mnt hwclock --systohc --utc 
     #arch-chroot /mnt date
     message=$(arch-chroot /mnt date)
-    whiptail --backtitle "SETTING HWCLOCK and TIMEZONE and Hardware Date" --title "HW CLOCK AND TIMEZONE SET to $TIMEZONE" --msgbox "$message" 25 78
+    whiptail --backtitle "SETTING HWCLOCK and TIMEZONE and Hardware Date" --title "HW CLOCK AND TIMEZONE SET to $TIMEZONE" --msgbox "$message" 8 78
 }
 
 # LOCALE
 set_locale(){
     #echo && echo "setting locale to $LOCALE..."
-    TERM=ansi whiptail --backtitle "SETTING LOCALE" --title "Setting Locale to $LOCALE" --infobox "Setting Locale to $LOCALE" 25 78
+    TERM=ansi whiptail --backtitle "SETTING LOCALE" --title "Setting Locale to $LOCALE" --infobox "Setting Locale to $LOCALE" 8 78
     sleep 2
-    arch-chroot /mnt sed -i "s/#$LOCALE/$LOCALE/g" /etc/locale.gen         &>>$LOGFILE
-    arch-chroot /mnt locale-gen                                            &>>$LOGFILE
+    arch-chroot /mnt sed -i "s/#$LOCALE/$LOCALE/g" /etc/locale.gen
+    arch-chroot /mnt locale-gen   &>>$LOGFILE
     sleep 2
-    echo "LANG=$LOCALE" > /mnt/etc/locale.conf                             &>>$LOGFILE
+    echo "LANG=$LOCALE" > /mnt/etc/locale.conf 
     export LANG="$LOCALE"
     sleep 2
     result=$(cat /mnt/etc/locale.conf)
-    whiptail --backtitle "LOCALE SET TO $LOCALE" --title "Locale: $LOCALE" --msgbox "$result" 24 79
+    whiptail --backtitle "LOCALE SET TO $LOCALE" --title "Locale: $LOCALE" --msgbox "$result" 8 79
 }
 
 # HOSTNAME
