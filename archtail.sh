@@ -582,7 +582,7 @@ install_extra_stuff(){
 # VALIDATE PKG NAMES IN SCRIPT
 validate_pkgs(){
     message="Archlinux can change package names without notice.  Just making sure we're okay. We'll be right back with a list of any changes, if any. "
-    TERM=ansi whiptail --backtitle "CHECKING PKG NAME CHANGES" --title "Checking for pkg name changes" "$message" 24 80
+    TERM=ansi whiptail --backtitle "CHECKING PKG NAME CHANGES" --title "Checking for pkg name changes" --infobox "$message" 24 80
     missing_pkgs=()
     {
     for pkg_arr in "${all_pkgs[@]}"; do
