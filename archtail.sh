@@ -581,25 +581,27 @@ install_extra_stuff(){
 
 # VALIDATE PKG NAMES IN SCRIPT
 validate_pkgs(){
+    MISSING_LOG=/tmp/missing_pkgs
     message="Archlinux can change package names without notice.  Just making sure we're okay. We'll be right back with a list of any changes, if any. "
     TERM=ansi whiptail --backtitle "CHECKING PKG NAME CHANGES" --title "Checking for pkg name changes" --infobox "$message" 8 80
 
     missing_pkgs=()
-    echo "=== MISSING PKG NAMES (IF ANY) ===" &>>$LOGFILE
+    echo "=== MISSING PKG NAMES (IF ANY) ===" &>>$MISSING_LOG
     for pkg_arr in "${all_pkgs[@]}"; do
         declare -n arr_name=$pkg_arr
         for pkg_name in "${arr_name[@]}"; do
             if $( pacman -Sp $pkg_name &>/dev/null ); then
-                echo -n "." &>>$LOGFILE
+                echo -n "." &>>$MISSING_LOG
             else 
-                echo -n "$pkg_name from $pkg_arr not in repos." &>>$LOGFILE
+                echo -n "$pkg_name from $pkg_arr not in repos." &>>$MISSING_LOG
                 missing_pkgs+=("$pkg_arr::$pkg_name")
             fi
         done
     done
-    echo "=== END OF MISSING PKGS ===" &>>$LOGFILE
+    echo "=== END OF MISSING PKGS ===" &>>$MISSING_LOG
     
-    whiptail --backtitle "Packages not in repos" --title "These packages not in repos" --textbox /tmp/install.log --scrolltext 20 80
+    whiptail --backtitle "Packages not in repos" --title "These packages not in repos" --textbox $MISSING_LOG --scrolltext 20 80
+
 }
 
 show_hosts(){
