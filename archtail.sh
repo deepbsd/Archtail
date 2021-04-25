@@ -479,11 +479,12 @@ install_essential(){
 
     # ENABLE SERVICES
     for service in "${my_services[@]}"; do
-        arch-chroot /mnt systemctl enable "$service"  --noconfirm            &>>$LOGFILE
+        arch-chroot /mnt systemctl enable "$service"                         &>>$LOGFILE
     done
     
     # INFORM USER
     whiptail --title "Network Essentials Installed" --msgbox "Network Essentials Installed.  OK to continue." 8 78
+    whiptail --title "Current Install Progress" --textbox /tmp/install.log --scrolltext 25 80
 }
 
 # ADD A USER ACCT
@@ -532,7 +533,7 @@ install_grub(){
 # WIFI (BCM4360) IF NECESSARY
 wl_wifi(){
     TERM=ansi whiptail --title "Installing $wifi_drivers" --infobox "Installing $wifi_drivers..." 10 70 
-    arch-chroot /mnt pacman -S "${wifi_drivers[@]}"
+    arch-chroot /mnt pacman -S "${wifi_drivers[@]}" &>>$LOGFILE
     [[ "$?" -eq 0 ]] && whiptail --title "Success!" --infobox "$wifi_drivers Installed!" 10 70
     sleep 3
 }
@@ -543,21 +544,22 @@ install_desktop(){
     message="Installing Xorg and Desktop..."
     TERM=ansi whiptail --backtitle "INSTALLING XORG AND DESKTOPS" --title "$message" --infobox "Installing X and Desktops and Extras" 8 75
     # EXTRA PACKAGES, FONTS, THEMES, CURSORS
-    arch-chroot /mnt pacman -S "${basic_x[@]}" --noconfirm
-    arch-chroot /mnt pacman -S "${extra_x1[@]}" --noconfirm 
-    arch-chroot /mnt pacman -S "${extra_x2[@]}" --noconfirm
-    arch-chroot /mnt pacman -S "${extra_x3[@]}" --noconfirm
-    arch-chroot /mnt pacman -S "${extra_x4[@]}" --noconfirm
+    arch-chroot /mnt pacman -S "${basic_x[@]}" --noconfirm   &>>$LOGFILE
+    arch-chroot /mnt pacman -S "${extra_x1[@]}" --noconfirm    &>>$LOGFILE
+    arch-chroot /mnt pacman -S "${extra_x2[@]}" --noconfirm   &>>$LOGFILE
+    arch-chroot /mnt pacman -S "${extra_x3[@]}" --noconfirm   &>>$LOGFILE
+    arch-chroot /mnt pacman -S "${extra_x4[@]}" --noconfirm   &>>$LOGFILE
 
     # DRIVER FOR GRAPHICS CARD, DESKTOP, DISPLAY MGR
-    arch-chroot /mnt pacman -S "${display_mgr[@]}" --noconfirm
-    arch-chroot /mnt pacman -S "${graphics_driver[@]}" --noconfirm
+    arch-chroot /mnt pacman -S "${display_mgr[@]}" --noconfirm        &>>$LOGFILE 
+    arch-chroot /mnt pacman -S "${graphics_driver[@]}" --noconfirm    &>>$LOGFILE 
 
     ## Insert your default desktop here...
-    arch-chroot /mnt pacman -S "${cinnamon_desktop[@]}" --noconfirm
-    arch-chroot /mnt systemctl enable "${display_mgr[@]}" --noconfirm
+    arch-chroot /mnt pacman -S "${cinnamon_desktop[@]}" --noconfirm   &>>$LOGFILE
+    arch-chroot /mnt systemctl enable "${display_mgr[@]}" 
 
-    whiptail --backtitle "X AND DESKTOPS INSTALLED" --title "Desktops Installed" --msgbox "Xorg and Extras and Desktops are installed.  OK to continue." 8 70
+    whiptail --backtitle "X AND DESKTOPS INSTALLED" --title "Desktops Installed" --msgbox "Xorg and Extras and Desktops are installed.  OK to check install.log." 8 70
+    whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Xorg Install Log" --textbox /tmp/install.log --scrolltext 25 80
 }
 
 # VALIDATE PKG NAMES IN SCRIPT
