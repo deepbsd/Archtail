@@ -586,7 +586,7 @@ validate_pkgs(){
     TERM=ansi whiptail --backtitle "CHECKING PKG NAME CHANGES" --title "Checking for pkg name changes" --infobox "$message" 8 80
 
     missing_pkgs=()
-    echo "=== MISSING PKG NAMES (IF ANY) ===" &>>$MISSING_LOG
+    echo -e "\n=== MISSING PKG NAMES (IF ANY) ===\n\n" &>>$MISSING_LOG
     for pkg_arr in "${all_pkgs[@]}"; do
         declare -n arr_name=$pkg_arr
         for pkg_name in "${arr_name[@]}"; do
@@ -598,7 +598,7 @@ validate_pkgs(){
             fi
         done
     done
-    echo "=== END OF MISSING PKGS ===" &>>$MISSING_LOG
+    echo -e "\n\n=== END OF MISSING PKGS ===\n" &>>$MISSING_LOG
     
     whiptail --backtitle "Packages not in repos" --title "These packages not in repos" --textbox $MISSING_LOG --scrolltext 20 80
 
