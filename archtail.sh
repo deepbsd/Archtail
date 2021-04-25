@@ -584,7 +584,6 @@ validate_pkgs(){
     message="Archlinux can change package names without notice.  Just making sure we're okay. We'll be right back with a list of any changes, if any. "
     TERM=ansi whiptail --backtitle "CHECKING PKG NAME CHANGES" --title "Checking for pkg name changes" --infobox "$message" 24 80
     missing_pkgs=()
-    {
     for pkg_arr in "${all_pkgs[@]}"; do
         declare -n arr_name=$pkg_arr
         for pkg_name in "${arr_name[@]}"; do
@@ -596,9 +595,8 @@ validate_pkgs(){
             fi
         done
     done
-    } 
     
-    whiptail --backtitle "Packages not in repos" --title "These packages not in repos" --msgbox "missing:  ${missing_pkgs[@]}" 10 78
+    whiptail --backtitle "Packages not in repos" --title "These packages not in repos" --msgbox "missing:  ${missing_pkgs[@]}  OK to continue." 10 78
 }
 
 show_hosts(){
