@@ -650,7 +650,6 @@ startmenu(){
             "G"   "Install grub"               \
             "X"   "Install Xorg + Desktop"     \
             "I"   "Install Extra Window Mgrs"  \
-            "V"   "Repopulate Variables "      \
             "P"   "Check for pkg name changes" \
             "L"   "Exit Script "  3>&1 1>&2 2>&3
         )
@@ -669,7 +668,6 @@ startmenu(){
             "G")  install_grub; check_tasks 10 ;;
             "X")  install_desktop; check_tasks 11 ;;
             "I")  install_extra_stuff; check_tasks 12 ;;
-            "V")  set_variables ;;
             "P")  validate_pkgs ;;
             "L") TERM=ansi whiptail --title "exit installer" --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; sleep 2; exit 0 ;;
         esac
