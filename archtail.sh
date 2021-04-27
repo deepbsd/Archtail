@@ -131,6 +131,38 @@ check_connect(){
     fi
 }
 
+
+# FOR SHOWING PROGRESS GAUGE FOR WHIPTAIL
+showprogress(){
+    start=$1; end=$2; shortest=$3; longest=$4
+
+    for n in $(seq $start $end); do
+        echo $n
+        pause=$(shuf -i ${shortest:=1}-${longest:=3} -n 1)  # random wait between 1 and 3 seconds
+        sleep $pause
+    done
+}
+
+# CALL FOR SHOWING PROGRESS GAUGE
+specialprogressgauge(){
+    process_to_measure=$1
+    message=$2
+    $process_to_measure&
+    thepid=$!
+    while true; do
+        showprogress 1 35 1 3
+        sleep 2
+        num=66
+        while $(ps aux | grep -v 'grep' | grep "$thepid" &>/dev/null); do
+            if [[ $num -gt 97 ]] ; then num=$(( num-1 )); fi
+            showprogress $num $((num+1)) 
+            num=$(( num+1 ))
+        done
+        showprogress 99 100 3 3
+        break
+    done  | whiptail --title "Progress Gauge" --gauge "$message" 6 70 0
+}
+
 # UPDATE SYSTEM CLOCK
 time_date(){
     timedatectl set-ntp true >"$LOGFILE" 2>&1
@@ -664,17 +696,22 @@ startmenu(){
         case $menupick in
             "C")  check_connect; time_date ;;
             "D")  diskmenu;;
-            "B")  USE_LVM='TRUE'; install_base; check_tasks 3 ;;
+            "B")  USE_LVM='TRUE'; 
+                  specialprogressgauge install_base "Installing base system..."; 
+                  check_tasks 3 ;;
             "F")  gen_fstab; set_tz; set_locale; check_tasks 4 ;;
             "H")  set_hostname; check_tasks 5 ;;
             "R")  password=$(whiptail --passwordbox "Please set your new root password..." --backtitle "SETTING ROOT PASSWORD" --title "Set new root password"   8 48 3>&1 1>&2 2>&3);
                   echo -e "$password\n$password" | arch-chroot /mnt passwd ;; 
-            "M")  install_essential; check_tasks 7 ;;
+            "M")  specialprogressgauge install_essential "Installing essential Network utils..."; 
+                  check_tasks 7 ;;
             "U")  add_user_acct; check_tasks 8 ;;
             "W")  wl_wifi; check_tasks 9 ;;
             "G")  install_grub; check_tasks 10 ;;
-            "X")  install_desktop; check_tasks 11 ;;
-            "I")  install_extra_stuff; check_tasks 12 ;;
+            "X")  specialprogressgauge install_desktop "Installing Extra Desktops..."; 
+                  check_tasks 11 ;;
+            "I")  specialprogressgauge install_extra_stuff "Installing Xorg Extras"; 
+                  check_tasks 12 ;;
             "P")  validate_pkgs ;;
             "L") TERM=ansi whiptail --title "exit installer" --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; sleep 2; exit 0 ;;
         esac
