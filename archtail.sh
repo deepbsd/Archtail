@@ -131,7 +131,6 @@ check_connect(){
     fi
 }
 
-
 # FOR SHOWING PROGRESS GAUGE FOR WHIPTAIL
 showprogress(){
     start=$1; end=$2; shortest=$3; longest=$4
@@ -195,7 +194,7 @@ lvm_hooks(){
     message="added lvm2 to mkinitcpio hooks HOOKS=( base udev ... block lvm2 filesystems )"
     sed -i 's/^HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)$/HOOKS=(base udev autodetect modconf block lvm2 filesystems keyboard fsck)/g' /mnt/etc/mkinitcpio.conf
     arch-chroot /mnt mkinitcpio -P 
-    whiptail --backtitle "updated mkinitcpio.conf with HOOKS" --title "updated mkinitcpio.conf with HOOKS" --msgbox "$message" 15 65
+    #whiptail --backtitle "updated mkinitcpio.conf with HOOKS" --title "updated mkinitcpio.conf with HOOKS" --msgbox "$message" 15 65
 }
 
 # FOR LOGICAL VOLUME PARTITIONS
