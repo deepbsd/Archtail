@@ -444,8 +444,6 @@ install_base(){
     pacstrap /mnt "${base_system[@]}"   &>> $LOGFILE
     [[ -L /dev/mapper/arch_vg-ArchRoot ]] && lvm_hooks &>>$LOGFILE
     #echo && echo "Base system installed.  Press any key to continue..."; read empty
-    #whiptail --backtitle "BASE SYSTEM INSTALLED" --title "Base system installed!" --msgbox "Your base system has been installed.  Click OK to continue." 3>&1 1>&2 2>&3 
-    #whiptail --backtitle "YOUR LOGFILE FOR INSTALLATION" --title "LOGFILE for your installation" --textbox /tmp/install.log --scrolltext 30 80
     startmenu
 }
 
@@ -704,6 +702,8 @@ startmenu(){
             "R")  password=$(whiptail --passwordbox "Please set your new root password..." --backtitle "SETTING ROOT PASSWORD" --title "Set new root password"   8 48 3>&1 1>&2 2>&3);
                   echo -e "$password\n$password" | arch-chroot /mnt passwd ;; 
             "M")  specialprogressgauge install_essential "Installing essential Network utils..."; 
+                  whiptail --backtitle "BASE SYSTEM INSTALLED" --title "Base system installed!" --msgbox "Your base system has been installed.  Click OK to continue." 3>&1 1>&2 2>&3 ;
+                  whiptail --backtitle "YOUR LOGFILE FOR INSTALLATION" --title "LOGFILE for your installation" --textbox /tmp/install.log --scrolltext 30 80;
                   check_tasks 7 ;;
             "U")  add_user_acct; check_tasks 8 ;;
             "W")  wl_wifi; check_tasks 9 ;;
