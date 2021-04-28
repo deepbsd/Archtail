@@ -565,9 +565,6 @@ wl_wifi(){
 
 # INSTALL XORG AND DESKTOP
 install_desktop(){
-    # XORG AND DESKTOP
-    message="Installing Xorg and Desktop..."
-    TERM=ansi whiptail --backtitle "INSTALLING XORG AND DESKTOPS" --title "$message" --infobox "Installing X and Desktops and Extras in background..." 8 75
     # EXTRA PACKAGES, FONTS, THEMES, CURSORS
     arch-chroot /mnt pacman -S "${basic_x[@]}" --noconfirm   &>>$LOGFILE
     arch-chroot /mnt pacman -S "${extra_x1[@]}" --noconfirm    &>>$LOGFILE
@@ -582,9 +579,6 @@ install_desktop(){
     ## Insert your default desktop here...
     arch-chroot /mnt pacman -S "${cinnamon_desktop[@]}" --noconfirm   &>>$LOGFILE
     arch-chroot /mnt systemctl enable "${display_mgr[@]}" 
-
-    whiptail --backtitle "X AND DESKTOPS INSTALLED" --title "Desktops Installed" --msgbox "Xorg and Extras and Desktops are installed.  OK to check install.log." 8 70
-    whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Xorg Install Log" --textbox /tmp/install.log --scrolltext 25 80
 }
 
 install_extra_stuff(){
@@ -702,7 +696,9 @@ startmenu(){
             "U")  add_user_acct; check_tasks 8 ;;
             "W")  wl_wifi; check_tasks 9 ;;
             "G")  install_grub; check_tasks 10 ;;
-            "X")  specialprogressgauge install_desktop "Installing Extra Desktops..."; 
+            "X")  specialprogressgauge install_desktop "Installing Xorg and Desktops..."; 
+                  whiptail --backtitle "X AND DESKTOPS INSTALLED" --title "Desktops Installed" --msgbox "Xorg and Extras and Desktops are installed.  OK to check install.log." 8 70 ;
+                  whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Xorg Install Log" --textbox /tmp/install.log --scrolltext 25 80 ;
                   check_tasks 11 ;;
             "I")  specialprogressgauge install_extra_stuff "Installing Xorg Extras"; 
                   check_tasks 12 ;;
