@@ -443,7 +443,7 @@ install_base(){
     pacstrap /mnt "${base_system[@]}"   &>> $LOGFILE
     [[ -L /dev/mapper/arch_vg-ArchRoot ]] && lvm_hooks &>>$LOGFILE
     #echo && echo "Base system installed.  Press any key to continue..."; read empty
-    startmenu
+    #startmenu
 }
 
 # GENERATE FSTAB
