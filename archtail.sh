@@ -545,6 +545,7 @@ install_grub(){
     else
         arch-chroot /mnt grub-install "$IN_DEVICE" --noconfirm  &>>$LOGFILE
         [[ $? == 0 ]] && TERM=ansi whiptail --backtitle "BOOT LOADER INSTALLED" --title "MBR Bootloader Installed" --infobox "MBR Bootloader Installed Successfully!" 9 70
+
         [[ $? != 0 ]] && whiptail --title "Errors During Boot Loader Installation" --textbox /tmp/install.log 30 79 --scrolltext
         sleep 2
     fi
