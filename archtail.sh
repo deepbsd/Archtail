@@ -151,7 +151,6 @@ specialprogressgauge(){
     while true; do
         showprogress 1 35 1 3
         sleep 2
-        num=66
         while $(ps aux | grep -v 'grep' | grep "$thepid" &>/dev/null); do
             if [[ $num -gt 97 ]] ; then num=$(( num-1 )); fi
             showprogress $num $((num+1)) 
