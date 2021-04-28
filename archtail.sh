@@ -504,7 +504,7 @@ HOSTS
 install_essential(){
 
     message=$(echo "Installing dhcpcd, sshd and NetworkManager services...")
-    TERM=ansi whiptail --backtitle "INSTALLING NETWORK ESSENTIALS" --title "Installing Network Essentials..." --infobox "$message" 10 75
+    #TERM=ansi whiptail --backtitle "INSTALLING NETWORK ESSENTIALS" --title "Installing Network Essentials..." --infobox "$message" 10 75
     arch-chroot /mnt pacman -S "${base_essentials[@]}"  --noconfirm          &>>$LOGFILE
     arch-chroot /mnt pacman -S "${network_essentials[@]}" --noconfirm        &>>$LOGFILE
 
