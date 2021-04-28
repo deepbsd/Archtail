@@ -582,16 +582,12 @@ install_desktop(){
 }
 
 install_extra_stuff(){
-    message="Installing Extra Window Managers and Stuff"
-    #TERM=ansi whiptail --backtitle "EXTRA WINDOW MANAGERS" --title "Extra Window Managers" --infobox "$message" 8 75
-
     arch-chroot /mnt pacman -S "${all_extras[@]}" --noconfirm   &>>$LOGFILE
 
     # restart services so lightdm gets all WM picks
     for service in "${my_services[@]}"; do
         arch-chroot /mnt systemctl enable "$service"   &>>$LOGFILE
     done
-    
 }
 
 
