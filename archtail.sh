@@ -583,7 +583,7 @@ install_desktop(){
 
 install_extra_stuff(){
     message="Installing Extra Window Managers and Stuff"
-    TERM=ansi whiptail --backtitle "EXTRA WINDOW MANAGERS" --title "Extra Window Managers" --infobox "$message" 8 75
+    #TERM=ansi whiptail --backtitle "EXTRA WINDOW MANAGERS" --title "Extra Window Managers" --infobox "$message" 8 75
 
     arch-chroot /mnt pacman -S "${all_extras[@]}" --noconfirm   &>>$LOGFILE
 
@@ -592,9 +592,6 @@ install_extra_stuff(){
         arch-chroot /mnt systemctl enable "$service"   &>>$LOGFILE
     done
     
-    whiptail --backtitle "XTRA X STUFF INSTALLED" --title "Extra Desktops Installed" --msgbox "Extra Goodies Installed.  Click OK to see Install Log." 8 70
-    
-    whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Extra Xorg Stuff Install Log" --textbox /tmp/install.log --scrolltext 25 80
 }
 
 
@@ -701,6 +698,8 @@ startmenu(){
                   whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Xorg Install Log" --textbox /tmp/install.log --scrolltext 25 80 ;
                   check_tasks 11 ;;
             "I")  specialprogressgauge install_extra_stuff "Installing Xorg Extras"; 
+                  whiptail --backtitle "XTRA X STUFF INSTALLED" --title "Extra Desktops Installed" --msgbox "Extra Goodies Installed.  Click OK to see Install Log." 8 70 ;
+                  whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Extra Xorg Stuff Install Log" --textbox /tmp/install.log --scrolltext 25 80 ;
                   check_tasks 12 ;;
             "P")  validate_pkgs ;;
             "L") TERM=ansi whiptail --title "exit installer" --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; sleep 2; exit 0 ;;
