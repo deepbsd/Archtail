@@ -507,7 +507,7 @@ install_essential(){
 
     # ENABLE SERVICES
     for service in "${my_services[@]}"; do
-        arch-chroot /mnt systemctl enable "$service"  
+        arch-chroot /mnt systemctl enable "$service"  &>>$LOGFILE
     done
     
 }
