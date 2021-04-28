@@ -538,7 +538,7 @@ install_grub(){
     if $(efi_boot_mode); then
         arch-chroot /mnt pacman -S efibootmgr --noconfirm  &>>$LOGFILE
         # /boot/efi should aready be mounted
-        [[ ! -d /mnt/boot/efi ]] && echo "no /mnt/boot/efi directory!!!" && exit 1 &>>$LOGFILE
+        [[ ! -d /mnt/boot/efi ]] && echo "no /mnt/boot/efi directory!!!" &>>$LOGFILE  && exit 1 
         arch-chroot /mnt grub-install "$IN_DEVICE" --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi  --noconfirm &>>$LOGFILE
         TERM=ansi whiptail --backtitle "GRUB INSTALLED" --title "GRUB Installed" --infobox "GRUB Installed!" 9 70
         sleep 2
@@ -546,7 +546,7 @@ install_grub(){
         arch-chroot /mnt grub-install "$IN_DEVICE" --noconfirm  &>>$LOGFILE
         [[ $? == 0 ]] && TERM=ansi whiptail --backtitle "BOOT LOADER INSTALLED" --title "MBR Bootloader Installed" --infobox "MBR Bootloader Installed Successfully!" 9 70
 
-        [[ $? != 0 ]] && whiptail --title "Errors During Boot Loader Installation" --textbox /tmp/install.log 30 79 --scrolltext
+        whiptail --title "LOGFILE for Grub Installation" --textbox /tmp/install.log 30 79 --scrolltext
         sleep 2
     fi
 
@@ -554,6 +554,7 @@ install_grub(){
     arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
         
     whiptail --backtitle "GRUB.CFG INSTALLED" --title "/boot/grub/grub.cfg installed" --msgbox "Please click OK to proceed." 8 70
+    whiptail --backtitle "GRUB.CFG LOGFILE" --title "/boot/grub/grub.cfg installed" --textbox /tmp/install.log 8 70
 }
 
 # WIFI (BCM4360) IF NECESSARY
