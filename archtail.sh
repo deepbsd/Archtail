@@ -149,7 +149,7 @@ specialprogressgauge(){
     backmessage=$3
     eval $process_to_measure &
     thepid=$!
-    num=25
+    num=20
     while true; do
         showprogress 1 $num 1 3 
         sleep 2
