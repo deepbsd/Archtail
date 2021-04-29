@@ -12,5 +12,7 @@ by default.  It's up to you to build that into your program.  How to do this?  W
 what I'm currently experimenting with in my `whipsample.sh` program in
 my [binfiles](https://github.com/deepbsd/binfiles) repo.
 
-Currently, there's only an arbitrary connection between `--gauge` and the actual progress of
-the function that's being watched.
+Currently the progress gauge works okay.  The installer works up to the Xorg-less part.
+There are still two or three places where STDOUT gets displayed to the screen rather than to
+the logfile.  Have to chase those down.  Also, I need to debug the X install functions.  They
+are not fully working yet.
