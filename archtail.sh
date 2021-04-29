@@ -148,8 +148,9 @@ specialprogressgauge(){
     message=$2
     $process_to_measure&
     thepid=$!
+    num=1
     while true; do
-        showprogress 1 35 1 3
+        showprogress $num 35 1 3
         sleep 2
         while $(ps aux | grep -v 'grep' | grep "$thepid" &>/dev/null); do
             if [[ $num -gt 97 ]] ; then num=$(( num-1 )); fi
