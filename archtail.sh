@@ -146,11 +146,12 @@ showprogress(){
 specialprogressgauge(){
     process_to_measure=$1
     message=$2
-    $process_to_measure&
+    backmessage=$3
+    eval $process_to_measure&
     thepid=$!
     num=1
     while true; do
-        showprogress $num 25 1 3
+        showprogress $num 25 1 3 
         sleep 2
         while $(ps aux | grep -v 'grep' | grep "$thepid" &>/dev/null); do
             if [[ $num -gt 97 ]] ; then num=$(( num-1 )); fi
@@ -159,7 +160,7 @@ specialprogressgauge(){
         done
         showprogress 99 100 3 3
         break
-    done  | whiptail --title "Progress Gauge" --gauge "$message" 6 70 0
+    done  | whiptail --backtitle $backmessage --title "Progress Gauge" --gauge "$message" 6 70 0
 }
 
 # UPDATE SYSTEM CLOCK
@@ -677,7 +678,7 @@ startmenu(){
             "C")  check_connect; time_date ;;
             "D")  diskmenu;;
             "B")  USE_LVM='TRUE'; 
-                  specialprogressgauge install_base "Installing base system..."; 
+                  specialprogressgauge install_base "Installing base system..." "INSTALLING BASE SYSTEM"; 
                   whiptail --backtitle "BASE SYSTEM INSTALLED" --title "Base system installed!" --msgbox "Your base system has been installed.  Click OK to continue." 10 80;
                   whiptail --backtitle "YOUR LOGFILE FOR INSTALLATION" --title "LOGFILE for your installation" --textbox /tmp/install.log --scrolltext 30 80;
                   check_tasks 3 ;;
