@@ -174,6 +174,7 @@ time_date(){
 check_tasks(){
     # If task already exists in array return falsey
     # Function takes a task number as an argument
+    # This function might not be needed anymore: STATUS TBD
     [[ "${completed_tasks[@]}" =~ $1 ]] && return 1
     completed_tasks+=( "$1" )
 }
@@ -182,20 +183,17 @@ check_tasks(){
 check_reflector(){
     
     whiptail --backtitle "REFLECTOR RUNNING" --title "Finding closest mirror" --infobox "Evaluating and finding closest mirrors for Arch repos. This may take a while, but you'll be returned to the menu as soon as possible." 10 65
-    #whiptail --title "Finding closes mirror" --gauge "Evaluating and finding closest mirrors for Arch repos..." 10 65 0
     
     while true; do
         pgrep -x reflector &>/dev/null || break
         sleep 2
-    done #| whiptail --title "Finding closest mirrors" --gauge "Evaluating and finding closest mirrors for Arch Linux repositories" 10 75 0
+    done 
 }
 
 # FOR MKINITCPIO.IMG
 lvm_hooks(){
-    message="added lvm2 to mkinitcpio hooks HOOKS=( base udev ... block lvm2 filesystems )"
     sed -i 's/^HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)$/HOOKS=(base udev autodetect modconf block lvm2 filesystems keyboard fsck)/g' /mnt/etc/mkinitcpio.conf
     arch-chroot /mnt mkinitcpio -P 
-    #whiptail --backtitle "updated mkinitcpio.conf with HOOKS" --title "updated mkinitcpio.conf with HOOKS" --msgbox "$message" 15 65
 }
 
 # FOR LOGICAL VOLUME PARTITIONS
@@ -320,11 +318,9 @@ mount_part(){
     
     mount "$device" "$mt_pt"
     if [[ "$?" -eq 0 ]]; then
-        #echo "$device mounted on $mt_pt ..."
         TERM=ansi whiptail --title "Mount successful" --infobox "$device mounted on $mt_pt" 8 65
         sleep 3
     else
-        #echo "Error!!  $mt_pt not mounted!"
         TERM=ansi whiptail --title "Mount NOT successful" --infobox "$device failed mounting on $mt_pt" 8 65
         sleep 3
         exit 1
@@ -338,7 +334,7 @@ format_disk(){
     # only do efi slice if efi_boot_mode return 0; else return 0
     [[ "$slice" =~ 'efi' && ! "$DISKTABLE" =~ 'GPT' ]] && return 0
     clear
-    #echo "Formatting $device with $slice. . ."
+
     sleep 3
     case $slice in 
         efi ) mkfs.fat -F32 "$device"
@@ -352,7 +348,7 @@ format_disk(){
             ;;
         swap  ) mkswap "$device"                &>> $LOGFILE
                 swapon "$device"                &>> $LOGFILE
-                #echo && echo "Swap space should be turned on now..."
+
                 TERM=ansi whiptail --title "Swap space now on" --infobox "Swap space should now be turned on..." 8 50
                 sleep 3
             ;;
@@ -438,19 +434,15 @@ get_install_device(){
 
 # INSTALL ESSENTIAL PACKAGES
 install_base(){
-    #TERM=ansi whiptail --backtitle "INSTALLING BASE SYSTEM" --title "Installing the Base System" --infobox "The main menu will reappear after the base system is installed" 20 70
     # install lvm2 hook if we're using LVM
     [[ $USE_LVM == 'TRUE'  ]] && base_system+=( "lvm2" )
     pacstrap /mnt "${base_system[@]}"   &>> $LOGFILE
     [[ -L /dev/mapper/arch_vg-ArchRoot ]] && lvm_hooks &>>$LOGFILE
-    #echo && echo "Base system installed.  Press any key to continue..."; read empty
-    #startmenu
 }
 
 # GENERATE FSTAB
 gen_fstab(){
     clear
-    #echo "Generating fstab..."
     TERM=ansi whiptail --title "Generating FSTAB" --infobox "Generating /mnt/etc/fstab" 8 75
     genfstab -U /mnt >> /mnt/etc/fstab
     sleep 3
@@ -465,14 +457,12 @@ set_tz(){
     TERM=ansi whiptail --title "Setting timezone to $TIMEZONE" --infobox "Setting Timezone to $TIMEZONE" 8 75
     arch-chroot /mnt ln -sf /usr/share/zoneinfo/"$TIMEZONE" /etc/localtime
     arch-chroot /mnt hwclock --systohc --utc 
-    #arch-chroot /mnt date
     message=$(arch-chroot /mnt date)
     whiptail --backtitle "SETTING HWCLOCK and TIMEZONE and Hardware Date" --title "HW CLOCK AND TIMEZONE SET to $TIMEZONE" --msgbox "$message" 8 78
 }
 
 # LOCALE
 set_locale(){
-    #echo && echo "setting locale to $LOCALE..."
     TERM=ansi whiptail --backtitle "SETTING LOCALE" --title "Setting Locale to $LOCALE" --infobox "Setting Locale to $LOCALE" 8 78
     sleep 2
     arch-chroot /mnt sed -i "s/#$LOCALE/$LOCALE/g" /etc/locale.gen
@@ -552,7 +542,6 @@ install_grub(){
         sleep 2
     fi
 
-    #echo "configuring /boot/grub/grub.cfg..."
     arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg &>>$LOGFILE
         
     whiptail --backtitle "GRUB.CFG INSTALLED" --title "/boot/grub/grub.cfg installed" --msgbox "Please click OK to proceed." 8 70
