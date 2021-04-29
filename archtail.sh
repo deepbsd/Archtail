@@ -556,7 +556,7 @@ install_grub(){
     arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg &>>$LOGFILE
         
     whiptail --backtitle "GRUB.CFG INSTALLED" --title "/boot/grub/grub.cfg installed" --msgbox "Please click OK to proceed." 8 70
-    whiptail --backtitle "GRUB.CFG LOGFILE" --title "/boot/grub/grub.cfg installed" --textbox /tmp/install.log 8 70
+    whiptail --backtitle "GRUB.CFG LOGFILE" --title "/boot/grub/grub.cfg installed" --textbox /tmp/install.log --scrolltext 38 80
 }
 
 # WIFI (BCM4360) IF NECESSARY
