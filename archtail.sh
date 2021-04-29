@@ -33,8 +33,8 @@ SWAP_SIZE=4G     # SWAP_SIZE="$(free | awk '/^Mem/ {mem=$2/1000000; print int(2.
 HOME_SIZE=''     # This is set automatically if using LVM
 
 # You can edit this if you want
-#TIMEZONE='America/New_York'
-TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
+TIMEZONE='America/New_York'
+#TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
 LOCALE="en_US.UTF-8"
 
 ###########  SOFTWARE SETS ###################
