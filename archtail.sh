@@ -147,7 +147,7 @@ specialprogressgauge(){
     process_to_measure=$1
     message=$2
     backmessage=$3
-    eval $process_to_measure&
+    eval $process_to_measure &
     thepid=$!
     num=1
     while true; do
@@ -160,7 +160,7 @@ specialprogressgauge(){
         done
         showprogress 99 100 3 3
         break
-    done  | whiptail --backtitle $backmessage --title "Progress Gauge" --gauge "$message" 6 70 0
+    done  | whiptail --backtitle "$backmessage" --title "Progress Gauge" --gauge "$message" 6 70 0
 }
 
 # UPDATE SYSTEM CLOCK
