@@ -541,11 +541,11 @@ install_grub(){
         arch-chroot /mnt pacman -S efibootmgr --noconfirm  &>>$LOGFILE
         # /boot/efi should aready be mounted
         [[ ! -d /mnt/boot/efi ]] && echo "no /mnt/boot/efi directory!!!" &>>$LOGFILE  && exit 1 
-        arch-chroot /mnt grub-install "$IN_DEVICE" --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi  --noconfirm &>>$LOGFILE
+        arch-chroot /mnt grub-install "$IN_DEVICE" --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi  &>>$LOGFILE
         TERM=ansi whiptail --backtitle "GRUB INSTALLED" --title "GRUB Installed" --infobox "GRUB Installed!" 9 70
         sleep 2
     else
-        arch-chroot /mnt grub-install "$IN_DEVICE" --noconfirm  &>>$LOGFILE
+        arch-chroot /mnt grub-install "$IN_DEVICE"  &>>$LOGFILE
         [[ $? == 0 ]] && TERM=ansi whiptail --backtitle "BOOT LOADER INSTALLED" --title "MBR Bootloader Installed" --infobox "MBR Bootloader Installed Successfully!" 9 70
 
         whiptail --title "LOGFILE for Grub Installation" --textbox /tmp/install.log 30 79 --scrolltext
