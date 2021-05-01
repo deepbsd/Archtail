@@ -640,7 +640,6 @@ diskmenu(){
 ##########################################
 
 #VIDEO_CARD=$(find_card)
-##validate_pkgs   # have to execute as root
 
 startmenu(){
     check_reflector
@@ -682,7 +681,8 @@ startmenu(){
             "U")  add_user_acct; check_tasks 8 ;;
             "W")  wl_wifi; check_tasks 9 ;;
             "G")  install_grub; check_tasks 10 ;;
-            "X")  specialprogressgauge install_desktop "Installing Xorg and Desktops..."; 
+            "X")  find_card;
+                  specialprogressgauge install_desktop "Installing Xorg and Desktops..."; 
                   whiptail --backtitle "X AND DESKTOPS INSTALLED" --title "Desktops Installed" --msgbox "Xorg and Extras and Desktops are installed.  OK to check install.log." 8 70 ;
                   whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Xorg Install Log" --textbox /tmp/install.log --scrolltext 25 80 ;
                   check_tasks 11 ;;
