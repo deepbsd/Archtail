@@ -682,7 +682,7 @@ startmenu(){
             "W")  wl_wifi; check_tasks 9 ;;
             "G")  install_grub; check_tasks 10 ;;
             "X")  find_card;
-                  specialprogressgauge install_desktop "Installing Xorg and Desktop Resources..."; 
+                  specialprogressgauge install_desktop "Installing Xorg and Desktop Resources..." "INSTALLING XORG"; 
                   whiptail --backtitle "X AND DESKTOPS INSTALLED" --title "Desktops Installed" --msgbox "Xorg and Extras and Desktops are installed.  OK to check install.log." 8 70 ;
                   whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Xorg Install Log" --textbox /tmp/install.log --scrolltext 25 80 ;
                   check_tasks 11 ;;
