@@ -39,7 +39,9 @@ TIMEZONE='America/New_York'
 #TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
 LOCALE="en_US.UTF-8"
 
-###########  SOFTWARE SETS ###################
+##############################################
+########     SOFTWARE SETS    ################
+##############################################
 
 # replace with linux-lts or -zen if preferrable
 base_system=( base base-devel linux linux-headers dkms linux-firmware vim sudo bash-completion )
@@ -62,7 +64,7 @@ extra_x4=( materia-gtk-theme papirus-icon-theme xcursor-bluecurve xcursor-premiu
 
 cinnamon_desktop=( cinnamon nemo-fileroller )
 
-#####  Include in 'all_extras' array if desired
+#####  Include these desktops in 'all_extras' array if desired
 xfce_desktop=( xfce4 xfce4-goodies )
 
 mate_desktop=( mate mate-extra )
