@@ -764,7 +764,8 @@ startmenu(){
             "R")  password=$(whiptail --passwordbox "Please set your new root password..." \
                       --backtitle "SETTING ROOT PASSWORD" --title "Set new root password"   8 48 3>&1 1>&2 2>&3);
                   echo -e "$password\n$password" | arch-chroot /mnt passwd ;; 
-            "M")  specialprogressgauge install_essential "Installing dhcpcd, sshd, ssh, networkmanager, etc..." ; 
+            "M")  specialprogressgauge install_essential "Installing dhcpcd, sshd, ssh, networkmanager, etc..." \
+                  "INSTALLING NETWORK ESSENTIALS "; 
                   whiptail --title "Network Essentials Installed" --msgbox "Network Essentials Installed.  OK to continue." 8 78;
                   whiptail --title "Current Install Progress" --textbox /tmp/install.log --scrolltext 25 80;
                   check_tasks 7 ;;
