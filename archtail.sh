@@ -569,7 +569,8 @@ install_essential(){
 
 # ADD A USER ACCT
 add_user_acct(){
-    whiptail --backtitle "ADDING SUDO USER" --title "Adding sudo + user acct..." --msgbox "Please type OK to add a sudo user account" 20 50 3>&1 2>&2 2>&3
+    TERM=ansi whiptail --backtitle "ADDING SUDO USER" --title "Adding sudo + user acct..." --infobox \
+        "Adding sudo user to new system" 20 50 
     arch-chroot /mnt pacman -S sudo bash-completion sshpass  --noconfirm      &>>$LOGFILE
     arch-chroot /mnt sed -i 's/# %wheel/%wheel/g' /etc/sudoers
     arch-chroot /mnt sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers  
