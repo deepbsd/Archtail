@@ -14,9 +14,9 @@ HOME_SLICE=''
 SWAP_SLICE=''
 
 # GRAPHICS DRIVERS ETC   ---  change as needed ---
-wifi_drivers=(broadcom-wl-dkms iwd)
-graphics_driver=(xf86-video-vmware)
-display_mgr=(lightdm)
+wifi_drivers=(broadcom-wl-dkms iwd)   # find chipset for YOUR wifi card!
+graphics_driver=(xf86-video-vmware)   # $( pacman -Ss xf86-video- ) will list available drivers...
+display_mgr=(lightdm)                 # lightdm goes well with cinnamon desktop
 
 # VOL GROUP VARIABLES
 USE_LVM=''   # gets set programmatically
@@ -27,13 +27,14 @@ LV_HOME="ArchHome"
 LV_SWAP="ArchSwap"
 
 # PARTITION SIZES  (You can edit these if desired)
-BOOT_SIZE=512M
-EFI_SIZE=512M
-ROOT_SIZE=13G
-SWAP_SIZE=4G     # SWAP_SIZE="$(free | awk '/^Mem/ {mem=$2/1000000; print int(2.2*mem)}')G"
+BOOT_SIZE=512M     # BOOT applies to non-efi BIOS and MBR disklable
+EFI_SIZE=512M      # EFI applies to GPT disklable
+ROOT_SIZE=13G      # Applies to either root partition or root logical volume
+SWAP_SIZE=4G       # calculate this with SWAP_SIZE="$(free | awk '/^Mem/ {mem=$2/1000000; print int(2.2*mem)}')G"
 HOME_SIZE=''     # This is set automatically if using LVM
 
 # You can edit this if you want
+# For some reason the ubuntu geoip server doesn't always respond work
 TIMEZONE='America/New_York'
 #TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
 LOCALE="en_US.UTF-8"
@@ -524,32 +525,45 @@ add_user_acct(){
 
 # INSTALL BOOTLOADER
 install_grub(){
+
     TERM=ansi whiptail --backtitle "INSTALLING GRUB" --title "Installing GRUB" --infobox "Installing GRUB" 9 70
     sleep 2
     arch-chroot /mnt pacman -S grub os-prober --noconfirm  &>>$LOGFILE
 
+    # Grub gets installed differently on efi- non-efi-systems
     if $(efi_boot_mode); then
+
         arch-chroot /mnt pacman -S efibootmgr --noconfirm  &>>$LOGFILE
+
         # /boot/efi should aready be mounted
         [[ ! -d /mnt/boot/efi ]] && echo "no /mnt/boot/efi directory!!!" &>>$LOGFILE  && exit 1 
+
         arch-chroot /mnt grub-install "$IN_DEVICE" --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi  &>>$LOGFILE
+
         TERM=ansi whiptail --backtitle "GRUB INSTALLED" --title "GRUB Installed" --infobox "GRUB Installed!" 9 70
         sleep 2
+
     else
+
         arch-chroot /mnt grub-install "$IN_DEVICE"  &>>$LOGFILE
-        [[ $? == 0 ]] && TERM=ansi whiptail --backtitle "BOOT LOADER INSTALLED" --title "MBR Bootloader Installed" --infobox "MBR Bootloader Installed Successfully!" 9 70
+
+        [[ $? == 0 ]] && TERM=ansi whiptail --backtitle "BOOT LOADER INSTALLED" --title "MBR Bootloader Installed" \
+            --infobox "MBR Bootloader Installed Successfully!" 9 70
 
         whiptail --title "LOGFILE for Grub Installation" --textbox /tmp/install.log 30 79 --scrolltext
+
         sleep 2
     fi
 
+    # create the grub.cfg file!
     arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg &>>$LOGFILE
         
+    # How did we do?
     whiptail --backtitle "GRUB.CFG INSTALLED" --title "/boot/grub/grub.cfg installed" --msgbox "Please click OK to proceed." 8 70
     whiptail --backtitle "GRUB.CFG LOGFILE" --title "/boot/grub/grub.cfg installed" --textbox /tmp/install.log --scrolltext 38 80
 }
 
-# WIFI (BCM4360) IF NECESSARY
+# WIFI (BCM4360) IF NECESSARY  # wifi_drivers should equal your PCI or USB wifi adapter!!!
 wl_wifi(){
     TERM=ansi whiptail --title "Installing $wifi_drivers" --infobox "Installing $wifi_drivers..." 10 70 
     arch-chroot /mnt pacman -S "${wifi_drivers[@]}" &>>$LOGFILE
