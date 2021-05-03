@@ -119,8 +119,13 @@ efi_boot_mode(){
 
 # FIND GRAPHICS CARD
 find_card(){
+    # I created this function to automatically find a graphics card.  Perhaps
+    # I'll eventually incorporate it programmatically.
+
     card=$(lspci | grep VGA | sed 's/^.*: //g')
-    whiptail --title "Your Video Card" --msgbox  "You're using a $card  Write this down and hit OK to continue." 8 65 3>&1 1>&2 2>&3
+
+    whiptail --title "Your Video Card" --msgbox \
+       "You're using a $card  Write this down and hit OK to continue." 8 65 3>&1 1>&2 2>&3
 }
 
 # IF NOT CONNTECTED
