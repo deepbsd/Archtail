@@ -587,15 +587,25 @@ install_extra_stuff(){
 
 # VALIDATE PKG NAMES IN SCRIPT
 validate_pkgs(){
+
     MISSING_LOG=/tmp/missing_pkgs
+
     [[ -f $MISSING_LOG ]] && rm "$MISSING_LOG"
-    message="Archlinux can change package names without notice.  Just making sure we're okay. We'll be right back with a list of any changes, if any. "
-    TERM=ansi whiptail --backtitle "CHECKING PKG NAME CHANGES" --title "Checking for pkg name changes" --infobox "$message" 8 80
+
+    message="Archlinux can change package names without notice. Just making sure we're okay. \
+        We'll be right back with a list of any changes, if any. "
+
+    TERM=ansi whiptail --backtitle "CHECKING PKG NAME CHANGES" --title "Checking for pkg name changes" \
+        --infobox "$message" 8 80
 
     missing_pkgs=()
+
     echo -e "\n=== MISSING PKG NAMES (IF ANY) ===\n\n" &>>$MISSING_LOG
+
     for pkg_arr in "${all_pkgs[@]}"; do
-        declare -n arr_name=$pkg_arr
+
+        declare -n arr_name=$pkg_arr  # make a namespace for each pkg_array
+
         for pkg_name in "${arr_name[@]}"; do
             if $( pacman -Sp $pkg_name &>/dev/null ); then
                 echo -n "." &>>$MISSING_LOG
@@ -619,7 +629,8 @@ diskmenu(){
 
     #check_tasks 2
     while true ; do
-        diskmenupick=$(whiptail --backtitle "PARTION DISKS" --title "DISK PARTITIONS" --menu "Prepare Installation Disk (Choose One)" 18 80 4 \
+        diskmenupick=$(whiptail --backtitle "PARTION DISKS" --title "DISK PARTITIONS" \
+            --menu "Prepare Installation Disk (Choose One)" 18 80 4 \
         "N"   "Prepare Installation Disk with Normal Partitions" \
         "L"   "Prepare Installation Disk with LVM"   \
         "E"   "Prepare Installation Disk Encryption and LVM"   \
