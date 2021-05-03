@@ -24,6 +24,7 @@ USE_CRYPT='' # gets set programmatically
 VOL_GROUP="arch_vg"
 LV_ROOT="ArchRoot"
 LV_HOME="ArchHome"
+LV_SWAP="ArchSwap"
 
 # PARTITION SIZES  (You can edit these if desired)
 BOOT_SIZE=512M
