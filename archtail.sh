@@ -574,13 +574,21 @@ add_user_acct(){
     arch-chroot /mnt pacman -S sudo bash-completion sshpass  --noconfirm      &>>$LOGFILE
     arch-chroot /mnt sed -i 's/# %wheel/%wheel/g' /etc/sudoers
     arch-chroot /mnt sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers  
-    sudo_user=$(whiptail --backtitle "SUDO USERNAME" --title "Please provide sudo username" --inputbox "Please provide a sudo username: " 8 40 3>&1 1>&2 2>&3 )
 
-    TERM=ansi whiptail --title "Creating sudo user and adding to wheel" --infobox "Creating $sudo_user and adding $sudo_user to sudoers..." 10 70
+    sudo_user=$(whiptail --backtitle "SUDO USERNAME" --title "Please provide sudo username" --inputbox \
+        "Please provide a sudo username: " 8 40 3>&1 1>&2 2>&3 )
+
+    TERM=ansi whiptail --title "Creating sudo user and adding to wheel" --infobox \
+        "Creating $sudo_user and adding $sudo_user to sudoers..." 10 70
+
     arch-chroot /mnt useradd -m -G wheel "$sudo_user"  &>>$LOGFILE
     sleep 2
-    user_pass=$(whiptail --passwordbox "Please enter your new user's password: " --title "Getting user password" 8 78 3>&1 1>&2 2>&3 )
+
+    user_pass=$(whiptail --passwordbox "Please enter your new user's password: " --title \
+        "Getting user password" 8 78 3>&1 1>&2 2>&3 )
+
     echo -e "$user_pass\n$user_pass" | arch-chroot /mnt passwd "$sudo_user"  
+
     TERM=ansi whiptail --title "Sudo User Password Created" --infobox "sudo user password updated" 10 70
     sleep 3
 }
