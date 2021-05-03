@@ -353,33 +353,45 @@ choose_disk(){
             DISKS+=("$d")
        done
 
-       whiptail --title "CHOOSE AN INSTALLATION DISK"  --radiolist " Your Installation Disk: " 20 70 "$depth" \
+       whiptail --title "CHOOSE AN INSTALLATION DISK" \
+           --radiolist " Your Installation Disk: " 20 70 "$depth" \
            "${DISKS[@]}" 3>&1 1>&2 2>&3
             
 }
 
 # MOUNT PARTION
 mount_part(){
+    # 2nd parameter is mount point
     device=$1; mt_pt=$2
+
     [[ ! -d /mnt/boot ]] && mkdir /mnt/boot &>> $LOGFILE
+
     $(efi_boot_mode) && ! [ -d /mnt/boot/efi ] && mkdir /mnt/boot/efi &>> $LOGFILE
+
     [[ ! -d "$mt_pt" ]] && mkdir "$mt_pt"   &>>$LOGFILE
     
+    # Do the deed (Mount it!)
     mount "$device" "$mt_pt"
+
+    # Check if we've succeeded or not
     if [[ "$?" -eq 0 ]]; then
         TERM=ansi whiptail --title "Mount successful" --infobox "$device mounted on $mt_pt" 8 65
         sleep 3
     else
-        TERM=ansi whiptail --title "Mount NOT successful" --infobox "$device failed mounting on $mt_pt" 8 65
+        TERM=ansi whiptail --title "Mount NOT successful" \
+            --infobox "$device failed mounting on $mt_pt" 8 65
         sleep 3
         exit 1
     fi
     return 0
 }
 
-# FORMAT DEVICE
+# FORMAT NON-LVM DEVICE
 format_disk(){
+    # I'm using 'slice' in the BSD disk slice sense here
+    # I'm pretty sure it means same as 'partition'
     device=$1; slice=$2
+
     # only do efi slice if efi_boot_mode return 0; else return 0
     [[ "$slice" =~ 'efi' && ! "$DISKTABLE" =~ 'GPT' ]] && return 0
     clear
@@ -398,10 +410,12 @@ format_disk(){
         swap  ) mkswap "$device"                &>> $LOGFILE
                 swapon "$device"                &>> $LOGFILE
 
-                TERM=ansi whiptail --title "Swap space now on" --infobox "Swap space should now be turned on..." 8 50
+                TERM=ansi whiptail --title "Swap space now on" \
+                    --infobox "Swap space should now be turned on..." 8 50
                 sleep 3
             ;;
-        * ) whiptail --title "Bad disk format request" --infobox "Can't make that disk * * format" 8 60 && sleep 5  && startmenu ;;
+        * ) whiptail --title "Bad disk format request" \
+            --infobox "Can't make that disk * * format" 8 60 && sleep 5  && startmenu ;;
     esac
 }
 
