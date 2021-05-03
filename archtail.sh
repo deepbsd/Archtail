@@ -668,12 +668,15 @@ startmenu(){
             "D")  diskmenu;;
             "B")  USE_LVM='TRUE'; 
                   specialprogressgauge install_base "Installing base system..." "INSTALLING BASE SYSTEM"; 
-                  whiptail --backtitle "BASE SYSTEM INSTALLED" --title "Base system installed!" --msgbox "Your base system has been installed.  Click OK to continue." 10 80;
-                  whiptail --backtitle "YOUR LOGFILE FOR INSTALLATION" --title "LOGFILE for your installation" --textbox /tmp/install.log --scrolltext 30 80;
+                  whiptail --backtitle "BASE SYSTEM INSTALLED" --title "Base system installed!" \
+                      --msgbox "Your base system has been installed.  Click OK to continue." 10 80;
+                  whiptail --backtitle "YOUR LOGFILE FOR INSTALLATION" --title "LOGFILE for your installation" \
+                      --textbox /tmp/install.log --scrolltext 30 80;
                   check_tasks 3 ;;
             "F")  gen_fstab; set_tz; set_locale; check_tasks 4 ;;
             "H")  set_hostname; check_tasks 5 ;;
-            "R")  password=$(whiptail --passwordbox "Please set your new root password..." --backtitle "SETTING ROOT PASSWORD" --title "Set new root password"   8 48 3>&1 1>&2 2>&3);
+            "R")  password=$(whiptail --passwordbox "Please set your new root password..." \
+                      --backtitle "SETTING ROOT PASSWORD" --title "Set new root password"   8 48 3>&1 1>&2 2>&3);
                   echo -e "$password\n$password" | arch-chroot /mnt passwd ;; 
             "M")  specialprogressgauge install_essential "Installing dhcpcd, sshd, ssh, networkmanager, etc..." ; 
                   whiptail --title "Network Essentials Installed" --msgbox "Network Essentials Installed.  OK to continue." 8 78;
@@ -684,15 +687,20 @@ startmenu(){
             "G")  install_grub; check_tasks 10 ;;
             "X")  find_card;
                   specialprogressgauge install_desktop "Installing Xorg and Desktop Resources..." "INSTALLING XORG"; 
-                  whiptail --backtitle "X AND DESKTOPS INSTALLED" --title "Desktops Installed" --msgbox "Xorg and Extras and Desktops are installed.  OK to check install.log." 8 70 ;
-                  whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Xorg Install Log" --textbox /tmp/install.log --scrolltext 25 80 ;
+                  whiptail --backtitle "X AND DESKTOPS INSTALLED" --title "Desktops Installed" \
+                      --msgbox "Xorg and Extras and Desktops are installed.  OK to check install.log." 8 70 ;
+                  whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Xorg Install Log" \
+                      --textbox /tmp/install.log --scrolltext 25 80 ;
                   check_tasks 11 ;;
             "I")  specialprogressgauge install_extra_stuff "Installing Xorg Extras"; 
-                  whiptail --backtitle "XTRA X STUFF INSTALLED" --title "Extra Desktops Installed" --msgbox "Extra Goodies Installed.  Click OK to see Install Log." 8 70 ;
-                  whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Extra Xorg Stuff Install Log" --textbox /tmp/install.log --scrolltext 25 80 ;
+                  whiptail --backtitle "XTRA X STUFF INSTALLED" --title "Extra Desktops Installed" \
+                      --msgbox "Extra Goodies Installed.  Click OK to see Install Log." 8 70 ;
+                  whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Extra Xorg Stuff Install Log" \
+                      --textbox /tmp/install.log --scrolltext 25 80 ;
                   check_tasks 12 ;;
             "P")  validate_pkgs ;;
-            "L") TERM=ansi whiptail --title "exit installer" --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; sleep 2; exit 0 ;;
+            "L")  TERM=ansi whiptail --title "exit installer" \
+                      --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; sleep 2; exit 0 ;;
         esac
     done
 }
