@@ -255,11 +255,16 @@ lv_create(){
     swapsize=$(whiptail --title "Get Size of Swap Partition or Volume" --inputbox "What size for your swap partition? (4G, 8G, 16G, etc)" 8 50 3>&1 1>&2 2>&3)
     SWAP_SIZE="$swapsize"
 
-    # Get EFI or BOOT partition
+    # Get EFI or BOOT partition?
     if $(efi_boot_mode); then
-        efi_dev=$(whiptail --title "Get EFI Device" --inputbox "What partition for your EFI Device?  (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&1 1>&2 2>&3) 
+
+        efi_dev=$(whiptail --title "Get EFI Device" \
+            --inputbox "What partition for your EFI Device? \
+            (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&1 1>&2 2>&3) 
+
         EFI_DEVICE=/dev/"$efi_dev"
         EFI_SIZE=512M
+
         # Create the physical partitions
         sgdisk -Z "$IN_DEVICE"                                    &>> $LOGFILE
         sgdisk -n 1::+"$EFI_SIZE" -t 1:ef00 -c 1:EFI "$IN_DEVICE" &>> $LOGFILE
@@ -269,9 +274,14 @@ lv_create(){
         mkfs.fat -F32 "$EFI_DEVICE"                               &>> $LOGFILE
     else
         # get boot partition (we're using MBR with LVM here)
-        boot_dev=$(whiptail --title "Get Boot Device" --inputbox "What partition for your Boot Device?  (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&1 1>&2 2>&3) 
+        boot_dev=$(whiptail --title "Get Boot Device" \
+            --inputbox "What partition for your Boot Device? \
+            (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&1 1>&2 2>&3) 
+
         BOOT_DEVICE=/dev/"$boot_dev"
         BOOT_SIZE=512M
+
+        # Here document requires no indentation:
 
 cat > /tmp/sfdisk.cmd << EOF
 $BOOT_DEVICE : start= 2048, size=+$BOOT_SIZE, type=83, bootable
@@ -304,7 +314,7 @@ EOF
     mkswap /dev/"$VOL_GROUP"/"$LV_SWAP"                   &>> $LOGFILE
     swapon /dev/"$VOL_GROUP"/"$LV_SWAP"                   &>> $LOGFILE
 
-    # insert the vol group module
+    # insert the vol group kernel module
     modprobe dm_mod                                       &>> $LOGFILE
     
     # activate the vol group
@@ -328,7 +338,8 @@ EOF
         mount "$BOOT_DEVICE" /mnt/boot                    &>> $LOGFILE
     fi
     lsblk > /tmp/filesystems_created
-    whiptail --title "LV's Created and Mounted" --backtitle "Filesystem Created" --textbox /tmp/filesystems_created 30 70
+    whiptail --title "LV's Created and Mounted" --backtitle "Filesystem Created" \
+        --textbox /tmp/filesystems_created 30 70
     startmenu
 }
 
