@@ -747,8 +747,6 @@ diskmenu(){
 ###    SCRIPT STARTS
 ##########################################
 
-#VIDEO_CARD=$(find_card)
-
 startmenu(){
     check_reflector
     while true ; do
