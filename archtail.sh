@@ -596,7 +596,9 @@ add_user_acct(){
 # INSTALL BOOTLOADER
 install_grub(){
 
-    TERM=ansi whiptail --backtitle "INSTALLING GRUB" --title "Installing GRUB" --infobox "Installing GRUB" 9 70
+    TERM=ansi whiptail --backtitle "INSTALLING GRUB" --title "Installing GRUB" --infobox \
+        "Installing GRUB" 9 70
+
     sleep 2
     arch-chroot /mnt pacman -S grub os-prober --noconfirm  &>>$LOGFILE
 
@@ -608,17 +610,20 @@ install_grub(){
         # /boot/efi should aready be mounted
         [[ ! -d /mnt/boot/efi ]] && echo "no /mnt/boot/efi directory!!!" &>>$LOGFILE  && exit 1 
 
-        arch-chroot /mnt grub-install "$IN_DEVICE" --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi  &>>$LOGFILE
+        arch-chroot /mnt grub-install "$IN_DEVICE" --target=x86_64-efi \
+            --bootloader-id=GRUB --efi-directory=/boot/efi  &>>$LOGFILE
 
-        TERM=ansi whiptail --backtitle "GRUB INSTALLED" --title "GRUB Installed" --infobox "GRUB Installed!" 9 70
+        TERM=ansi whiptail --backtitle "GRUB INSTALLED" --title "GRUB Installed" \
+            --infobox "GRUB Installed!" 9 70
+
         sleep 2
 
     else
 
         arch-chroot /mnt grub-install "$IN_DEVICE"  &>>$LOGFILE
 
-        [[ $? == 0 ]] && TERM=ansi whiptail --backtitle "BOOT LOADER INSTALLED" --title "MBR Bootloader Installed" \
-            --infobox "MBR Bootloader Installed Successfully!" 9 70
+        [[ $? == 0 ]] && TERM=ansi whiptail --backtitle "BOOT LOADER INSTALLED" --title \
+            "MBR Bootloader Installed" --infobox "MBR Bootloader Installed Successfully!" 9 70
 
         whiptail --title "LOGFILE for Grub Installation" --textbox /tmp/install.log 30 79 --scrolltext
 
@@ -629,20 +634,27 @@ install_grub(){
     arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg &>>$LOGFILE
         
     # How did we do?
-    whiptail --backtitle "GRUB.CFG INSTALLED" --title "/boot/grub/grub.cfg installed" --msgbox "Please click OK to proceed." 8 70
-    whiptail --backtitle "GRUB.CFG LOGFILE" --title "/boot/grub/grub.cfg installed" --textbox /tmp/install.log --scrolltext 38 80
+    whiptail --backtitle "GRUB.CFG INSTALLED" --title "/boot/grub/grub.cfg installed" \
+        --msgbox "Please click OK to proceed." 8 70
+    whiptail --backtitle "GRUB.CFG LOGFILE" --title "/boot/grub/grub.cfg installed" \
+        --textbox /tmp/install.log --scrolltext 38 80
 }
 
 # WIFI (BCM4360) IF NECESSARY  # wifi_drivers should equal your PCI or USB wifi adapter!!!
 wl_wifi(){
+
     TERM=ansi whiptail --title "Installing $wifi_drivers" --infobox "Installing $wifi_drivers..." 10 70 
+
     arch-chroot /mnt pacman -S "${wifi_drivers[@]}" &>>$LOGFILE
+
     [[ "$?" -eq 0 ]] && whiptail --title "Success!" --infobox "$wifi_drivers Installed!" 10 70
+
     sleep 3
 }
 
 # INSTALL XORG AND DESKTOP
 install_desktop(){
+
     # EXTRA PACKAGES, FONTS, THEMES, CURSORS
     arch-chroot /mnt pacman -S "${basic_x[@]}" --noconfirm   &>>$LOGFILE
     arch-chroot /mnt pacman -S "${extra_x1[@]}" --noconfirm    &>>$LOGFILE
@@ -759,8 +771,11 @@ startmenu(){
         )
 
         case $menupick in
+
             "C")  check_connect; time_date ;;
+
             "D")  diskmenu;;
+
             "B")  USE_LVM='TRUE'; 
                   specialprogressgauge install_base "Installing base system..." "INSTALLING BASE SYSTEM"; 
                   whiptail --backtitle "BASE SYSTEM INSTALLED" --title "Base system installed!" \
@@ -768,19 +783,27 @@ startmenu(){
                   whiptail --backtitle "YOUR LOGFILE FOR INSTALLATION" --title "LOGFILE for your installation" \
                       --textbox /tmp/install.log --scrolltext 30 80;
                   check_tasks 3 ;;
+
             "F")  gen_fstab; set_tz; set_locale; check_tasks 4 ;;
+
             "H")  set_hostname; check_tasks 5 ;;
+
             "R")  password=$(whiptail --passwordbox "Please set your new root password..." \
                       --backtitle "SETTING ROOT PASSWORD" --title "Set new root password"   8 48 3>&1 1>&2 2>&3);
                   echo -e "$password\n$password" | arch-chroot /mnt passwd ;; 
+
             "M")  specialprogressgauge install_essential "Installing dhcpcd, sshd, ssh, networkmanager, etc..." \
                   "INSTALLING NETWORK ESSENTIALS "; 
                   whiptail --title "Network Essentials Installed" --msgbox "Network Essentials Installed.  OK to continue." 8 78;
                   whiptail --title "Current Install Progress" --textbox /tmp/install.log --scrolltext 25 80;
                   check_tasks 7 ;;
+
             "U")  add_user_acct; check_tasks 8 ;;
+
             "W")  wl_wifi; check_tasks 9 ;;
+
             "G")  install_grub; check_tasks 10 ;;
+
             "X")  find_card;
                   specialprogressgauge install_desktop "Installing Xorg and Desktop Resources..." "INSTALLING XORG"; 
                   whiptail --backtitle "X AND DESKTOPS INSTALLED" --title "Desktops Installed" \
@@ -788,13 +811,16 @@ startmenu(){
                   whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Xorg Install Log" \
                       --textbox /tmp/install.log --scrolltext 25 80 ;
                   check_tasks 11 ;;
+
             "I")  specialprogressgauge install_extra_stuff "Installing Xorg Extras" "EXTRAS FOR XORG"; 
                   whiptail --backtitle "XTRA X STUFF INSTALLED" --title "Extra Desktops Installed" \
                       --msgbox "Extra Goodies Installed.  Click OK to see Install Log." 8 70 ;
                   whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Extra Xorg Stuff Install Log" \
                       --textbox /tmp/install.log --scrolltext 25 80 ;
                   check_tasks 12 ;;
+
             "P")  validate_pkgs ;;
+
             "L")  TERM=ansi whiptail --title "exit installer" \
                       --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; sleep 2; exit 0 ;;
         esac
