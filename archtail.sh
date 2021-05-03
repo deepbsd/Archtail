@@ -130,26 +130,46 @@ find_card(){
 
 # IF NOT CONNTECTED
 not_connected(){
-    clear
+    
     message="No network connection!!!  Perhaps your wifi card is not supported?\nIs your network card plugged in?"
-    TERM=ansi whiptail --backtitle "NO NETWORK CONNECTION" --title "Are you connected?" --infobox "$message" 15 70
+
+    TERM=ansi whiptail --backtitle "NO NETWORK CONNECTION" \
+        --title "Are you connected?" --infobox "$message" 15 70
     sleep 5
     exit 1
 }
 
 # ARE WE CONNTECTED??
 check_connect(){
-    TERM=ansi whiptail --backtitle "Checking Network Connection" --title "Are you connected?" --infobox "Checking connection now..." 15 60 
+    TERM=ansi whiptail --backtitle "Checking Network Connection" \
+        --title "Are you connected?" --infobox "Checking connection now..." 15 60 
+
     if $(ping -c 3 archlinux.org &>/dev/null); then
-        TERM=ansi whiptail --backtitle "Network is UP" --title "Network is up!" --infobox "Your network connection is up!" 15 60
+
+        TERM=ansi whiptail --backtitle "Network is UP" --title "Network is up!" \
+           --infobox "Your network connection is up!" 15 60
+
         sleep 3
     else
         not_connected
     fi
 }
 
-# FOR SHOWING PROGRESS GAUGE FOR WHIPTAIL
+# NOTE:  Showing a progress gauge in whiptail is a pain.  I do it by 
+# passing the name of the process to measure (a function name) to a
+# calling function.  The calling function calls the function and sends
+# it to the background, and then immediately captures its PID.  
+# We check for that PID and keep showing the progress meter if its still
+# in the PID table.  If it drops out of the PID table, then we immediately
+# show 98 99 100 pct progress with a 3 second wait between each.
+# If the process is taking a very long time, we show 97pct 98pct 97pct 
+# 98pct until the PID drops out of the PID table.  This way the user
+# never suspects the install has frozen, just that he's going spastic.
+
+
+# FOR SHOWING PROGRESS GAUGE FOR WHIPTAIL (this does the counting)
 showprogress(){
+    # start count, end count, shortest sleep, longest sleep
     start=$1; end=$2; shortest=$3; longest=$4
 
     for n in $(seq $start $end); do
@@ -159,23 +179,23 @@ showprogress(){
     done
 }
 
-# CALL FOR SHOWING PROGRESS GAUGE
+# CALL FOR SHOWING PROGRESS GAUGE (this calls the function)
 specialprogressgauge(){
-    process_to_measure=$1
-    message=$2
-    backmessage=$3
-    eval $process_to_measure &
-    thepid=$!
-    num=15
+    process_to_measure=$1   # This is the function we're going to measure progress for
+    message=$2              # Message on Whiptail progress window
+    backmessage=$3          # Message on Background Window
+    eval $process_to_measure &      # Start the process in the background
+    thepid=$!               # Immediately capture the PID for this process
+    num=15                  # Shortest progress bar could be 15 sec to 45 sec
     while true; do
         showprogress 1 $num 1 3 
-        sleep 2
+        sleep 2             # Max of 47 sec before we check for completion
         while $(ps aux | grep -v 'grep' | grep "$thepid" &>/dev/null); do
             if [[ $num -gt 97 ]] ; then num=$(( num-1 )); fi
             showprogress $num $((num+1)) 
             num=$(( num+1 ))
         done
-        showprogress 99 100 3 3
+        showprogress 99 100 3 3  # If we have completion, we add 6 sec. Max of 53 sec.
         break
     done  | whiptail --backtitle "$backmessage" --title "Progress Gauge" --gauge "$message" 6 70 0
 }
