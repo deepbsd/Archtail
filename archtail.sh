@@ -281,7 +281,7 @@ lv_create(){
         BOOT_DEVICE=/dev/"$boot_dev"
         BOOT_SIZE=512M
 
-        # Here document requires no indentation:
+        # The HERE document requires zero indentation:
 
 cat > /tmp/sfdisk.cmd << EOF
 $BOOT_DEVICE : start= 2048, size=+$BOOT_SIZE, type=83, bootable
