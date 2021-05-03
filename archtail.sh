@@ -97,8 +97,14 @@ completed_tasks=()
 ##################################
  
 welcome(){
-    message="Dave's ARCH Installer will lead you through a menu-driven process to create a base installation of Archlinux on your computer or virtual machine by selecting a group of tasks from a main menu.  "
-    whiptail --backtitle "Dave's ARCH Installer (DARCHI)" --title "Welcome to DARCHI!" --msgbox "$message" 15 80 
+    message="Dave's ARCH Installer will lead you through a menu-driven process to\
+        create a base installation of Archlinux on your computer or virtual machine\
+        by selecting a group of tasks from a main menu.  "
+
+    whiptail --backtitle "Dave's ARCH Installer (DARCHI)" --title "Welcome to DARCHI!" \
+        --msgbox "$message" 15 80 
+
+    # Remove old logfiles and start the new one
     [[ -f $LOGFILE ]] && rm $LOGFILE
     when=$(date)
     echo "=== START INSTALL: $when ===" &>>$LOGFILE
@@ -106,6 +112,8 @@ welcome(){
 
 # VERIFY BOOT MODE
 efi_boot_mode(){
+    # if the efivars directory exists we definitely have an EFI BIOS
+    # otherwise, we could have a non-standard EFI or even an MBR-only system
     ( $(ls /sys/firmware/efi/efivars &>/dev/null) && return 0 ) || return 1
 }
 
