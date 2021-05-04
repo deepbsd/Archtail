@@ -255,15 +255,15 @@ lv_create(){
     swapsize=$(whiptail --title "Get Size of Swap Partition or Volume" --inputbox "What size for your swap partition? (4G, 8G, 16G, etc)" 8 50 3>&1 1>&2 2>&3)
     SWAP_SIZE="$swapsize"
 
-    # show an infobox while we wait for partitions
-    TERM=ansi whiptail --backtitle "CREATING PARTITIONS" --title "Creating Your Partitions" --infobox "Please wait a moment while we create your partitions..." 8 40
-
     # Get EFI or BOOT partition?
     if $(efi_boot_mode); then
 
         efi_dev=$(whiptail --title "Get EFI Device" \
             --inputbox "What partition for your EFI Device? \
             (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&1 1>&2 2>&3) 
+
+        # show an infobox while we wait for partitions
+        TERM=ansi whiptail --backtitle "CREATING PARTITIONS" --title "Creating Your Partitions" --infobox "Please wait a moment while we create your partitions..." 8 40
 
         EFI_DEVICE=/dev/"$efi_dev"
         EFI_SIZE=512M
@@ -280,6 +280,9 @@ lv_create(){
         boot_dev=$(whiptail --title "Get Boot Device" \
             --inputbox "What partition for your Boot Device? \
             (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&1 1>&2 2>&3) 
+
+        # show an infobox while we wait for partitions
+        TERM=ansi whiptail --backtitle "CREATING PARTITIONS" --title "Creating Your Partitions" --infobox "Please wait a moment while we create your partitions..." 8 40
 
         BOOT_DEVICE=/dev/"$boot_dev"
         BOOT_SIZE=512M
