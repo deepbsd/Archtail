@@ -32,3 +32,36 @@ of containers, for example.  I'd like to try that.
 
 Anyway, I'm glad to say it works.  All the features except cryptsetup.  Everything else.
 Yaaay!
+
+## TODO
+
+Eventually, I'll need to break this sucker up into separate files, and at that
+point you'll have to clone it into the Archiso instance.  That's fine.  I'd prefer
+to have kept it simple, but it's just gotten too big.
+
+There are some other things that have struck me though:
+
+1. Break some of the larger functions into smaller functions.  Particularly
+   lv\_create.  That one is too big.
+
+2. I want to have a list of all executables in the script and at the start of the
+   script make sure they are all in the $PATH (or at least are all executable).
+
+3. The user should be able to determine his/her own desktop environment or window
+   manager.  Right now they're getting Cinnamon and lightdm whether they want it or
+   not.
+
+4. I don't need to ask for whether to do LVM or not.  I should probably just get
+   the user's choice of disk for installation by default and install my usual LVM
+   to it using ext4.  I can build in whether it chooses GPT or MBR disk labels.
+   Not sure on this.  I could just survey the top Linux installers and see what
+   they do.
+
+5. Is there a way to re-use the same functions for creating LVs and regular
+   partitions?  Seems like there should be, but I should find out.
+
+6. Cryptsetup:  Do I want to bother with it or not?
+
+7. ?
+ 
+
