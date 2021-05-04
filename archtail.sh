@@ -787,7 +787,7 @@ startmenu(){
     while true ; do
         menupick=$(
         whiptail --backtitle "Daves ARCHlinux Installer" --title "Main Menu" --menu "Your choice?" 25 70 16 \
-            "C"    "${completed_tasks[1]}  Check connection and date"  \
+            "C"    "$(echo ${completed_tasks[1]}  Check connection and date)"  \
             "D"    "${completed_tasks[2]}  Prepare Installation Disk"  \
             "B"    "${completed_tasks[3]}  Install Base System"        \
             "F"    "${completed_tasks[4]}  New FSTAB and TZ/Locale"    \
