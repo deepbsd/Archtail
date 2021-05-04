@@ -89,7 +89,11 @@ all_extras=( "${xfce_desktop[@]}" "${i3gaps_desktop[@]}" "${mate_desktop[@]}" "$
 # This will exclude services because they are often named differently and are duplicates
 all_pkgs=( base_system base_essentials network_essentials basic_x extra_x1 extra_x2 extra_x3 extra_x4 cinnamon_desktop xfce_desktop mate_desktop i3gaps_desktop devel_stuff printing_stuff multimedia_stuff qtile_desktop kde_desktop )
 
-completed_tasks=()
+checkmark=$(printf "\xE2\x9C\x94  ")
+
+# This will be the list of checkmarks.  Each index represents a task number
+# ie, ${completed_tasks[0]} is for task 1 and so forth.
+completed_tasks=( "$checkmark" )
 
 
 ##################################
@@ -210,11 +214,14 @@ time_date(){
 
 # CHECK IF TASK IS COMPLETED
 check_tasks(){
+    task=$1
+
     # If task already exists in array return falsey
     # Function takes a task number as an argument
     # This function might not be needed anymore: STATUS TBD
-    [[ "${completed_tasks[@]}" =~ $1 ]] && return 1
-    completed_tasks+=( "$1" )
+    [[ "${completed_tasks[${task}]}" =~ $checkmark ]] && return 1
+
+    ${completed_tasks[$1]}="$checkmark"
 }
 
 # FIND CLOSEST MIRROR
@@ -734,7 +741,6 @@ validate_pkgs(){
     
     whiptail --backtitle "Packages not in repos" --title \
        "These packages not in repos" --textbox $MISSING_LOG --scrolltext 20 80
-
 }
 
 show_hosts(){
@@ -757,9 +763,9 @@ diskmenu(){
 
             "N") get_install_device ;;
 
-            "L") USE_LVM='TRUE'; lv_create ;;
+            "L") USE_LVM='TRUE'; lv_create; check_tasks 2 ;;
 
-            "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; lv_create ;;
+            "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; lv_create; check_tasks 2 ;;
 
             "R") startmenu ;;
         esac
@@ -776,27 +782,27 @@ startmenu(){
     while true ; do
         menupick=$(
         whiptail --backtitle "Daves ARCHlinux Installer" --title "Main Menu" --menu "Your choice?" 25 70 16 \
-            "C"    "Check connection and date"  \
-            "D"    "Prepare Installation Disk"  \
-            "B"    "Install Base System"        \
-            "F"    "New FSTAB and TZ/Locale"    \
-            "H"    "Set new hostname"           \
-            "R"    "Set root password"          \
-            "M"    "Install more essentials"    \
-            "U"    "Add user + sudo account "   \
-            "W"    "Install Wifi Drivers "      \
-            "G"   "Install grub"               \
-            "X"   "Install Xorg + Desktop"     \
-            "I"   "Install Extra Window Mgrs"  \
-            "P"   "Check for pkg name changes" \
-            "L"   "Exit Script "  3>&1 1>&2 2>&3
+            "C"    "${completed_tasks[1]}  Check connection and date"  \
+            "D"    "${completed_tasks[2]}  Prepare Installation Disk"  \
+            "B"    "${completed_tasks[3]}  Install Base System"        \
+            "F"    "${completed_tasks[4]}  New FSTAB and TZ/Locale"    \
+            "H"    "${completed_tasks[5]}  Set new hostname"           \
+            "R"    "${completed_tasks[6]}  Set root password"          \
+            "M"    "${completed_tasks[7]}  Install more essentials"    \
+            "U"    "${completed_tasks[8]}  Add user + sudo account "   \
+            "W"    "${completed_tasks[9]}  Install Wifi Drivers "      \
+            "G"   "${completed_tasks[10]}  Install grub"               \
+            "X"   "${completed_tasks[11]}  Install Xorg + Desktop"     \
+            "I"   "${completed_tasks[12]}  Install Extra Window Mgrs"  \
+            "P"   "${completed_tasks[13]}  Check for pkg name changes" \
+            "L"   "${completed_tasks[14]}  Exit Script "  3>&1 1>&2 2>&3
         )
 
         case $menupick in
 
-            "C")  check_connect; time_date ;;
+            "C")  check_connect; time_date; check_tasks 1 ;;
 
-            "D")  diskmenu;;
+            "D")  diskmenu; check_tasks 2 ;;
 
             "B")  USE_LVM='TRUE'; 
                   specialprogressgauge install_base "Installing base system..." "INSTALLING BASE SYSTEM"; 
@@ -812,7 +818,8 @@ startmenu(){
 
             "R")  password=$(whiptail --passwordbox "Please set your new root password..." \
                       --backtitle "SETTING ROOT PASSWORD" --title "Set new root password"   8 48 3>&1 1>&2 2>&3);
-                  echo -e "$password\n$password" | arch-chroot /mnt passwd ;; 
+                  echo -e "$password\n$password" | arch-chroot /mnt passwd;
+                  check_tasks 6 ;; 
 
             "M")  specialprogressgauge install_essential "Installing dhcpcd, sshd, ssh, networkmanager, etc..." \
                   "INSTALLING NETWORK ESSENTIALS "; 
@@ -841,7 +848,7 @@ startmenu(){
                       --textbox /tmp/install.log --scrolltext 25 80 ;
                   check_tasks 12 ;;
 
-            "P")  validate_pkgs ;;
+            "P")  validate_pkgs; check_tasks 13 ;;
 
             "L")  TERM=ansi whiptail --title "exit installer" \
                       --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; sleep 2; exit 0 ;;
