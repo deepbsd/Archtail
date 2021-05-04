@@ -742,13 +742,9 @@ diskmenu(){
 
         diskmenupick=$(whiptail --backtitle "PARTION DISKS" --title "DISK PARTITIONS" \
             --menu "Prepare Installation Disk (Choose One)" 18 80 4 \
-
         "N"   "Prepare Installation Disk with Normal Partitions" \
-
         "L"   "Prepare Installation Disk with LVM"   \
-
         "E"   "Prepare Installation Disk Encryption and LVM"   \
-
         "R"   "Return to previous menu"   3>&1 1>&2 2>&3 ) 
 
         case $diskmenupick in
