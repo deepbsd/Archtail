@@ -89,11 +89,15 @@ all_extras=( "${xfce_desktop[@]}" "${i3gaps_desktop[@]}" "${mate_desktop[@]}" "$
 # This will exclude services because they are often named differently and are duplicates
 all_pkgs=( base_system base_essentials network_essentials basic_x extra_x1 extra_x2 extra_x3 extra_x4 cinnamon_desktop xfce_desktop mate_desktop i3gaps_desktop devel_stuff printing_stuff multimedia_stuff qtile_desktop kde_desktop )
 
-checkmark=$(printf "\xE2\x9C\x94  ")
+# *** keep this around until I find out if I can do a checkmark in a tty ***
+# apparently this will not work in a tty without resetting the font...
+#checkmark=$(printf "\xE2\x9C\x94  ")
+#checkmark="X"
 
 # This will be the list of checkmarks.  Each index represents a task number
 # ie, ${completed_tasks[0]} is for task 1 and so forth.
-completed_tasks=( "$checkmark" )
+# Nevermind, the vbox tty cannot do checkmarks
+completed_tasks=( "X" )
 
 
 ##################################
@@ -214,14 +218,15 @@ time_date(){
 
 # CHECK IF TASK IS COMPLETED
 check_tasks(){
-    task=$1
 
     # If task already exists in array return falsey
     # Function takes a task number as an argument
     # This function might not be needed anymore: STATUS TBD
-    [[ "${completed_tasks[${task}]}" =~ $checkmark ]] && return 1
 
-    ${completed_tasks[$1]}="$checkmark"
+    #[[ "${completed_tasks[$task]}" =~ $checkmark ]] && return 1
+
+    # just return an 'X' in the array position of the passed integer parameter
+    ${completed_tasks[$1]}="X"
 }
 
 # FIND CLOSEST MIRROR
