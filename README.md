@@ -62,6 +62,6 @@ There are some other things that have struck me though:
 
 6. Cryptsetup:  Do I want to bother with it or not?
 
-7. ?
+7. Use a checkmark to indicate the item is complete on the main menu
  
 

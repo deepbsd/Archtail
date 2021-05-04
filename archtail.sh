@@ -511,22 +511,26 @@ gen_fstab(){
     sleep 3
 
     # take a look at new fstab file
-    whiptail --backtitle "Checkout New /etc/fstab" --title "Here's your new /etc/fstab" --textbox /mnt/etc/fstab 25 85
+    whiptail --backtitle "Checkout New /etc/fstab" --title \
+        "Here's your new /etc/fstab" --textbox /mnt/etc/fstab 25 85
 }
 
 # TIMEZONE
 set_tz(){
     
-    TERM=ansi whiptail --title "Setting timezone to $TIMEZONE" --infobox "Setting Timezone to $TIMEZONE" 8 75
+    TERM=ansi whiptail --title "Setting timezone to $TIMEZONE" --infobox \
+        "Setting Timezone to $TIMEZONE" 8 75
     arch-chroot /mnt ln -sf /usr/share/zoneinfo/"$TIMEZONE" /etc/localtime
     arch-chroot /mnt hwclock --systohc --utc 
     message=$(arch-chroot /mnt date)
-    whiptail --backtitle "SETTING HWCLOCK and TIMEZONE and Hardware Date" --title "HW CLOCK AND TIMEZONE SET to $TIMEZONE" --msgbox "$message" 8 78
+    whiptail --backtitle "SETTING HWCLOCK and TIMEZONE and Hardware Date" --title \
+        "HW CLOCK AND TIMEZONE SET to $TIMEZONE" --msgbox "$message" 8 78
 }
 
 # LOCALE
 set_locale(){
-    TERM=ansi whiptail --backtitle "SETTING LOCALE" --title "Setting Locale to $LOCALE" --infobox "Setting Locale to $LOCALE" 8 78
+    TERM=ansi whiptail --backtitle "SETTING LOCALE" --title \
+        "Setting Locale to $LOCALE" --infobox "Setting Locale to $LOCALE" 8 78
     sleep 2
     arch-chroot /mnt sed -i "s/#$LOCALE/$LOCALE/g" /etc/locale.gen
     arch-chroot /mnt locale-gen   &>>$LOGFILE
@@ -535,12 +539,14 @@ set_locale(){
     export LANG="$LOCALE"
     sleep 2
     result=$(cat /mnt/etc/locale.conf)
-    whiptail --backtitle "LOCALE SET TO $LOCALE" --title "Locale: $LOCALE" --msgbox "$result" 8 79
+    whiptail --backtitle "LOCALE SET TO $LOCALE" --title "Locale: $LOCALE" \
+        --msgbox "$result" 8 79
 }
 
 # HOSTNAME
 set_hostname(){
-    namevar=$(whiptail --title "Hostname" --inputbox "What is your new hostname?" 20 40 3>&1 1>&2 2>&3)
+    namevar=$(whiptail --title "Hostname" --inputbox \
+        "What is your new hostname?" 20 40 3>&1 1>&2 2>&3)
     echo "$namevar" > /mnt/etc/hostname
 
 cat > /mnt/etc/hosts <<HOSTS
@@ -552,7 +558,8 @@ HOSTS
     message=$(echo -e "/etc/hostname and /etc/hosts files configured...\n" && echo)
     message+=$(echo -e "\n/etc/hostname: \n" && cat /mnt/etc/hostname)
     message+=$(echo -e "\n\n/etc/hosts: \n" && cat /mnt/etc/hosts)
-    whiptail --backtitle "/etc/hostname & /etc/hosts" --title "Files created" --msgbox "$message" 25 75
+    whiptail --backtitle "/etc/hostname & /etc/hosts" --title "Files created" \
+        --msgbox "$message" 25 75
 }
 
 # SOME MORE ESSENTIAL NETWORK STUFF
@@ -569,13 +576,16 @@ install_essential(){
 
 # ADD A USER ACCT
 add_user_acct(){
-    TERM=ansi whiptail --backtitle "ADDING SUDO USER" --title "Adding sudo + user acct..." --infobox \
-        "Adding sudo user to new system" 20 50 
+
+    TERM=ansi whiptail --backtitle "ADDING SUDO USER" --title \
+        "Adding sudo + user acct..." --infobox "Adding sudo user to new system" 20 50 
+
     arch-chroot /mnt pacman -S sudo bash-completion sshpass  --noconfirm      &>>$LOGFILE
     arch-chroot /mnt sed -i 's/# %wheel/%wheel/g' /etc/sudoers
     arch-chroot /mnt sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers  
 
-    sudo_user=$(whiptail --backtitle "SUDO USERNAME" --title "Please provide sudo username" --inputbox \
+    sudo_user=$(whiptail --backtitle "SUDO USERNAME" --title \
+        "Please provide sudo username" --inputbox \
         "Please provide a sudo username: " 8 40 3>&1 1>&2 2>&3 )
 
     TERM=ansi whiptail --title "Creating sudo user and adding to wheel" --infobox \
@@ -589,7 +599,8 @@ add_user_acct(){
 
     echo -e "$user_pass\n$user_pass" | arch-chroot /mnt passwd "$sudo_user"  
 
-    TERM=ansi whiptail --title "Sudo User Password Created" --infobox "sudo user password updated" 10 70
+    TERM=ansi whiptail --title "Sudo User Password Created" --infobox \
+        "sudo user password updated" 10 70
     sleep 3
 }
 
@@ -625,7 +636,8 @@ install_grub(){
         [[ $? == 0 ]] && TERM=ansi whiptail --backtitle "BOOT LOADER INSTALLED" --title \
             "MBR Bootloader Installed" --infobox "MBR Bootloader Installed Successfully!" 9 70
 
-        whiptail --title "LOGFILE for Grub Installation" --textbox /tmp/install.log 30 79 --scrolltext
+        whiptail --title "LOGFILE for Grub Installation" \
+            --textbox /tmp/install.log 30 79 --scrolltext
 
         sleep 2
     fi
@@ -643,7 +655,8 @@ install_grub(){
 # WIFI (BCM4360) IF NECESSARY  # wifi_drivers should equal your PCI or USB wifi adapter!!!
 wl_wifi(){
 
-    TERM=ansi whiptail --title "Installing $wifi_drivers" --infobox "Installing $wifi_drivers..." 10 70 
+    TERM=ansi whiptail --title "Installing $wifi_drivers" --infobox \
+        "Installing $wifi_drivers..." 10 70 
 
     arch-chroot /mnt pacman -S "${wifi_drivers[@]}" &>>$LOGFILE
 
@@ -691,8 +704,8 @@ validate_pkgs(){
     message="Archlinux can change package names without notice. Just making sure we're okay. \
         We'll be right back with a list of any changes, if any. "
 
-    TERM=ansi whiptail --backtitle "CHECKING PKG NAME CHANGES" --title "Checking for pkg name changes" \
-        --infobox "$message" 8 80
+    TERM=ansi whiptail --backtitle "CHECKING PKG NAME CHANGES" --title \
+        "Checking for pkg name changes" --infobox "$message" 8 80
 
     missing_pkgs=()
 
@@ -713,7 +726,8 @@ validate_pkgs(){
     done
     echo -e "\n\n=== END OF MISSING PKGS ===\n" &>>$MISSING_LOG
     
-    whiptail --backtitle "Packages not in repos" --title "These packages not in repos" --textbox $MISSING_LOG --scrolltext 20 80
+    whiptail --backtitle "Packages not in repos" --title \
+       "These packages not in repos" --textbox $MISSING_LOG --scrolltext 20 80
 
 }
 
