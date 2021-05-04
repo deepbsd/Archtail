@@ -256,9 +256,7 @@ lv_create(){
     SWAP_SIZE="$swapsize"
 
     # show an infobox while we wait for partitions
-    TERM=ansi whiptail --backtitle "CREATING PARTITIONS" --title \
-        "Creating Your Partitions" --infobox \
-        "Please wait a moment while we create your partitions..." 8 40
+    TERM=ansi whiptail --backtitle "CREATING PARTITIONS" --title "Creating Your Partitions" --infobox "Please wait a moment while we create your partitions..." 8 40
 
     # Get EFI or BOOT partition?
     if $(efi_boot_mode); then
