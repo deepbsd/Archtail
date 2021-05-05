@@ -766,11 +766,11 @@ diskmenu(){
 
         case $diskmenupick in
 
-            "N") get_install_device ; check_tasks 2 ;;
+            "N") check_tasks 2; get_install_device ;;
 
-            "L") USE_LVM='TRUE'; lv_create; check_tasks 2 ;;
+            "L") USE_LVM='TRUE'; check_tasks 2; lv_create ;;
 
-            "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; lv_create; check_tasks 2 ;;
+            "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; check_tasks 2; lv_create ;;
 
             "R") startmenu ;;
         esac
