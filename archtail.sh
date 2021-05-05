@@ -787,20 +787,20 @@ startmenu(){
     while true ; do
         menupick=$(
         whiptail --backtitle "Daves ARCHlinux Installer" --title "Main Menu" --menu "Your choice?" 25 70 16 \
-            "C"    "$(echo ${completed_tasks[1]}  Check connection and date)"  \
-            "D"    "${completed_tasks[2]}  Prepare Installation Disk"  \
-            "B"    "${completed_tasks[3]}  Install Base System"        \
-            "F"    "${completed_tasks[4]}  New FSTAB and TZ/Locale"    \
-            "H"    "${completed_tasks[5]}  Set new hostname"           \
-            "R"    "${completed_tasks[6]}  Set root password"          \
-            "M"    "${completed_tasks[7]}  Install more essentials"    \
-            "U"    "${completed_tasks[8]}  Add user + sudo account "   \
-            "W"    "${completed_tasks[9]}  Install Wifi Drivers "      \
-            "G"   "${completed_tasks[10]}  Install grub"               \
-            "X"   "${completed_tasks[11]}  Install Xorg + Desktop"     \
-            "I"   "${completed_tasks[12]}  Install Extra Window Mgrs"  \
-            "P"   "${completed_tasks[13]}  Check for pkg name changes" \
-            "L"   "${completed_tasks[14]}  Exit Script "  3>&1 1>&2 2>&3
+            "C"   "$(echo ${completed_tasks[1]}  Check connection and date)"  \
+            "D"   "$(echo ${completed_tasks[2]}  Prepare Installation Disk)"  \
+            "B"   "$(echo ${completed_tasks[3]}  Install Base System)"        \
+            "F"   "$(echo ${completed_tasks[4]}  New FSTAB and TZ/Locale)"    \
+            "H"   "$(echo ${completed_tasks[5]}  Set new hostname)"           \
+            "R"   "$(echo ${completed_tasks[6]}  Set root password)"          \
+            "M"   "$(echo ${completed_tasks[7]}  Install more essentials)"    \
+            "U"   "$(echo ${completed_tasks[8]}  Add user + sudo account) "   \
+            "W"   "$(echo ${completed_tasks[9]}  Install Wifi Drivers )"      \
+            "G"   "$(echo ${completed_tasks[10]}  Install grub)"               \
+            "X"   "$(echo ${completed_tasks[11]}  Install Xorg + Desktop)"     \
+            "I"   "$(echo ${completed_tasks[12]}  Install Extra Window Mgrs)"  \
+            "P"   "$(echo ${completed_tasks[13]}  Check for pkg name changes)" \
+            "L"   "$(echo ${completed_tasks[14]}  Exit Script) "  3>&1 1>&2 2>&3
         )
 
         case $menupick in
