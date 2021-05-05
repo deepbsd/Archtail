@@ -194,6 +194,7 @@ specialprogressgauge(){
     backmessage=$3          # Message on Background Window
     eval $process_to_measure &      # Start the process in the background
     thepid=$!               # Immediately capture the PID for this process
+    echo "=== Watching PID $thepid for progress ===" &>>$LOGFILE
     num=15                  # Shortest progress bar could be 15 sec to 45 sec
     while true; do
         showprogress 1 $num 1 3 
@@ -204,6 +205,7 @@ specialprogressgauge(){
             num=$(( num+1 ))
         done
         showprogress 99 100 3 3  # If we have completion, we add 6 sec. Max of 53 sec.
+        echo "=== No longer watching PID: $thepid ===" &>>$LOGFILE
         break
     done  | whiptail --backtitle "$backmessage" --title "Progress Gauge" --gauge "$message" 6 70 0
 }
