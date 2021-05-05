@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# these are all executables in script that should be in $PATH
-executables=( "date" "whiptail" "rm" "echo" "ls" "sed" "grep" "sleep" "exit" "shuf" "eval"\
- "break" "timedatectl" "pgrep" "arch-chroot" "sgdisk" "sfdisk" "mkfs" "pvcreate"\
-"sgcreate" "lvcreate" "mkswap" "swapon" "modprobe" "vgchange" "mount" "mkdir" "lsblk"\
-"local" "if" "then" "for" "[[" "case" "genfstab" "locale-gen" "cat" "pacman" "passwd"\
-"useradd" "grub-install" "grub-mkconfig" "systemctl" "declare" "while")
 
 ################################
 ###    GLOBAL VARIABLES  #######
@@ -49,6 +43,13 @@ LOCALE="en_US.UTF-8"
 ##############################################
 ########     SOFTWARE SETS    ################
 ##############################################
+
+# these are all executables in script that should be in $PATH
+executables=( "date" "whiptail" "rm" "echo" "ls" "sed" "grep" "sleep" "exit" "shuf" "eval"\
+ "break" "timedatectl" "pgrep" "arch-chroot" "sgdisk" "sfdisk" "mkfs" "pvcreate"\
+"sgcreate" "lvcreate" "mkswap" "swapon" "modprobe" "vgchange" "mount" "mkdir" "lsblk"\
+"local" "if" "then" "for" "[[" "case" "genfstab" "locale-gen" "cat" "pacman" "passwd"\
+"useradd" "grub-install" "grub-mkconfig" "systemctl" "declare" "while")
 
 # replace with linux-lts or -zen if preferrable
 base_system=( base base-devel linux linux-headers dkms linux-firmware vim sudo bash-completion )
@@ -760,6 +761,7 @@ validate_pkgs(){
 # CHECK FOR ALL EXECUTABLES BEING AVAILABLE FOR THIS SCRIPT
 checkpath(){
     echo "=== MISSING EXECUTABLES: ===" &>>$LOGFILE
+    echo "${#all_executables[@]} executables being checked..."
     for ex in "${all_executables[@]}"; do
         $( command -v $ex &>/dev/null) || ( echo $ex &>>$LOGFILE )
     done
