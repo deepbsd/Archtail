@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# these are all executables in script that should be in $PATH
+executables=( "date" "whiptail" "rm" "echo" "ls" "sed" "grep" "sleep" "exit" "shuf" "eval"\
+ "break" "timedatectl" "pgrep" "arch-chroot" "sgdisk" "sfdisk" "mkfs" "pvcreate"\
+"sgcreate" "lvcreate" "mkswap" "swapon" "modprobe" "vgchange" "mount" "mkdir" "lsblk"\
+"local" "if" "then" "for" "[[" "case" "genfstab" "locale-gen" "cat" "pacman" "passwd"\
+"useradd" "grub-install" "grub-mkconfig" "systemctl" "declare" "while")
+
 ################################
 ###    GLOBAL VARIABLES  #######
 ################################
@@ -414,7 +421,7 @@ format_disk(){
 
     # only do efi slice if efi_boot_mode return 0; else return 0
     [[ "$slice" =~ 'efi' && ! "$DISKTABLE" =~ 'GPT' ]] && return 0
-    clear
+    #clear
 
     sleep 3
     case $slice in 
@@ -525,7 +532,7 @@ install_base(){
 
 # GENERATE FSTAB
 gen_fstab(){
-    clear
+    #clear
     TERM=ansi whiptail --title "Generating FSTAB" --infobox "Generating /mnt/etc/fstab" 8 75
     genfstab -U /mnt >> /mnt/etc/fstab
     sleep 3
@@ -750,10 +757,21 @@ validate_pkgs(){
        "These packages not in repos" --textbox $MISSING_LOG --scrolltext 20 80
 }
 
+# CHECK FOR ALL EXECUTABLES BEING AVAILABLE FOR THIS SCRIPT
+checkpath(){
+    echo "=== MISSING EXECUTABLES: ===" &>>$LOGFILE
+    for ex in "${all_executables[@]}"; do
+        $( command -v $ex &>/dev/null) || ( echo $ex &>>$LOGFILE )
+    done
+    echo "== END MISSING EXECUTABLES ===" &>>$LOGFILE
+}
+
+# DISPLAY /MNT/ETC/HOSTS
 show_hosts(){
     whiptail --backtitle "/ETC/HOSTS" --title "Your /etc/hosts file" --textbox /etc/hosts 25 80 
 }
 
+# DISPLAY DISK PREP METHODS
 diskmenu(){
 
     #check_tasks 2
@@ -865,5 +883,6 @@ startmenu(){
 }
 
 welcome
+checkpath
 startmenu
 
