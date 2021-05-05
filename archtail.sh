@@ -242,7 +242,8 @@ check_tasks(){
 # FIND CLOSEST MIRROR
 check_reflector(){
     
-    whiptail --backtitle "REFLECTOR RUNNING" --title "Finding closest mirror" --infobox "Evaluating and finding closest mirrors for Arch repos. This may take a while, but you'll be returned to the menu as soon as possible." 10 65
+    whiptail --backtitle "REFLECTOR RUNNING" --title "Finding closest mirror" --infobox \
+    "Evaluating and finding closest mirrors for Arch repos. This may take a while, but you'll be returned to the main menu as soon as possible." 10 65
     
     while true; do
         pgrep -x reflector &>/dev/null || break
@@ -761,8 +762,8 @@ validate_pkgs(){
 # CHECK FOR ALL EXECUTABLES BEING AVAILABLE FOR THIS SCRIPT
 checkpath(){
     echo "=== MISSING EXECUTABLES: ===" &>>$LOGFILE
-    echo "${#all_executables[@]} executables being checked..."
-    for ex in "${all_executables[@]}"; do
+    echo "${#executables[@]} executables being checked..." &>>$LOGFILE
+    for ex in "${executables[@]}"; do
         $( command -v $ex &>/dev/null) || ( echo $ex &>>$LOGFILE )
     done
     echo "== END MISSING EXECUTABLES ===" &>>$LOGFILE
