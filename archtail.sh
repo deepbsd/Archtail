@@ -226,7 +226,7 @@ check_tasks(){
     #[[ "${completed_tasks[$task]}" =~ $checkmark ]] && return 1
 
     # just return an 'X' in the array position of the passed integer parameter
-    ${completed_tasks[$1]}="X"
+    completed_tasks[$1]="X"
 }
 
 # FIND CLOSEST MIRROR
