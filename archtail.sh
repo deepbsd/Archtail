@@ -856,7 +856,8 @@ startmenu(){
             "P")  validate_pkgs; check_tasks 13 ;;
 
             "L")  TERM=ansi whiptail --title "exit installer" \
-                      --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; sleep 2; exit 0 ;;
+                  --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; 
+                  sleep 2; exit 0 ;;
         esac
     done
 }
