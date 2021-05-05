@@ -766,7 +766,7 @@ diskmenu(){
 
         case $diskmenupick in
 
-            "N") get_install_device ;;
+            "N") get_install_device ; check_tasks 2 ;;
 
             "L") USE_LVM='TRUE'; lv_create; check_tasks 2 ;;
 
@@ -807,7 +807,7 @@ startmenu(){
 
             "C")  check_connect; time_date; check_tasks 1 ;;
 
-            "D")  diskmenu; check_tasks 2 ;;
+            "D")  diskmenu ;;
 
             "B")  USE_LVM='TRUE'; 
                   specialprogressgauge install_base "Installing base system..." "INSTALLING BASE SYSTEM"; 
