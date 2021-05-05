@@ -45,10 +45,10 @@ LOCALE="en_US.UTF-8"
 ##############################################
 
 # these are all executables in script that should be in $PATH
-executables=( "date" "whiptail" "rm" "echo" "ls" "sed" "grep" "sleep" "exit" "shuf" "eval"\
- "break" "timedatectl" "pgrep" "arch-chroot" "sgdisk" "sfdisk" "mkfs" "pvcreate"\
-"sgcreate" "lvcreate" "mkswap" "swapon" "modprobe" "vgchange" "mount" "mkdir" "lsblk"\
-"local" "if" "then" "for" "[[" "case" "genfstab" "locale-gen" "cat" "pacman" "passwd"\
+executables=( "date" "whiptail" "rm" "echo" "ls" "sed" "grep" "sleep" "exit" "shuf" "eval" \
+ "break" "timedatectl" "pgrep" "arch-chroot" "sgdisk" "sfdisk" "mkfs" "pvcreate" \
+"sgcreate" "lvcreate" "mkswap" "swapon" "modprobe" "vgchange" "mount" "mkdir" "lsblk" \
+"local" "if" "then" "for" "[[" "case" "genfstab" "locale-gen" "cat" "pacman" "passwd" \
 "useradd" "grub-install" "grub-mkconfig" "systemctl" "declare" "while")
 
 # replace with linux-lts or -zen if preferrable
