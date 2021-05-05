@@ -49,7 +49,7 @@ executables=( "date" "whiptail" "rm" "echo" "ls" "sed" "grep" "sleep" "exit" "sh
  "break" "timedatectl" "pgrep" "arch-chroot" "sgdisk" "sfdisk" "mkfs" "pvcreate" \
 "vgcreate" "lvcreate" "mkswap" "swapon" "modprobe" "vgchange" "mount" "mkdir" "lsblk" \
 "local" "if" "then" "for" "[[" "case" "genfstab" "locale-gen" "cat" "pacman" "passwd" \
-"useradd" "grub-install" "grub-mkconfig" "systemctl" "declare" "while")
+"useradd" "systemctl" "declare" "while")
 
 # replace with linux-lts or -zen if preferrable
 base_system=( base base-devel linux linux-headers dkms linux-firmware vim sudo bash-completion )
