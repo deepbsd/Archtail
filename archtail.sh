@@ -698,7 +698,7 @@ wl_wifi(){
 # PICK YOUR XSERVER AND DESKTOP
 pick_desktop(){
     card=$(lspci | grep VGA | sed 's/^.*: //g')
-    graphic_sdriver=$(whiptail --title "Please Choose Your X Server:" --radiolist \
+    graphics_driver=$(whiptail --title "Please Choose Your X Server:" --radiolist \
     "You're running a $card" 20 80 15 \
     "xf86-video-amdgpu"         "AMD GPUs"                           OFF \
     "xf86-video-ati"            "ATI cards"                          OFF \
