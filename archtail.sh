@@ -694,6 +694,22 @@ wl_wifi(){
     sleep 3
 }
 
+# PICK YOUR XSERVER AND DESKTOP
+pick_desktop(){
+    card=$(lspci | grep VGA | sed 's/^.*: //g')
+    server=$(whiptail --title "Please Choose Your X Server:" --radiolist \
+    "You're running a $card" 20 80 15 \
+    "xf86-video-amdgpu"         "AMD GPUs"                           OFF \
+    "xf86-video-ati"            "ATI cards"                          OFF \
+    "xf86-video-intel"          "Intel Video Chipsets"               OFF \
+    "xf86-video-nouveau"        "Nvidia Chipsets (Open Source)"      OFF \
+    "xf86-video-openchrome"     "Chrome-related video chipsets"      OFF \
+    "xf86-video-vmware"         "Use for virtual machines"           OFF \
+    "xf86-video-fbdev"          "Only for frame buffer devices"      OFF \
+    )  
+}
+
+
 # INSTALL XORG AND DESKTOP
 install_desktop(){
 
@@ -862,7 +878,7 @@ startmenu(){
 
             "G")  install_grub; check_tasks 10 ;;
             
-            "E")  echo "install_grub"; check_tasks 11 ;;
+            "E")  pick_desktop ; check_tasks 11 ;;
 
             "X")  find_card;
                   specialprogressgauge install_desktop "Installing Xorg and Desktop Resources..." "INSTALLING XORG"; 
