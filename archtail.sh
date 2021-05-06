@@ -706,7 +706,7 @@ pick_desktop(){
 
     # This selection should overwrite the global choice if necessary
     graphics_driver=$(whiptail --title "Please Choose Your X Server:" --radiolist \
-    "You're running a $card" 20 80 15 \
+    "You're running a $card" 20 80 7 \
     "xf86-video-amdgpu"         "AMD GPUs"                               OFF \
     "xf86-video-ati"            "ATI cards"                              OFF \
     "xf86-video-intel"          "Intel Video Chipsets"                   OFF \
@@ -716,7 +716,7 @@ pick_desktop(){
     "xf86-video-fbdev"          "Only for frame buffer devices!!!"       OFF 3&>1 1&>2 2&>3 )  
 
     choice=$(whiptail --title "Please Choose Your Desktop" --radiolist \
-    "Default Desktop is Cinnamon" 20 80 20 \
+    "Default Desktop is Cinnamon" 20 80 8 \
     "Cinnamon" "Gnome based desktop that is intuitive and familiar"     ON \
     "Mate"  "Originally based on Gnome 2, traditional, lightweight"     OFF \
     "Gnome"  "Modern and even bleeding Edge Desktop"                    OFF \
