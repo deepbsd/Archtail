@@ -820,10 +820,11 @@ startmenu(){
             "U"   "[$(echo ${completed_tasks[8]}]    Add user + sudo account) "   \
             "W"   "[$(echo ${completed_tasks[9]}]    Install Wifi Drivers )"      \
             "G"   "[$(echo ${completed_tasks[10]}]   Install grub)"               \
-            "X"   "[$(echo ${completed_tasks[11]}]   Install Xorg + Desktop)"     \
-            "I"   "[$(echo ${completed_tasks[12]}]   Install Extra Window Mgrs)"  \
-            "P"   "[$(echo ${completed_tasks[13]}]   Check for pkg name changes)" \
-            "L"   "[$(echo ${completed_tasks[14]}]   Exit Script) "  3>&1 1>&2 2>&3
+            "E"   "[$(echo ${completed_tasks[11]}]   Choose Your Desktop Environment)" \
+            "X"   "[$(echo ${completed_tasks[12]}]   Install Xorg + Desktop)"     \
+            "I"   "[$(echo ${completed_tasks[13]}]   Install Extra Window Mgrs)"  \
+            "P"   "[$(echo ${completed_tasks[14]}]   Check for pkg name changes)" \
+            "L"   "[$(echo ${completed_tasks[15]}]   Exit Script) "  3>&1 1>&2 2>&3
         )
 
         case $menupick in
@@ -860,6 +861,8 @@ startmenu(){
             "W")  wl_wifi; check_tasks 9 ;;
 
             "G")  install_grub; check_tasks 10 ;;
+            
+            "E")  echo "install_grub"; check_tasks 11 ;;
 
             "X")  find_card;
                   specialprogressgauge install_desktop "Installing Xorg and Desktop Resources..." "INSTALLING XORG"; 
@@ -867,16 +870,16 @@ startmenu(){
                       --msgbox "Xorg and Extras and Desktops are installed.  OK to check install.log." 8 70 ;
                   whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Xorg Install Log" \
                       --textbox /tmp/install.log --scrolltext 25 80 ;
-                  check_tasks 11 ;;
+                  check_tasks 12 ;;
 
             "I")  specialprogressgauge install_extra_stuff "Installing Xorg Extras" "EXTRAS FOR XORG"; 
                   whiptail --backtitle "XTRA X STUFF INSTALLED" --title "Extra Desktops Installed" \
                       --msgbox "Extra Goodies Installed.  Click OK to see Install Log." 8 70 ;
                   whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Extra Xorg Stuff Install Log" \
                       --textbox /tmp/install.log --scrolltext 25 80 ;
-                  check_tasks 12 ;;
+                  check_tasks 13 ;;
 
-            "P")  validate_pkgs; check_tasks 13 ;;
+            "P")  validate_pkgs; check_tasks 14 ;;
 
             "L")  TERM=ansi whiptail --title "exit installer" \
                   --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; 
