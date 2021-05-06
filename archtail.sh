@@ -701,7 +701,10 @@ wl_wifi(){
 
 # PICK YOUR XSERVER AND DESKTOP
 pick_desktop(){
+
     card=$(lspci | grep VGA | sed 's/^.*: //g')
+
+    # This selection should overwrite the global choice if necessary
     graphics_driver=$(whiptail --title "Please Choose Your X Server:" --radiolist \
     "You're running a $card" 20 80 15 \
     "xf86-video-amdgpu"         "AMD GPUs"                           OFF \
@@ -709,7 +712,7 @@ pick_desktop(){
     "xf86-video-intel"          "Intel Video Chipsets"               OFF \
     "xf86-video-nouveau"        "Nvidia Chipsets (Open Source)"      OFF \
     "xf86-video-openchrome"     "Chrome-related video chipsets"      OFF \
-    "xf86-video-vmware"         "Use for virtual machines"           OFF \
+    "xf86-video-vmware"         "Use for virtual machines"           ON \
     "xf86-video-fbdev"          "Only for frame buffer devices!!!"      OFF \
     )  
 
@@ -913,8 +916,7 @@ startmenu(){
             
             "E")  pick_desktop ; check_tasks 11 ;;
 
-            "X")  find_card;
-                  specialprogressgauge install_desktop "Installing Xorg and Desktop Resources..." "INSTALLING XORG"; 
+            "X")  specialprogressgauge install_desktop "Installing Xorg and Desktop Resources..." "INSTALLING XORG"; 
                   whiptail --backtitle "X AND DESKTOPS INSTALLED" --title "Desktops Installed" \
                       --msgbox "Xorg and Extras and Desktops are installed.  OK to check install.log." 8 70 ;
                   whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Xorg Install Log" \
