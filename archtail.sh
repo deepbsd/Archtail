@@ -704,8 +704,7 @@ pick_desktop(){
 
     card=$(lspci | grep VGA | sed 's/^.*: //g')
 
-    # This selection should overwrite the global choice if necessary
-    graphics_driver=$(whiptail --title "Please Choose Your X Server:" --radiolist \
+    driver=$(whiptail --title "Please Choose Your X Server:" --radiolist \
     "You're running a $card" 20 80 7 \
     "xf86-video-amdgpu"         "AMD GPUs"                               OFF \
     "xf86-video-ati"            "ATI cards"                              OFF \
@@ -714,6 +713,9 @@ pick_desktop(){
     "xf86-video-openchrome"     "Chrome-related video chipsets"          OFF \
     "xf86-video-vmware"         "Use for virtual machines"               ON \
     "xf86-video-fbdev"          "Only for frame buffer devices!!!"       OFF 3&>1 1&>2 2&>3 )  
+
+    # This selection should overwrite the global choice if necessary
+    graphics_driver="$driver"
 
     choice=$(whiptail --title "Please Choose Your Desktop" --radiolist \
     "Default Desktop is Cinnamon" 20 80 8 \
