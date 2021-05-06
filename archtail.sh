@@ -717,7 +717,7 @@ pick_desktop(){
     # This selection should overwrite the global choice if necessary
     graphics_driver=( "$driver" )
 
-    choice=$(whiptail --title "Please Choose Your Desktop (spacebar)" --radiolist \
+    choice=$(whiptail --title "Please Choose Your Desktop: (spacebar)" --radiolist \
     "Default Desktop is Cinnamon" 20 80 8 \
     "Cinnamon" "Gnome based desktop that is intuitive and familiar"     ON \
     "Mate"  "Originally based on Gnome 2, traditional, lightweight"     OFF \
