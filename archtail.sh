@@ -18,6 +18,7 @@ SWAP_SLICE=''
 wifi_drivers=(broadcom-wl-dkms iwd)   # find chipset for YOUR wifi card!
 graphics_driver=(xf86-video-vmware)   # $( pacman -Ss xf86-video- ) will list available drivers...
 display_mgr=(lightdm)                 # lightdm goes well with cinnamon desktop
+my_desktop=( "$cinnamon_desktop[@]" )
 
 # VOL GROUP VARIABLES
 USE_LVM=''   # gets set programmatically
@@ -720,6 +721,21 @@ pick_desktop(){
     "Xmonad"   "A favorite of tiling WM fans, written in Haskell"      OFF \
     "Awesome"   "Another favorite tiling WM written in Lua"            OFF \
     )
+
+    case $choice in 
+        "Cinnamon" ) mydesktop=( "${cinnamon_desktop[@]}" ) ;;
+        "Mate"     ) mydesktop=( "${mate[@]}" ) ;;
+        "Gnome"    ) mydesktop=( "${gnomedesktop[@]}" )   ;;
+        "XFCE"     ) mydesktop=( "${xfce[@]}" )  ;;
+        "KDE"      ) mydesktop=( "${kde[@]}" )  ;;
+        "i3gaps"   ) mydesktop=( "${i3gaps[@]}" )  ;;
+        "Qtile"    ) mydesktop=( "${qtile[@]}" ) ;;
+        "Xmonad"   ) mydesktop=( "${xmonad[@]}" ) ;;
+        "Awesome"  ) mydesktop=( "${awesome[@]}" ) ;;
+        * )          mydesktop=( "${cinnamon_desktop[@]}" )
+    esac
+    
+
 }
 
 
