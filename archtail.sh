@@ -82,6 +82,10 @@ i3gaps_desktop=( i3-gaps dmenu feh rofi i3status i3blocks nitrogen i3status ttf-
 
 qtile_desktop=( qtile )
 
+xmonad_desktop=( xmonad xmonad-contrib )
+
+awesome_desktop=( awesome vicious )
+
 kde_desktop=( lightdm-kde-greeter plasma plasma-wayland-session kde-applications )
 
 ## Python3 should be installed by default
@@ -735,7 +739,7 @@ pick_desktop(){
         * )          mydesktop=( "${cinnamon_desktop[@]}" )
     esac
     
-
+    echo "=== Graphics Driver Selected: $graphics_driver  ==  Desktop: $mydesktop" &>>$LOGFILE
 }
 
 
