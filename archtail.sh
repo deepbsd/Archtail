@@ -698,7 +698,7 @@ wl_wifi(){
 # PICK YOUR XSERVER AND DESKTOP
 pick_desktop(){
     card=$(lspci | grep VGA | sed 's/^.*: //g')
-    server=$(whiptail --title "Please Choose Your X Server:" --radiolist \
+    graphic_sdriver=$(whiptail --title "Please Choose Your X Server:" --radiolist \
     "You're running a $card" 20 80 15 \
     "xf86-video-amdgpu"         "AMD GPUs"                           OFF \
     "xf86-video-ati"            "ATI cards"                          OFF \
@@ -727,9 +727,9 @@ pick_desktop(){
         "Mate"     ) mydesktop=( "${mate_desktop[@]}" ) ;;
         "Gnome"    ) mydesktop=( "${gnome_desktop[@]}" )   ;;
         "XFCE"     ) mydesktop=( "${xfce[@]}" )  ;;
-        "KDE"      ) mydesktop=( "${kde[@]}" )  ;;
-        "i3gaps"   ) mydesktop=( "${i3gaps[@]}" )  ;;
-        "Qtile"    ) mydesktop=( "${qtile[@]}" ) ;;
+        "KDE"      ) mydesktop=( "${kde_desktop[@]}" )  ;;
+        "i3gaps"   ) mydesktop=( "${i3gaps_desktop[@]}" )  ;;
+        "Qtile"    ) mydesktop=( "${qtile_desktop[@]}" ) ;;
         "Xmonad"   ) mydesktop=( "${xmonad[@]}" ) ;;
         "Awesome"  ) mydesktop=( "${awesome[@]}" ) ;;
         * )          mydesktop=( "${cinnamon_desktop[@]}" )
