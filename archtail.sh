@@ -715,7 +715,7 @@ pick_desktop(){
     "xf86-video-fbdev"          "Only for frame buffer devices!!!"       OFF 3&>1 1&>2 2&>3 )  
 
     # This selection should overwrite the global choice if necessary
-    graphics_driver="$driver"
+    graphics_driver=( "$driver" )
 
     choice=$(whiptail --title "Please Choose Your Desktop" --radiolist \
     "Default Desktop is Cinnamon" 20 80 8 \
