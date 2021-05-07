@@ -924,7 +924,7 @@ startmenu(){
                       --textbox /tmp/install.log --scrolltext 25 80 ;
                   check_tasks 12 ;;
 
-            "I")  specialprogressgauge install_extra_stuff "Installing Xorg Extras" "EXTRAS FOR XORG"; 
+            "I")  specialprogressgauge install_extra_stuff "Installing All My Xorg Extras" "ALL MY EXTRAS FOR XORG"; 
                   whiptail --backtitle "XTRA X STUFF INSTALLED" --title "Extra Desktops Installed" \
                       --msgbox "Extra Goodies Installed.  Click OK to see Install Log." 8 70 ;
                   whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Extra Xorg Stuff Install Log" \
