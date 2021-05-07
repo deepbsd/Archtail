@@ -95,7 +95,7 @@ printing_stuff=( system-config-printer foomatic-db foomatic-db-engine gutenprint
 
 multimedia_stuff=( brasero sox cheese eog shotwell imagemagick sox cmus mpg123 alsa-utils cheese )
 
-all_extras=( "${xfce_desktop[@]}" "${i3gaps_desktop[@]}" "${mate_desktop[@]}" "${devel_stuff[@]}" "${printing_stuff[@]}" "${multimedia_stuff[@]}" )
+all_extras=( "${kde_desktop[@]}" "${xmonad_desktop[@]}" "${qtile_desktop[@]}" "${xfce_desktop[@]}" "${i3gaps_desktop[@]}" "${mate_desktop[@]}" "${devel_stuff[@]}" "${printing_stuff[@]}" "${multimedia_stuff[@]}" )
 
 ##  fonts_themes=()    #  in case I want to break these out from extra_x
 
