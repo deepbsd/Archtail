@@ -704,7 +704,7 @@ pick_desktop(){
 
     card=$(lspci | grep VGA | sed 's/^.*: //g')
 
-    driver=$(whiptail --title "Please Choose Your X Server: (spacebar)" --radiolist \
+    driver=$(whiptail --title "Please Choose Your X Server: (spacebar)" --radiolist -- \
     "You're running a $card" 20 80 7 \
     "xf86-video-amdgpu"         "AMD GPUs"                               OFF \
     "xf86-video-ati"            "ATI cards"                              OFF \
@@ -717,7 +717,7 @@ pick_desktop(){
     # This selection should overwrite the global choice if necessary
     graphics_driver=( "$driver" )
 
-    choice=$(whiptail --title "Please Choose Your Desktop: (spacebar)" --radiolist \
+    choice=$(whiptail --title "Please Choose Your Desktop: (spacebar)" --radiolist -- \
     "Default Desktop is Cinnamon" 20 80 8 \
     "Cinnamon" "Gnome based desktop that is intuitive and familiar"     ON \
     "Mate"  "Originally based on Gnome 2, traditional, lightweight"     OFF \
