@@ -788,8 +788,7 @@ validate_pkgs(){
 
     [[ -f $MISSING_LOG ]] && rm "$MISSING_LOG"
 
-    message="Archlinux can change package names without notice. Just making sure we're okay. \
-        We'll be right back with a list of any changes, if any. "
+    message="Archlinux can change package names without notice. Just making sure we're okay.  We'll be right back with a list of any changes, if any. "
 
     TERM=ansi whiptail --backtitle "CHECKING PKG NAME CHANGES" --title \
         "Checking for pkg name changes" --infobox "$message" 8 80
