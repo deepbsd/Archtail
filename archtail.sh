@@ -712,7 +712,7 @@ pick_desktop(){
     "xf86-video-nouveau"        "Nvidia Chipsets (Open Source)"          OFF \
     "xf86-video-openchrome"     "Chrome-related video chipsets"          OFF \
     "xf86-video-vmware"         "Use for virtual machines"               ON \
-    "xf86-video-fbdev"          "Only for frame buffer devices!!!"       OFF 3&>1 1&>2 2&>3 )  
+    "xf86-video-fbdev"          "Only for frame buffer devices!!!"       OFF 3>&1 1>&2 2>&3 )  
 
     # This selection should overwrite the global choice if necessary
     graphics_driver=( "$driver" )
@@ -727,7 +727,7 @@ pick_desktop(){
     "i3gaps"   "A very popular tiling window manager"                   OFF \
     "Qtile"   "A terrific tiling window manager written in Python"      OFF \
     "Xmonad"   "A favorite of tiling WM fans, written in Haskell"       OFF \
-    "Awesome"   "Another favorite tiling WM written in Lua"             OFF 3&>1 1&>2 2&>3 )
+    "Awesome"   "Another favorite tiling WM written in Lua"             OFF 3>&1 1>&2 2>&3 )
 
     case $choice in 
         "Cinnamon" ) mydesktop=( "${cinnamon_desktop[@]}" ) ;;
