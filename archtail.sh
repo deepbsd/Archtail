@@ -40,6 +40,10 @@ HOME_SIZE=''     # This is set automatically if using LVM
 TIMEZONE='America/New_York'
 #TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
 LOCALE="en_US.UTF-8"
+#KEYBOARD="us"
+KEYBOARD=$(setxkbmap -query |grep layout | awk '{print $2}')
+
+
 
 ##############################################
 ########     SOFTWARE SETS    ################
