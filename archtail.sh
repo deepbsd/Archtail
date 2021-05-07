@@ -742,7 +742,7 @@ pick_desktop(){
         * )          mydesktop=( "${cinnamon_desktop[@]}" )
     esac
     
-    echo "=== Graphics Driver Selected: $graphics_driver  ==  Desktop: $mydesktop" &>>$LOGFILE
+    echo "=== Graphics Driver Selected: ${graphics_driver[@]}  ==  Desktop: ${mydesktop[@]}" &>>$LOGFILE
 }
 
 
@@ -761,7 +761,8 @@ install_desktop(){
     arch-chroot /mnt pacman -S "${graphics_driver[@]}" --noconfirm    &>>$LOGFILE 
 
     ## Insert your default desktop here...
-    arch-chroot /mnt pacman -S "${cinnamon_desktop[@]}" --noconfirm   &>>$LOGFILE
+    #arch-chroot /mnt pacman -S "${cinnamon_desktop[@]}" --noconfirm   &>>$LOGFILE
+    arch-chroot /mnt pacman -S "${my_desktop[@]}" --noconfirm   &>>$LOGFILE
     arch-chroot /mnt systemctl enable "${display_mgr[@]}" 
 }
 
