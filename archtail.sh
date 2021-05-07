@@ -42,6 +42,7 @@ TIMEZONE='America/New_York'
 LOCALE="en_US.UTF-8"
 #KEYBOARD="us"
 KEYBOARD=$(setxkbmap -query |grep layout | awk '{print $2}')
+EXT_IP=$( dig +short myip.opendns.com @resolver1.opendns.com )
 
 
 
