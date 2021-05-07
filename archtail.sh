@@ -437,13 +437,13 @@ format_disk(){
 
     sleep 3
     case $slice in 
-        efi ) mkfs.fat -F32 "$device"
+        efi ) mkfs.fat -F32 "$device"           &>> $LOGFILE
             mount_part "$device" /mnt/boot/efi  &>> $LOGFILE
             ;;
-        home  ) mkfs.ext4 "$device"
+        home  ) mkfs.ext4 "$device"             &>> $LOGFILE
             mount_part "$device" /mnt/home      &>> $LOGFILE
             ;;
-        root  ) mkfs.ext4 "$device"
+        root  ) mkfs.ext4 "$device"             &>> $LOGFILE
             mount_part "$device" /mnt           &>> $LOGFILE
             ;;
         swap  ) mkswap "$device"                &>> $LOGFILE
