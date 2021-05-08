@@ -269,9 +269,6 @@ lvm_hooks(){
 # VALIDATE PKG NAMES IN SCRIPT
 validate_pkgs(){
 
-    # initialize the package database
-    pacman -Sy
-
     MISSING_LOG=/tmp/missing_pkgs
 
     [[ -f $MISSING_LOG ]] && rm "$MISSING_LOG"
@@ -284,6 +281,9 @@ validate_pkgs(){
     missing_pkgs=()
 
     echo -e "\n=== MISSING PKG NAMES (IF ANY) ===\n\n" &>>$MISSING_LOG
+    
+    # initialize the package database
+    pacman -Sy   &>>$MISSING_LOG
 
     for pkg_arr in "${all_pkgs[@]}"; do
 
