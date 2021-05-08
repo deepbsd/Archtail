@@ -708,7 +708,7 @@ pick_desktop(){
     graphics_driver=( "$driver" )
 
     choice=$(whiptail --title "Please Choose Your Desktop: (spacebar)" --radiolist \
-    "Default Desktop is Cinnamon" 20 80 8 \
+    "Default Desktop is Cinnamon" 20 80 9 \
     "Cinnamon" "Gnome based desktop that is intuitive and familiar"        ON \
     "Mate"     "Originally based on Gnome 2, traditional, lightweight"     OFF \
     "Gnome"    "Modern and even bleeding Edge Desktop"                     OFF \
