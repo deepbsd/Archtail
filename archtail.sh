@@ -109,14 +109,7 @@ all_extras=( "${kde_desktop[@]}" "${xmonad_desktop[@]}" "${qtile_desktop[@]}" "$
 # This will exclude services because they are often named differently and are duplicates
 all_pkgs=( base_system base_essentials network_essentials basic_x extra_x1 extra_x2 extra_x3 extra_x4 cinnamon_desktop xfce_desktop mate_desktop i3gaps_desktop devel_stuff printing_stuff multimedia_stuff qtile_desktop kde_desktop )
 
-# *** keep this around until I find out if I can do a checkmark in a tty ***
-# apparently this will not work in a tty without resetting the font...
-#checkmark=$(printf "\xE2\x9C\x94  ")
-#checkmark="X"
-
-# This will be the list of checkmarks.  Each index represents a task number
-# ie, ${completed_tasks[0]} is for task 1 and so forth.
-# Nevermind, the vbox tty cannot do checkmarks
+# Can't show checkmarks very easily...
 completed_tasks=( "X" )
 
 
@@ -124,6 +117,9 @@ completed_tasks=( "X" )
 ###    FUNCTIONS    ##############
 ##################################
  
+
+############  UTILITY FUNCTIONS  ####################
+
 welcome(){
     message="Dave's ARCH Installer will lead you through a menu-driven process to\
         create a base installation of Archlinux on your computer or virtual machine\
@@ -269,13 +265,89 @@ lvm_hooks(){
     arch-chroot /mnt mkinitcpio -P 
 }
 
+
+# VALIDATE PKG NAMES IN SCRIPT
+validate_pkgs(){
+
+    MISSING_LOG=/tmp/missing_pkgs
+
+    [[ -f $MISSING_LOG ]] && rm "$MISSING_LOG"
+
+    message="Archlinux can change package names without notice. Just making sure we're okay.  We'll be right back with a list of any changes, if any. "
+
+    TERM=ansi whiptail --backtitle "CHECKING PKG NAME CHANGES" --title \
+        "Checking for pkg name changes" --infobox "$message" 8 80
+
+    missing_pkgs=()
+
+    echo -e "\n=== MISSING PKG NAMES (IF ANY) ===\n\n" &>>$MISSING_LOG
+
+    for pkg_arr in "${all_pkgs[@]}"; do
+
+        declare -n arr_name=$pkg_arr  # make a namespace for each pkg_array
+
+        for pkg_name in "${arr_name[@]}"; do
+            if $( pacman -Sp $pkg_name &>/dev/null ); then
+                echo -n "." &>>$MISSING_LOG
+            else 
+                echo -e "\n$pkg_name from $pkg_arr not in repos.\n" &>>$MISSING_LOG
+                missing_pkgs+=("$pkg_arr::$pkg_name")
+            fi
+        done
+    done
+    echo -e "\n\n=== END OF MISSING PKGS ===\n" &>>$MISSING_LOG
+    
+    whiptail --backtitle "Packages not in repos" --title \
+       "These packages not in repos" --textbox $MISSING_LOG --scrolltext 20 80
+}
+
+# CHECK FOR ALL EXECUTABLES BEING AVAILABLE FOR THIS SCRIPT
+checkpath(){
+    echo "=== MISSING EXECUTABLES: ===" &>>$LOGFILE
+    echo "${#executables[@]} executables being checked..." &>>$LOGFILE
+    for ex in "${executables[@]}"; do
+        $( command -v $ex &>/dev/null) || ( echo $ex &>>$LOGFILE )
+    done
+    echo "== END MISSING EXECUTABLES ===" &>>$LOGFILE
+}
+
+# DISPLAY /MNT/ETC/HOSTS
+show_hosts(){
+    whiptail --backtitle "/ETC/HOSTS" --title "Your /etc/hosts file" --textbox /etc/hosts 25 80 
+}
+
+
+
+#################  DISK FUNCTIONS  ########################
+
+# SELECT INSTALLATION DISK
+choose_disk(){
+       depth=$(lsblk | grep 'disk' | wc -l)
+       local DISKS=()
+       for d in $(lsblk | grep disk | awk '{printf "%s\n%s \\\n",$1,$4}'); do
+            DISKS+=("$d")
+       done
+
+       whiptail --title "CHOOSE AN INSTALLATION DISK" \
+           --radiolist " Your Installation Disk: " 20 70 "$depth" \
+           "${DISKS[@]}" 3>&1 1>&2 2>&3
+}
+
+# INSTALL TO WHAT DEVICE?
+get_install_device(){
+    device=$(choose_disk)
+    if $(efi_boot_mode); then 
+        echo && echo "Formatting with EFI/GPT"
+        DISKTABLE='GPT'
+    else
+        echo && echo "Formatting with BIOS/MBR"
+        DISKTABLE='MBR'
+    fi
+    part_disk "$device"
+}
+
 # FOR LOGICAL VOLUME PARTITIONS
 lv_create(){
-    # These should already be defined.
-    #VOL_GROUP="arch_vg"
-    #LV_ROOT="ArchRoot"
-    #LV_HOME="ArchHome"
-    #LV_SWAP="ArchSwap"
 
     # Choose your installation device
     disk=$(choose_disk)
@@ -383,22 +455,6 @@ EOF
     whiptail --title "LV's Created and Mounted" --backtitle "Filesystem Created" \
         --textbox /tmp/filesystems_created 30 70
     startmenu
-}
-
-
-
-# SELECT INSTALLATION DISK
-choose_disk(){
-       depth=$(lsblk | grep 'disk' | wc -l)
-       local DISKS=()
-       for d in $(lsblk | grep disk | awk '{printf "%s\n%s \\\n",$1,$4}'); do
-            DISKS+=("$d")
-       done
-
-       whiptail --title "CHOOSE AN INSTALLATION DISK" \
-           --radiolist " Your Installation Disk: " 20 70 "$depth" \
-           "${DISKS[@]}" 3>&1 1>&2 2>&3
-            
 }
 
 # MOUNT PARTION
@@ -524,18 +580,33 @@ EOF
     whiptail --backtitle "DISKS PARTITIONED, FORMATTED and MOUNTED" --title "DISKS OKAY?" --msgbox "$message" 25 75 
 }
 
-# INSTALL TO WHAT DEVICE?
-get_install_device(){
-    device=$(choose_disk)
-    if $(efi_boot_mode); then 
-        echo && echo "Formatting with EFI/GPT"
-        DISKTABLE='GPT'
-    else
-        echo && echo "Formatting with BIOS/MBR"
-        DISKTABLE='MBR'
-    fi
-    part_disk "$device"
+# DISPLAY AND CHOOSE DISK PREP METHODS
+diskmenu(){
+
+    #check_tasks 2
+    while true ; do
+
+        diskmenupick=$(whiptail --backtitle "PARTION DISKS" --title "DISK PARTITIONS" \
+            --menu "Prepare Installation Disk (Choose One)" 18 80 4 \
+        "N"   "Prepare Installation Disk with Normal Partitions" \
+        "L"   "Prepare Installation Disk with LVM"   \
+        "E"   "Prepare Installation Disk Encryption and LVM"   \
+        "R"   "Return to previous menu"   3>&1 1>&2 2>&3 ) 
+
+        case $diskmenupick in
+
+            "N") check_tasks 2; get_install_device ;;
+
+            "L") USE_LVM='TRUE'; check_tasks 2; lv_create ;;
+
+            "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; check_tasks 2; lv_create ;;
+
+            "R") startmenu ;;
+        esac
+    done
 }
+
+###################  INSTALLATION FUNCTIONS #################################
 
 # INSTALL ESSENTIAL PACKAGES
 install_base(){
@@ -545,64 +616,6 @@ install_base(){
     [[ -L /dev/mapper/arch_vg-ArchRoot ]] && lvm_hooks &>>$LOGFILE
 }
 
-# GENERATE FSTAB
-gen_fstab(){
-    #clear
-    TERM=ansi whiptail --title "Generating FSTAB" --infobox "Generating /mnt/etc/fstab" 8 75
-    genfstab -U /mnt >> /mnt/etc/fstab
-    sleep 3
-
-    # take a look at new fstab file
-    whiptail --backtitle "Checkout New /etc/fstab" --title \
-        "Here's your new /etc/fstab" --textbox /mnt/etc/fstab 25 85
-}
-
-# TIMEZONE
-set_tz(){
-    
-    TERM=ansi whiptail --title "Setting timezone to $TIMEZONE" --infobox \
-        "Setting Timezone to $TIMEZONE" 8 75
-    arch-chroot /mnt ln -sf /usr/share/zoneinfo/"$TIMEZONE" /etc/localtime
-    arch-chroot /mnt hwclock --systohc --utc 
-    message=$(arch-chroot /mnt date)
-    whiptail --backtitle "SETTING HWCLOCK and TIMEZONE and Hardware Date" --title \
-        "HW CLOCK AND TIMEZONE SET to $TIMEZONE" --msgbox "$message" 8 78
-}
-
-# LOCALE
-set_locale(){
-    TERM=ansi whiptail --backtitle "SETTING LOCALE" --title \
-        "Setting Locale to $LOCALE" --infobox "Setting Locale to $LOCALE" 8 78
-    sleep 2
-    arch-chroot /mnt sed -i "s/#$LOCALE/$LOCALE/g" /etc/locale.gen
-    arch-chroot /mnt locale-gen   &>>$LOGFILE
-    sleep 2
-    echo "LANG=$LOCALE" > /mnt/etc/locale.conf 
-    export LANG="$LOCALE"
-    sleep 2
-    result=$(cat /mnt/etc/locale.conf)
-    whiptail --backtitle "LOCALE SET TO $LOCALE" --title "Locale: $LOCALE" \
-        --msgbox "$result" 8 79
-}
-
-# HOSTNAME
-set_hostname(){
-    namevar=$(whiptail --title "Hostname" --inputbox \
-        "What is your new hostname?" 20 40 3>&1 1>&2 2>&3)
-    echo "$namevar" > /mnt/etc/hostname
-
-cat > /mnt/etc/hosts <<HOSTS
-127.0.0.1      localhost
-::1            localhost
-127.0.1.1      $namevar.localdomain     $namevar
-HOSTS
-
-    message=$(echo -e "/etc/hostname and /etc/hosts files configured...\n" && echo)
-    message+=$(echo -e "\n/etc/hostname: \n" && cat /mnt/etc/hostname)
-    message+=$(echo -e "\n\n/etc/hosts: \n" && cat /mnt/etc/hosts)
-    whiptail --backtitle "/etc/hostname & /etc/hosts" --title "Files created" \
-        --msgbox "$message" 25 75
-}
 
 # SOME MORE ESSENTIAL NETWORK STUFF
 install_essential(){
@@ -613,37 +626,6 @@ install_essential(){
     for service in "${my_services[@]}"; do
         arch-chroot /mnt systemctl enable "$service"  &>>$LOGFILE
     done
-    
-}
-
-# ADD A USER ACCT
-add_user_acct(){
-
-    TERM=ansi whiptail --backtitle "ADDING SUDO USER" --title \
-        "Adding sudo + user acct..." --infobox "Adding sudo user to new system" 20 50 
-
-    arch-chroot /mnt pacman -S sudo bash-completion sshpass  --noconfirm      &>>$LOGFILE
-    arch-chroot /mnt sed -i 's/# %wheel/%wheel/g' /etc/sudoers
-    arch-chroot /mnt sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers  
-
-    sudo_user=$(whiptail --backtitle "SUDO USERNAME" --title \
-        "Please provide sudo username" --inputbox \
-        "Please provide a sudo username: " 8 40 3>&1 1>&2 2>&3 )
-
-    TERM=ansi whiptail --title "Creating sudo user and adding to wheel" --infobox \
-        "Creating $sudo_user and adding $sudo_user to sudoers..." 10 70
-
-    arch-chroot /mnt useradd -m -G wheel "$sudo_user"  &>>$LOGFILE
-    sleep 2
-
-    user_pass=$(whiptail --passwordbox "Please enter your new user's password: " --title \
-        "Getting user password" 8 78 3>&1 1>&2 2>&3 )
-
-    echo -e "$user_pass\n$user_pass" | arch-chroot /mnt passwd "$sudo_user"  &>>$LOGFILE
-
-    TERM=ansi whiptail --title "Sudo User Password Created" --infobox \
-        "sudo user password updated" 10 70
-    sleep 3
 }
 
 # INSTALL BOOTLOADER
@@ -751,7 +733,6 @@ pick_desktop(){
     esac
 }
 
-
 # INSTALL XORG AND DESKTOP
 install_desktop(){
 
@@ -782,81 +763,98 @@ install_extra_stuff(){
 }
 
 
-# VALIDATE PKG NAMES IN SCRIPT
-validate_pkgs(){
+#################### CONFIGURATION FUNCTIONS  ###################################
 
-    MISSING_LOG=/tmp/missing_pkgs
+# GENERATE FSTAB
+gen_fstab(){
+    #clear
+    TERM=ansi whiptail --title "Generating FSTAB" --infobox "Generating /mnt/etc/fstab" 8 75
+    genfstab -U /mnt >> /mnt/etc/fstab
+    sleep 3
 
-    [[ -f $MISSING_LOG ]] && rm "$MISSING_LOG"
+    # take a look at new fstab file
+    whiptail --backtitle "Checkout New /etc/fstab" --title \
+        "Here's your new /etc/fstab" --textbox /mnt/etc/fstab 25 85
+}
 
-    message="Archlinux can change package names without notice. Just making sure we're okay.  We'll be right back with a list of any changes, if any. "
-
-    TERM=ansi whiptail --backtitle "CHECKING PKG NAME CHANGES" --title \
-        "Checking for pkg name changes" --infobox "$message" 8 80
-
-    missing_pkgs=()
-
-    echo -e "\n=== MISSING PKG NAMES (IF ANY) ===\n\n" &>>$MISSING_LOG
-
-    for pkg_arr in "${all_pkgs[@]}"; do
-
-        declare -n arr_name=$pkg_arr  # make a namespace for each pkg_array
-
-        for pkg_name in "${arr_name[@]}"; do
-            if $( pacman -Sp $pkg_name &>/dev/null ); then
-                echo -n "." &>>$MISSING_LOG
-            else 
-                echo -e "\n$pkg_name from $pkg_arr not in repos.\n" &>>$MISSING_LOG
-                missing_pkgs+=("$pkg_arr::$pkg_name")
-            fi
-        done
-    done
-    echo -e "\n\n=== END OF MISSING PKGS ===\n" &>>$MISSING_LOG
+# TIMEZONE
+set_tz(){
     
-    whiptail --backtitle "Packages not in repos" --title \
-       "These packages not in repos" --textbox $MISSING_LOG --scrolltext 20 80
+    TERM=ansi whiptail --title "Setting timezone to $TIMEZONE" --infobox \
+        "Setting Timezone to $TIMEZONE" 8 75
+    arch-chroot /mnt ln -sf /usr/share/zoneinfo/"$TIMEZONE" /etc/localtime
+    arch-chroot /mnt hwclock --systohc --utc 
+    message=$(arch-chroot /mnt date)
+    whiptail --backtitle "SETTING HWCLOCK and TIMEZONE and Hardware Date" --title \
+        "HW CLOCK AND TIMEZONE SET to $TIMEZONE" --msgbox "$message" 8 78
 }
 
-# CHECK FOR ALL EXECUTABLES BEING AVAILABLE FOR THIS SCRIPT
-checkpath(){
-    echo "=== MISSING EXECUTABLES: ===" &>>$LOGFILE
-    echo "${#executables[@]} executables being checked..." &>>$LOGFILE
-    for ex in "${executables[@]}"; do
-        $( command -v $ex &>/dev/null) || ( echo $ex &>>$LOGFILE )
-    done
-    echo "== END MISSING EXECUTABLES ===" &>>$LOGFILE
+# LOCALE
+set_locale(){
+    TERM=ansi whiptail --backtitle "SETTING LOCALE" --title \
+        "Setting Locale to $LOCALE" --infobox "Setting Locale to $LOCALE" 8 78
+    sleep 2
+    arch-chroot /mnt sed -i "s/#$LOCALE/$LOCALE/g" /etc/locale.gen
+    arch-chroot /mnt locale-gen   &>>$LOGFILE
+    sleep 2
+    echo "LANG=$LOCALE" > /mnt/etc/locale.conf 
+    export LANG="$LOCALE"
+    sleep 2
+    result=$(cat /mnt/etc/locale.conf)
+    whiptail --backtitle "LOCALE SET TO $LOCALE" --title "Locale: $LOCALE" \
+        --msgbox "$result" 8 79
 }
 
-# DISPLAY /MNT/ETC/HOSTS
-show_hosts(){
-    whiptail --backtitle "/ETC/HOSTS" --title "Your /etc/hosts file" --textbox /etc/hosts 25 80 
+# HOSTNAME
+set_hostname(){
+    namevar=$(whiptail --title "Hostname" --inputbox \
+        "What is your new hostname?" 20 40 3>&1 1>&2 2>&3)
+    echo "$namevar" > /mnt/etc/hostname
+
+cat > /mnt/etc/hosts <<HOSTS
+127.0.0.1      localhost
+::1            localhost
+127.0.1.1      $namevar.localdomain     $namevar
+HOSTS
+
+    message=$(echo -e "/etc/hostname and /etc/hosts files configured...\n" && echo)
+    message+=$(echo -e "\n/etc/hostname: \n" && cat /mnt/etc/hostname)
+    message+=$(echo -e "\n\n/etc/hosts: \n" && cat /mnt/etc/hosts)
+    whiptail --backtitle "/etc/hostname & /etc/hosts" --title "Files created" \
+        --msgbox "$message" 25 75
 }
 
-# DISPLAY DISK PREP METHODS
-diskmenu(){
 
-    #check_tasks 2
-    while true ; do
+# ADD A USER ACCT
+add_user_acct(){
 
-        diskmenupick=$(whiptail --backtitle "PARTION DISKS" --title "DISK PARTITIONS" \
-            --menu "Prepare Installation Disk (Choose One)" 18 80 4 \
-        "N"   "Prepare Installation Disk with Normal Partitions" \
-        "L"   "Prepare Installation Disk with LVM"   \
-        "E"   "Prepare Installation Disk Encryption and LVM"   \
-        "R"   "Return to previous menu"   3>&1 1>&2 2>&3 ) 
+    TERM=ansi whiptail --backtitle "ADDING SUDO USER" --title \
+        "Adding sudo + user acct..." --infobox "Adding sudo user to new system" 20 50 
 
-        case $diskmenupick in
+    arch-chroot /mnt pacman -S sudo bash-completion sshpass  --noconfirm      &>>$LOGFILE
+    arch-chroot /mnt sed -i 's/# %wheel/%wheel/g' /etc/sudoers
+    arch-chroot /mnt sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers  
 
-            "N") check_tasks 2; get_install_device ;;
+    sudo_user=$(whiptail --backtitle "SUDO USERNAME" --title \
+        "Please provide sudo username" --inputbox \
+        "Please provide a sudo username: " 8 40 3>&1 1>&2 2>&3 )
 
-            "L") USE_LVM='TRUE'; check_tasks 2; lv_create ;;
+    TERM=ansi whiptail --title "Creating sudo user and adding to wheel" --infobox \
+        "Creating $sudo_user and adding $sudo_user to sudoers..." 10 70
 
-            "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; check_tasks 2; lv_create ;;
+    arch-chroot /mnt useradd -m -G wheel "$sudo_user"  &>>$LOGFILE
+    sleep 2
 
-            "R") startmenu ;;
-        esac
-    done
+    user_pass=$(whiptail --passwordbox "Please enter your new user's password: " --title \
+        "Getting user password" 8 78 3>&1 1>&2 2>&3 )
+
+    echo -e "$user_pass\n$user_pass" | arch-chroot /mnt passwd "$sudo_user"  &>>$LOGFILE
+
+    TERM=ansi whiptail --title "Sudo User Password Created" --infobox \
+        "sudo user password updated" 10 70
+    sleep 3
 }
+
 
 
 ##########################################
