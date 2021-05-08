@@ -724,15 +724,15 @@ pick_desktop(){
 
     choice=$(whiptail --title "Please Choose Your Desktop: (spacebar)" --radiolist \
     "Default Desktop is Cinnamon" 20 80 8 \
-    "Cinnamon" "Gnome based desktop that is intuitive and familiar"     ON \
-    "Mate"  "Originally based on Gnome 2, traditional, lightweight"     OFF \
-    "Gnome"  "Modern and even bleeding Edge Desktop"                    OFF \
-    "XFCE"   "Lightweight and full featured Desktop"                    OFF \
-    "KDE"    "Another medium- to heavy-weight DE based on QT toolkit"   OFF \
-    "i3gaps"   "A very popular tiling window manager"                   OFF \
-    "Qtile"   "A terrific tiling window manager written in Python"      OFF \
-    "Xmonad"   "A favorite of tiling WM fans, written in Haskell"       OFF \
-    "Awesome"   "Another favorite tiling WM written in Lua"             OFF 3>&1 1>&2 2>&3 )
+    "Cinnamon" "Gnome based desktop that is intuitive and familiar"        ON \
+    "Mate"     "Originally based on Gnome 2, traditional, lightweight"     OFF \
+    "Gnome"    "Modern and even bleeding Edge Desktop"                     OFF \
+    "XFCE"     "Lightweight and full featured Desktop"                     OFF \
+    "KDE"      "Another medium- to heavy-weight DE based on QT toolkit"    OFF \
+    "i3gaps"   "A very popular tiling window manager"                      OFF \
+    "Qtile"    "A terrific tiling window manager written in Python"        OFF \
+    "Xmonad"   "A favorite of tiling WM fans, written in Haskell"          OFF \
+    "Awesome"  "Another favorite tiling WM written in Lua"                 OFF 3>&1 1>&2 2>&3 )
 
     case $choice in 
         "Cinnamon" ) mydesktop=( "${cinnamon_desktop[@]}" ) ;;
