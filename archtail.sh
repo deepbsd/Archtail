@@ -269,6 +269,9 @@ lvm_hooks(){
 # VALIDATE PKG NAMES IN SCRIPT
 validate_pkgs(){
 
+    # initialize the package database
+    pacman -Sy
+
     MISSING_LOG=/tmp/missing_pkgs
 
     [[ -f $MISSING_LOG ]] && rm "$MISSING_LOG"
