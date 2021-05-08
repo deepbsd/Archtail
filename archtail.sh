@@ -755,7 +755,7 @@ pick_desktop(){
 install_desktop(){
 
     # are we picking up the new choice here?
-    echo -e "=== My Desktop Choice: ===\n ${my_desktop[@]}\n=== End Choice ===" &>>$LOGFILE
+    echo -e "=== My Desktop Choice: ===\n ${mydesktop[@]}\n=== End Choice ===" &>>$LOGFILE
 
     # EXTRA PACKAGES, FONTS, THEMES, CURSORS
     arch-chroot /mnt pacman -S "${basic_x[@]}" --noconfirm   &>>$LOGFILE
@@ -770,7 +770,7 @@ install_desktop(){
 
     ## Insert your default desktop here...
     #arch-chroot /mnt pacman -S "${cinnamon_desktop[@]}" --noconfirm   &>>$LOGFILE
-    arch-chroot /mnt pacman -S "${my_desktop[@]}" --noconfirm   &>>$LOGFILE
+    arch-chroot /mnt pacman -S "${mydesktop[@]}" --noconfirm   &>>$LOGFILE
     arch-chroot /mnt systemctl enable "${display_mgr[@]}" 
 }
 
