@@ -831,6 +831,8 @@ add_user_acct(){
     TERM=ansi whiptail --backtitle "ADDING SUDO USER" --title \
         "Adding sudo + user acct..." --infobox "Adding sudo user to new system" 20 50 
 
+    sleep 2
+
     arch-chroot /mnt pacman -S sudo bash-completion sshpass  --noconfirm      &>>$LOGFILE
     arch-chroot /mnt sed -i 's/# %wheel/%wheel/g' /etc/sudoers
     arch-chroot /mnt sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers  
