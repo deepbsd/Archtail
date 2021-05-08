@@ -636,7 +636,7 @@ add_user_acct(){
     user_pass=$(whiptail --passwordbox "Please enter your new user's password: " --title \
         "Getting user password" 8 78 3>&1 1>&2 2>&3 )
 
-    echo -e "$user_pass\n$user_pass" | arch-chroot /mnt passwd "$sudo_user"  
+    echo -e "$user_pass\n$user_pass" | arch-chroot /mnt passwd "$sudo_user"  &>>$LOGFILE
 
     TERM=ansi whiptail --title "Sudo User Password Created" --infobox \
         "sudo user password updated" 10 70
