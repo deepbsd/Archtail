@@ -269,10 +269,11 @@ lvm_hooks(){
 
 # FOR LOGICAL VOLUME PARTITIONS
 lv_create(){
-    VOL_GROUP="arch_vg"
-    LV_ROOT="ArchRoot"
-    LV_HOME="ArchHome"
-    LV_SWAP="ArchSwap"
+    # These should already be defined.
+    #VOL_GROUP="arch_vg"
+    #LV_ROOT="ArchRoot"
+    #LV_HOME="ArchHome"
+    #LV_SWAP="ArchSwap"
 
     # Choose your installation device
     disk=$(choose_disk)
