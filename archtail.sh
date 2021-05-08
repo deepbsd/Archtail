@@ -754,6 +754,9 @@ pick_desktop(){
 # INSTALL XORG AND DESKTOP
 install_desktop(){
 
+    # are we picking up the new choice here?
+    echo -e "=== My Desktop Choice: ===\n ${my_desktop[@]}\n=== End Choice ===" &>>$LOGFILE
+
     # EXTRA PACKAGES, FONTS, THEMES, CURSORS
     arch-chroot /mnt pacman -S "${basic_x[@]}" --noconfirm   &>>$LOGFILE
     arch-chroot /mnt pacman -S "${extra_x1[@]}" --noconfirm    &>>$LOGFILE
