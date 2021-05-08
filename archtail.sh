@@ -83,6 +83,8 @@ xfce_desktop=( xfce4 xfce4-goodies )
 
 mate_desktop=( mate mate-extra )
 
+gnome_desktop=( gnome gnome-extra )
+
 i3gaps_desktop=( i3-gaps dmenu feh rofi i3status i3blocks nitrogen i3status ttf-font-awesome ttf-ionicons )
 
 qtile_desktop=( qtile )
