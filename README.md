@@ -42,29 +42,39 @@ to have kept it simple, but it's just gotten too big.
 There are some other things that have struck me though:
 
 1. Break some of the larger functions into smaller functions.  Particularly
-   lv\_create.  That one is too big.
+   lv\_create.  That one is too big.  UPDATE: Haven't done this, but I have re-
+   organized the sequence of the functions into Utility functions, Disk functions,
+   Installation functions, and Other functions.  These could later be broken out 
+   into separate files.
 
 2. I want to have a list of all executables in the script and at the start of the
    script make sure they are all in the $PATH (or at least are all executable).
+   UPDATE: This currently works now, but the extra repo is not active by default.  
+   Still looking into that.
 
 3. The user should be able to determine his/her own desktop environment or window
    manager.  Right now they're getting Cinnamon and lightdm whether they want it or
-   not.
+   not.  UPDATE:  This currently is how the script works.  The default is still Cinnamon
+   with lightdm, however.  But whatever the user selects will become the default environment.
 
 4. I don't need to ask for whether to do LVM or not.  I should probably just get
    the user's choice of disk for installation by default and install my usual LVM
    to it using ext4.  I can build in whether it chooses GPT or MBR disk labels.
    Not sure on this.  I could just survey the top Linux installers and see what
-   they do.
+   they do. 
 
 5. Is there a way to re-use the same functions for creating LVs and regular
    partitions?  Seems like there should be, but I should find out.
+   UPDATE:  If I decide to do away with non-LVM disk prep, that will remove
+   quite a few functions.
 
-6. Cryptsetup:  Do I want to bother with it or not?
+6. Cryptsetup:  Do I want to bother with it or not?  (Still haven't worked on this again.)
 
 7. Use a checkmark to indicate the item is complete on the main menu.
+   UPDATE: Creating an actual checkmark on a TTY is actually more trouble than it's worth,
+   so I just created an 'X' in a box in front of each startmenu pick item.
 
 8. I should also check that archtail is being called by BASH and not zsh, for
-   example.
+   example.  (Have not addressed this yet.)
  
 
