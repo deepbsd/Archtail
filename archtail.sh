@@ -746,8 +746,6 @@ pick_desktop(){
         "Awesome"  ) mydesktop=( "${awesome[@]}" ) ;;
         * )          mydesktop=( "${cinnamon_desktop[@]}" )
     esac
-    
-    echo "=== Graphics Driver Selected: ${graphics_driver[@]}  ==  Desktop: ${mydesktop[@]}" &>>$LOGFILE
 }
 
 
