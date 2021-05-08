@@ -293,7 +293,7 @@ validate_pkgs(){
             if $( pacman -Sp $pkg_name &>/dev/null ); then
                 echo -n "." &>>$MISSING_LOG
             else 
-                echo -e "\n$pkg_name from $pkg_arr not in repos.\n" &>>$MISSING_LOG
+                echo -e "\n$pkg_name from $pkg_arr not in repos.\n" >>$MISSING_LOG 2>&1
                 missing_pkgs+=("$pkg_arr::$pkg_name")
             fi
         done
