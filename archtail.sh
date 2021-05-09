@@ -146,6 +146,7 @@ auto_kb(){
     # Set default value for us in case setxkbmap doesn't work
     KEYBOARD=${KEYBOARD:='us'}
     # Default value is 'us'; therefore load new value if we're not in US
+    # loadkeys is not persistent.  Only loads for current session
     if [[ ! $KEYBOARD =~ 'us' ]] ; then loadkeys $KEYBOARD ; fi
 }
 
