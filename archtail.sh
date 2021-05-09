@@ -37,13 +37,9 @@ HOME_SIZE=''     # This is set automatically if using LVM
 
 # You can edit this if you want
 # For some reason the ubuntu geoip server doesn't always respond work
-pacman -Sy   # update the pacman db 
-pacman -S wget --noconfirm &>>$LOGFILE
-#TIMEZONE='America/New_York'
-TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
+TIMEZONE='America/New_York'
 LOCALE="en_US.UTF-8"
-#KEYBOARD="us"
-KEYBOARD=$(setxkbmap -query |grep layout | awk '{print $2}')
+KEYBOARD="us"
 EXT_IP=$( dig +short myip.opendns.com @resolver1.opendns.com )
 
 
@@ -122,6 +118,7 @@ completed_tasks=( "X" )
 
 ############  UTILITY FUNCTIONS  ####################
 
+
 welcome(){
     message="Dave's ARCH Installer will lead you through a menu-driven process to\
         create a base installation of Archlinux on your computer or virtual machine\
@@ -134,6 +131,17 @@ welcome(){
     [[ -f $LOGFILE ]] && rm $LOGFILE
     when=$(date)
     echo "=== START INSTALL: $when ===" &>>$LOGFILE
+}
+
+# AUTO SET TIMEZONE
+auto_tz(){
+    pacman -Sy  $>>$LOGFILE 
+    pacman -S wget --noconfirm &>>$LOGFILE
+    TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
+}
+
+auto_kb(){
+    KEYBOARD=$(setxkbmap -query |grep layout | awk '{print $2}')
 }
 
 # VERIFY BOOT MODE
@@ -951,6 +959,7 @@ startmenu(){
 }
 
 welcome
+auto_tz
 checkpath
 startmenu
 
