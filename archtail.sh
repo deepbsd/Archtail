@@ -138,10 +138,15 @@ auto_tz(){
     pacman -Sy  $>>$LOGFILE 
     pacman -S wget --noconfirm &>>$LOGFILE
     TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
+    TIMEZONE=${TIMEZONE:='America/New_York'}
 }
 
 auto_kb(){
     KEYBOARD=$(setxkbmap -query |grep layout | awk '{print $2}')
+    # Set default value for us in case setxkbmap doesn't work
+    KEYBOARD=${KEYBOARD:='us'}
+    # Default value is 'us'; therefore load new value if we're not in US
+    if [[ ! $KEYBOARD =~ 'us' ]] ; then loadkeys $KEYBOARD ; fi
 }
 
 # VERIFY BOOT MODE
@@ -960,6 +965,7 @@ startmenu(){
 
 welcome
 auto_tz
+auto_kb
 checkpath
 startmenu
 
