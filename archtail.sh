@@ -742,7 +742,7 @@ pick_desktop(){
         "Cinnamon" ) mydesktop=( "${cinnamon_desktop[@]}" ) ;;
         "Mate"     ) mydesktop=( "${mate_desktop[@]}" ) ;;
         "Gnome"    ) mydesktop=( "${gnome_desktop[@]}" )   ;;
-        "XFCE"     ) mydesktop=( "${xfce[@]}" )  ;;
+        "XFCE"     ) mydesktop=( "${xfce_desktop[@]}" )  ;;
         "KDE"      ) mydesktop=( "${kde_desktop[@]}" )  ;;
         "i3gaps"   ) mydesktop=( "${i3gaps_desktop[@]}" )  ;;
         "Qtile"    ) mydesktop=( "${qtile_desktop[@]}" ) ;;
