@@ -33,7 +33,7 @@ BOOT_SIZE=512M     # BOOT applies to non-efi BIOS and MBR disklable
 EFI_SIZE=512M      # EFI applies to GPT disklable
 ROOT_SIZE=13G      # Applies to either root partition or root logical volume
 SWAP_SIZE=4G       # calculate this with SWAP_SIZE="$(free | awk '/^Mem/ {mem=$2/1000000; print int(2.2*mem)}')G"
-HOME_SIZE=''     # This is set automatically if using LVM
+HOME_SIZE=''       # Takes up rest of drive
 
 # You can edit this if you want
 # For some reason the ubuntu geoip server doesn't always respond work
@@ -50,7 +50,7 @@ EXT_IP=$( dig +short myip.opendns.com @resolver1.opendns.com )
 
 # these are all executables in script that should be in $PATH
 executables=( "date" "whiptail" "rm" "echo" "ls" "sed" "grep" "sleep" "exit" "shuf" "eval" \
-"wget" "break" "timedatectl" "pgrep" "arch-chroot" "sgdisk" "sfdisk" "mkfs" "pvcreate" \
+"dig" "wget" "break" "timedatectl" "pgrep" "arch-chroot" "sgdisk" "sfdisk" "mkfs" "pvcreate" \
 "vgcreate" "lvcreate" "mkswap" "swapon" "modprobe" "vgchange" "mount" "mkdir" "lsblk" \
 "local" "if" "then" "for" "[[" "case" "genfstab" "locale-gen" "cat" "pacman" "passwd" \
 "useradd" "systemctl" "declare" "while")
