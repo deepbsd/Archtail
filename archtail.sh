@@ -135,7 +135,7 @@ welcome(){
 
 # AUTO SET TIMEZONE
 auto_tz(){
-    pacman -Sy  $>>$LOGFILE 
+    pacman -Sy  &>>$LOGFILE 
     pacman -S wget --noconfirm &>>$LOGFILE
     TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
     TIMEZONE=${TIMEZONE:='America/New_York'}
@@ -742,7 +742,7 @@ pick_desktop(){
         "Cinnamon" ) mydesktop=( "${cinnamon_desktop[@]}" ) ;;
         "Mate"     ) mydesktop=( "${mate_desktop[@]}" ) ;;
         "Gnome"    ) mydesktop=( "${gnome_desktop[@]}" )   ;;
-        "XFCE"     ) mydesktop=( "${xfce[@]}" )  ;;
+        "XFCE"     ) mydesktop=( "${xfce_desktop[@]}" )  ;;
         "KDE"      ) mydesktop=( "${kde_desktop[@]}" )  ;;
         "i3gaps"   ) mydesktop=( "${i3gaps_desktop[@]}" )  ;;
         "Qtile"    ) mydesktop=( "${qtile_desktop[@]}" ) ;;
@@ -754,6 +754,9 @@ pick_desktop(){
 
 # INSTALL XORG AND DESKTOP
 install_desktop(){
+
+    # UPDATE FROM LATEST DESKTOP CHOICE
+    #desktop=( "${mydesktop[@]}" )
 
     # EXTRA PACKAGES, FONTS, THEMES, CURSORS
     arch-chroot /mnt pacman -S "${basic_x[@]}" --noconfirm   &>>$LOGFILE
@@ -897,7 +900,7 @@ startmenu(){
             "U"   "[$(echo ${completed_tasks[8]}]    Add user + sudo account) "   \
             "W"   "[$(echo ${completed_tasks[9]}]    Install Wifi Drivers )"      \
             "G"   "[$(echo ${completed_tasks[10]}]   Install grub)"               \
-            "E"   "[$(echo ${completed_tasks[11]}]   Choose Your Desktop Environment)" \
+            "E"   "[$(echo ${completed_tasks[11]}]   Choose Your Desktop Environment and Graphics Driver)" \
             "X"   "[$(echo ${completed_tasks[12]}]   Install Xorg + Desktop)"     \
             "I"   "[$(echo ${completed_tasks[13]}]   Install Extra Window Mgrs)"  \
             "P"   "[$(echo ${completed_tasks[14]}]   Check for pkg name changes)" \
