@@ -865,6 +865,7 @@ add_user_acct(){
         "Creating $sudo_user and adding $sudo_user to sudoers..." 10 70
 
     arch-chroot /mnt useradd -m -G wheel "$sudo_user"  &>>$LOGFILE
+    sleep 2  # Need this so user has time to read infobox above
 
     user_pass=$(whiptail --passwordbox "Please enter your new user's password: " --title \
         "Getting user password" 8 78 3>&1 1>&2 2>&3 )
