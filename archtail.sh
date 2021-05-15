@@ -511,7 +511,6 @@ format_disk(){
 
     # only do efi slice if efi_boot_mode return 0; else return 0
     [[ "$slice" =~ 'efi' && ! "$DISKTABLE" =~ 'GPT' ]] && return 0
-    #clear
 
     sleep 3
     case $slice in 
