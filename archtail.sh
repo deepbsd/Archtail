@@ -815,10 +815,10 @@ set_locale(){
     sleep 2
     arch-chroot /mnt sed -i "s/#$LOCALE/$LOCALE/g" /etc/locale.gen
     arch-chroot /mnt locale-gen   &>>$LOGFILE
-    sleep 2
+
     echo "LANG=$LOCALE" > /mnt/etc/locale.conf 
     export LANG="$LOCALE"
-    sleep 2
+
     result=$(cat /mnt/etc/locale.conf)
     whiptail --backtitle "LOCALE SET TO $LOCALE" --title "Locale: $LOCALE" \
         --msgbox "$result" 8 79
