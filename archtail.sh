@@ -717,7 +717,7 @@ pick_desktop(){
     "xf86-video-ati"            "ATI cards"                              OFF \
     "xf86-video-intel"          "Intel Video Chipsets"                   OFF \
     "xf86-video-nouveau"        "Nvidia Chipsets (Open Source)"          OFF \
-    "xf86-video-openchrome"     "Chrome-related video chipsets"          OFF \
+    "xf86-video-openchrome"     "Chromebook video chipsets"              OFF \
     "xf86-video-vmware"         "Use for virtual machines"               ON \
     "xf86-video-fbdev"          "Only for frame buffer devices!!!"       OFF 3>&1 1>&2 2>&3 )  
 
@@ -767,8 +767,7 @@ install_desktop(){
     arch-chroot /mnt pacman -S "${display_mgr[@]}" --noconfirm        &>>$LOGFILE 
     arch-chroot /mnt pacman -S "${graphics_driver[@]}" --noconfirm    &>>$LOGFILE 
 
-    ## Insert your default desktop here...
-    #arch-chroot /mnt pacman -S "${cinnamon_desktop[@]}" --noconfirm   &>>$LOGFILE
+    ## MYDESKTOP gets installed here, either default or user choice
     arch-chroot /mnt pacman -S "${mydesktop[@]}" --noconfirm   &>>$LOGFILE
     arch-chroot /mnt systemctl enable "${display_mgr[@]}" 
 }
