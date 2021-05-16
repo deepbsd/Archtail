@@ -893,7 +893,7 @@ startmenu(){
             "F"   "[$(echo ${completed_tasks[4]}]    New FSTAB and TZ/Locale)"    \
             "H"   "[$(echo ${completed_tasks[5]}]    Set new hostname)"           \
             "R"   "[$(echo ${completed_tasks[6]}]    Set root password)"          \
-            "M"   "[$(echo ${completed_tasks[7]}]    Install more essentials)"    \
+            "M"   "[$(echo ${completed_tasks[7]}]    Install network essentials)" \
             "U"   "[$(echo ${completed_tasks[8]}]    Add user + sudo account) "   \
             "W"   "[$(echo ${completed_tasks[9]}]    Install Wifi Drivers )"      \
             "G"   "[$(echo ${completed_tasks[10]}]   Install grub)"               \
