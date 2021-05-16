@@ -744,8 +744,8 @@ pick_desktop(){
         "KDE"      ) mydesktop=( "${kde_desktop[@]}" )  ;;
         "i3gaps"   ) mydesktop=( "${i3gaps_desktop[@]}" )  ;;
         "Qtile"    ) mydesktop=( "${qtile_desktop[@]}" ) ;;
-        "Xmonad"   ) mydesktop=( "${xmonad[@]}" ) ;;
-        "Awesome"  ) mydesktop=( "${awesome[@]}" ) ;;
+        "Xmonad"   ) mydesktop=( "${xmonad_desktop[@]}" ) ;;
+        "Awesome"  ) mydesktop=( "${awesome_desktop[@]}" ) ;;
         * )          mydesktop=( "${cinnamon_desktop[@]}" )
     esac
 }
@@ -764,12 +764,12 @@ install_desktop(){
     arch-chroot /mnt pacman -S "${extra_x4[@]}" --noconfirm   &>>$LOGFILE
 
     # DRIVER FOR GRAPHICS CARD, DESKTOP, DISPLAY MGR
-    arch-chroot /mnt pacman -S "${display_mgr[@]}" --noconfirm        &>>$LOGFILE 
+    arch-chroot /mnt pacman -S "${display_mgr[@]}" --noconfirm  &>>$LOGFILE 
     arch-chroot /mnt pacman -S "${graphics_driver[@]}" --noconfirm    &>>$LOGFILE 
 
     ## MYDESKTOP gets installed here, either default or user choice
     arch-chroot /mnt pacman -S "${mydesktop[@]}" --noconfirm   &>>$LOGFILE
-    arch-chroot /mnt systemctl enable "${display_mgr[@]}" 
+    arch-chroot /mnt systemctl enable "${display_mgr[@]}" &>>$LOGFILE 2>&1
 }
 
 install_extra_stuff(){
