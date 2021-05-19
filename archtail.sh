@@ -7,7 +7,11 @@
 
 
 LOGFILE='/tmp/install.log'
-DISKTABLE=''
+if $(efi_boot_mode); then 
+    DISKTABLE='GPT'
+else
+    DISKTABLE='MBR'
+fi
 IN_DEVICE=''
 EFI_SLICE=''
 ROOT_SLICE=''
@@ -364,13 +368,6 @@ choose_disk(){
 # INSTALL TO WHAT DEVICE?
 get_install_device(){
     device=$(choose_disk)
-    if $(efi_boot_mode); then 
-        echo && echo "Formatting with EFI/GPT"
-        DISKTABLE='GPT'
-    else
-        echo && echo "Formatting with BIOS/MBR"
-        DISKTABLE='MBR'
-    fi
     part_disk "$device"
 }
 
@@ -529,10 +526,13 @@ format_disk(){
     device=$1; slice=$2
 
     # only do efi slice if efi_boot_mode return 0; else return 0
-    [[ "$slice" =~ 'efi' && ! "$DISKTABLE" =~ 'GPT' ]] && return 0
+
+    # this is old. is it preventing a good efi slice from getting formatted?
+    #[[ "$slice" =~ 'efi' && ! "$DISKTABLE" =~ 'GPT' ]] && return 0
 
     case $slice in 
-        efi ) mkfs.fat -F32 "$device"           &>> $LOGFILE
+        efi ) [[ $DISKTABLE == "GPT" ]] || return 0
+            mkfs.fat -F32 "$device"           &>> $LOGFILE
             mount_part "$device" /mnt/boot/efi  &>> $LOGFILE
             ;;
         home  ) mkfs.ext4 "$device"             &>> $LOGFILE
