@@ -411,7 +411,7 @@ lv_create(){
 
         # Format the EFI partition
         #mkfs.fat -F32 "$EFI_DEVICE"                               &>> $LOGFILE
-        format_disk "$EFI_DEVICE" efi  &>>$LOGFILE
+        format_disk "$EFI_DEVICE" efi
     else
         # get boot partition (we're using MBR with LVM here)
         boot_dev=$(whiptail --title "Get Boot Device" \
