@@ -335,7 +335,7 @@ show_hosts(){
     whiptail --backtitle "/ETC/HOSTS" --title "Your /etc/hosts file" --textbox /etc/hosts 25 80 
 }
 
-# SHOW ERROR IF FUNCTION DIDN'T SUCCEED
+# SHOW ERROR IF FUNCTION DIDN'T SUCCEED, USER MAY EXIT OR NOT
 show_error(){
     message=$1
     whiptail --backtitle "ERROR! ERROR!" --title "Error: " --msgbox "$message" 20 80
