@@ -434,7 +434,8 @@ EOF
         sfdisk /dev/sda < /tmp/sfdisk.cmd   &>> $LOGFILE
 
         # format the boot partition
-        mkfs.ext4 "$BOOT_DEVICE"            &>> $LOGFILE
+        #mkfs.ext4 "$BOOT_DEVICE"            &>> $LOGFILE
+        format_disk "$BOOT_DEVICE" boot
     fi
 
     # run cryptsetup on root device  # uncomment this later
@@ -536,6 +537,9 @@ format_disk(){
             ;;
         home  ) mkfs.ext4 "$device"             &>> $LOGFILE
             mount_part "$device" /mnt/home      &>> $LOGFILE
+            ;;
+        boot  ) mkfs.ext4 "$device"             &>> $LOGFILE
+            mount_part $device /mnt/boot        &>> $LOGFILE
             ;;
         root  ) mkfs.ext4 "$device"             &>> $LOGFILE
             mount_part "$device" /mnt           &>> $LOGFILE
