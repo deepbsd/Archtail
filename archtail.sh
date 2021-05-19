@@ -614,7 +614,7 @@ diskmenu(){
     while true ; do
 
         diskmenupick=$(whiptail --backtitle "PARTION DISKS" --title "DISK PARTITIONS" \
-            --menu "Prepare Installation Disk (Choose One)" 18 80 4 \
+            --menu "Prepare Installation Disk (Choose One)" 18 80 5 \
         "N"   "Prepare Installation Disk with Normal Partitions" \
         "L"   "Prepare Installation Disk with LVM"   \
         "E"   "Prepare Installation Disk Encryption and LVM"   \
