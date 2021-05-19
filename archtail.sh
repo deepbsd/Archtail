@@ -531,8 +531,7 @@ format_disk(){
     [[ "$slice" =~ 'efi' && ! "$DISKTABLE" =~ 'GPT' ]] && return 0
 
     case $slice in 
-        efi ) [[ $DISKTABLE == "GPT" ]] || return 0
-            mkfs.fat -F32 "$device"           &>> $LOGFILE
+        efi ) mkfs.fat -F32 "$device"           &>> $LOGFILE
             mount_part "$device" /mnt/boot/efi  &>> $LOGFILE
             ;;
         home  ) mkfs.ext4 "$device"             &>> $LOGFILE
