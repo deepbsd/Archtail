@@ -341,7 +341,7 @@ show_error(){
     whiptail --backtitle "ERROR! ERROR!" --title "Error: " --msgbox "$message" 20 80
     whiptail --backtitle "QUIT OR CONTINUE" --title "Quit or Continue?" --yesno \
         --yes-button "Return to startmenu" --no-button "Exit DARCHI"
-    ($? && startmenu) || exit 1
+    ( [[ $? -eq 0 ]] && startmenu ) || exit 1
 }
 
 
