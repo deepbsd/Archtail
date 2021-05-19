@@ -393,7 +393,7 @@ lv_create(){
         TERM=ansi whiptail --backtitle "CREATING PARTITIONS" --title "Creating Your Partitions" --infobox "Please wait a moment while we create your partitions..." 8 40
 
         EFI_DEVICE=/dev/"$efi_dev"
-        EFI_SIZE=512M
+        EFI_SIZE=512M   # This is a duplicate line
 
         # Create the physical partitions
         sgdisk -Z "$IN_DEVICE"                                    &>> $LOGFILE
@@ -401,7 +401,8 @@ lv_create(){
         sgdisk -n 2 -t 2:8e00 -c 2:VOLGROUP "$IN_DEVICE"          &>> $LOGFILE
 
         # Format the EFI partition
-        mkfs.fat -F32 "$EFI_DEVICE"                               &>> $LOGFILE
+        #mkfs.fat -F32 "$EFI_DEVICE"                               &>> $LOGFILE
+        format_disk "$EFI_DEVICE" efi  &>>$LOGFILE
     else
         # get boot partition (we're using MBR with LVM here)
         boot_dev=$(whiptail --title "Get Boot Device" \
