@@ -527,11 +527,12 @@ format_disk(){
 
     # only do efi slice if efi_boot_mode return 0; else return 0
 
-    # this is old. is it preventing a good efi slice from getting formatted?
-    #[[ "$slice" =~ 'efi' && "$DISKTABLE" != 'GPT' ]] && return 0
+    if [[ $slice == 'efi' ]]; then
+        $(efi_boot_mode) || show_error "You can't create an EFI partition with an MBR disktable!"
+    fi
 
     case $slice in 
-        efi ) $(efi_boot_mode) && mkfs.fat -F32 "$device"           &>> $LOGFILE
+        efi ) mkfs.fat -F32 "$device"           &>> $LOGFILE
             mount_part "$device" /mnt/boot/efi  &>> $LOGFILE
             ;;
         home  ) mkfs.ext4 "$device"             &>> $LOGFILE
