@@ -481,8 +481,10 @@ mount_part(){
     # 2nd parameter is mount point
     device=$1; mt_pt=$2
 
+    # both efi and non-efi systems need /mnt/boot
     [[ ! -d /mnt/boot ]] && mkdir /mnt/boot &>> $LOGFILE
 
+    # only efi systems need /mnt/boot/efi
     $(efi_boot_mode) && ! [ -d /mnt/boot/efi ] && mkdir /mnt/boot/efi &>> $LOGFILE
 
     [[ ! -d "$mt_pt" ]] && mkdir "$mt_pt"   &>>$LOGFILE
