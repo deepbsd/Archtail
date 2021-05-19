@@ -445,8 +445,9 @@ EOF
     lvcreate -l 100%FREE  "$VOL_GROUP" -n "$LV_HOME"      &>> $LOGFILE
     
     # Format SWAP 
-    mkswap /dev/"$VOL_GROUP"/"$LV_SWAP"                   &>> $LOGFILE
-    swapon /dev/"$VOL_GROUP"/"$LV_SWAP"                   &>> $LOGFILE
+    #mkswap /dev/"$VOL_GROUP"/"$LV_SWAP"                   &>> $LOGFILE
+    #swapon /dev/"$VOL_GROUP"/"$LV_SWAP"                   &>> $LOGFILE
+    format_disk /dev/"$VOL_GROUP"/"$LV_SWAP" swap
 
     # insert the vol group kernel module
     modprobe dm_mod                                       &>> $LOGFILE
@@ -456,25 +457,30 @@ EOF
 
     ## format the volumes
     ###  EFI or BOOT partition already handled
-    mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_ROOT"                &>> $LOGFILE
-    mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_HOME"                &>> $LOGFILE
+    #mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_ROOT"                &>> $LOGFILE
+    #mkfs.ext4 /dev/"$VOL_GROUP"/"$LV_HOME"                &>> $LOGFILE
+    format_disk /dev/"$VOL_GROUP"/"$LV_ROOT"  root
+    format_disk /dev/"$VOL_GROUP"/"$LV_HOME"  home
+
+
+    # Everything below should already be handled now...
 
     # mount the volumes
-    mount /dev/"$VOL_GROUP"/"$LV_ROOT" /mnt               &>> $LOGFILE
-    mkdir /mnt/home                                       &>> $LOGFILE
-    mount /dev/"$VOL_GROUP"/"$LV_HOME" /mnt/home          &>> $LOGFILE
-    if $(efi_boot_mode); then
-        # mount the EFI partitions
-        mkdir /mnt/boot && mkdir /mnt/boot/efi            &>> $LOGFILE
-        mount "$EFI_DEVICE" /mnt/boot/efi                 &>> $LOGFILE
-    else
-        mkdir /mnt/boot                                   &>> $LOGFILE
-        mount "$BOOT_DEVICE" /mnt/boot                    &>> $LOGFILE
-    fi
-    lsblk > /tmp/filesystems_created
-    whiptail --title "LV's Created and Mounted" --backtitle "Filesystem Created" \
-        --textbox /tmp/filesystems_created 30 70
-    startmenu
+    #mount /dev/"$VOL_GROUP"/"$LV_ROOT" /mnt               &>> $LOGFILE
+    #mkdir /mnt/home                                       &>> $LOGFILE
+    #mount /dev/"$VOL_GROUP"/"$LV_HOME" /mnt/home          &>> $LOGFILE
+    #if $(efi_boot_mode); then
+    #    # mount the EFI partitions
+    #    mkdir /mnt/boot && mkdir /mnt/boot/efi            &>> $LOGFILE
+    #    mount "$EFI_DEVICE" /mnt/boot/efi                 &>> $LOGFILE
+    #else
+    #    mkdir /mnt/boot                                   &>> $LOGFILE
+    #    mount "$BOOT_DEVICE" /mnt/boot                    &>> $LOGFILE
+    #fi
+    #lsblk > /tmp/filesystems_created
+    #whiptail --title "LV's Created and Mounted" --backtitle "Filesystem Created" \
+    #    --textbox /tmp/filesystems_created 30 70
+    #startmenu
 }
 
 # MOUNT PARTION
