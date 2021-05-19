@@ -406,8 +406,6 @@ lv_create(){
         sgdisk -n 1::+"$EFI_SIZE" -t 1:ef00 -c 1:EFI "$IN_DEVICE" &>> $LOGFILE
         sgdisk -n 2 -t 2:8e00 -c 2:VOLGROUP "$IN_DEVICE"          &>> $LOGFILE
 
-        # Format the EFI partition
-        format_disk "$EFI_DEVICE" efi
     else
         # get boot partition (we're using MBR with LVM here)
         boot_dev=$(whiptail --title "Get Boot Device" \
@@ -430,7 +428,6 @@ EOF
         sfdisk /dev/sda < /tmp/sfdisk.cmd   &>> $LOGFILE
 
         # format the boot partition
-        #mkfs.ext4 "$BOOT_DEVICE"            &>> $LOGFILE
         format_disk "$BOOT_DEVICE" boot
     fi
 
@@ -460,8 +457,9 @@ EOF
     vgchange -ay                                          &>> $LOGFILE
 
     ## format the volumes
-    ###  EFI or BOOT partition already handled
     format_disk /dev/"$VOL_GROUP"/"$LV_ROOT"  root
+    ## Format the EFI partition  (Have to do this AFTER the root partition)
+    format_disk "$EFI_DEVICE" efi
     format_disk /dev/"$VOL_GROUP"/"$LV_HOME"  home
 
     # examine our work here
