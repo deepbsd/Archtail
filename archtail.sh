@@ -487,10 +487,11 @@ mount_part(){
     # only efi systems need /mnt/boot/efi
     $(efi_boot_mode) && ! [ -d /mnt/boot/efi ] && mkdir /mnt/boot/efi &>> $LOGFILE
 
+    # if mt_pt doesn't exist, create it if possible
     [[ ! -d "$mt_pt" ]] && mkdir "$mt_pt"   &>>$LOGFILE
     
-    # Do the deed (Mount it!)
-    mount "$device" "$mt_pt"
+    # Do the deed (Mount it!)  Don't forget the logfile
+    mount "$device" "$mt_pt"  &>>$LOGFILE
 
     # Check if we've succeeded or not
     if [[ "$?" -eq 0 ]]; then
