@@ -458,7 +458,8 @@ EOF
 
     ## format the volumes
     format_disk /dev/"$VOL_GROUP"/"$LV_ROOT"  root
-    ## Format the EFI partition  (Have to do this AFTER the root partition)
+    ## Format the EFI partition  
+    ## Have to do this AFTER the root partition or else it won't get mounted properly
     format_disk "$EFI_DEVICE" efi
     format_disk /dev/"$VOL_GROUP"/"$LV_HOME"  home
 
