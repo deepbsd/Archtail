@@ -477,9 +477,9 @@ EOF
     #    mkdir /mnt/boot                                   &>> $LOGFILE
     #    mount "$BOOT_DEVICE" /mnt/boot                    &>> $LOGFILE
     #fi
-    #lsblk > /tmp/filesystems_created
-    #whiptail --title "LV's Created and Mounted" --backtitle "Filesystem Created" \
-    #    --textbox /tmp/filesystems_created 30 70
+    lsblk > /tmp/filesystems_created
+    whiptail --title "LV's Created and Mounted" --backtitle "Filesystem Created" \
+        --textbox /tmp/filesystems_created 30 70
     #startmenu
 }
 
