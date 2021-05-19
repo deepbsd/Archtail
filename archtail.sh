@@ -243,7 +243,7 @@ specialprogressgauge(){
         showprogress 99 100 3 3  # If we have completion, we add 6 sec. Max of 53 sec.
         echo "=== No longer watching PID: $thepid ===" &>>$LOGFILE
         break
-    done  | whiptail --backtitle "$backmessage" --title "Progress Gauge" --gauge "$message" 6 70 0
+    done  | whiptail --backtitle "$backmessage" --title "Progress Gauge" --gauge "$message" 9 70 0
 }
 
 # UPDATE SYSTEM CLOCK
