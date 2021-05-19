@@ -528,10 +528,10 @@ format_disk(){
     # only do efi slice if efi_boot_mode return 0; else return 0
 
     # this is old. is it preventing a good efi slice from getting formatted?
-    [[ "$slice" =~ 'efi' && "$DISKTABLE" != 'GPT' ]] && return 0
+    #[[ "$slice" =~ 'efi' && "$DISKTABLE" != 'GPT' ]] && return 0
 
     case $slice in 
-        efi ) mkfs.fat -F32 "$device"           &>> $LOGFILE
+        efi ) $(efi_boot_mode) && mkfs.fat -F32 "$device"           &>> $LOGFILE
             mount_part "$device" /mnt/boot/efi  &>> $LOGFILE
             ;;
         home  ) mkfs.ext4 "$device"             &>> $LOGFILE
