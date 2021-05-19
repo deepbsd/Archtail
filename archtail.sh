@@ -335,6 +335,15 @@ show_hosts(){
     whiptail --backtitle "/ETC/HOSTS" --title "Your /etc/hosts file" --textbox /etc/hosts 25 80 
 }
 
+# SHOW ERROR IF FUNCTION DIDN'T SUCCEED
+show_error(){
+    message=$1
+    whiptail --backtitle "ERROR! ERROR!" --title "Error: " --msgbox "$message" 20 80
+    whiptail --backtitle "Quit or Continue" --title "Quit or Continue?" --yesno \
+        --yes-button "Return to startmenu" --no-button "Exit DARCHI"
+    ($? && startmenu) || exit 1
+}
+
 
 
 #################  DISK FUNCTIONS  ########################
@@ -498,17 +507,16 @@ mount_part(){
     [[ ! -d "$mt_pt" ]] && mkdir "$mt_pt"   &>>$LOGFILE
     
     # Do the deed (Mount it!)  Don't forget the logfile
-    mount "$device" "$mt_pt"  &>>$LOGFILE
+    mount "$device" "$mt_pt" 2>&1  &>>$LOGFILE
 
     # Check if we've succeeded or not
     if [[ "$?" -eq 0 ]]; then
-        TERM=ansi whiptail --title "Mount successful" --infobox "$device mounted on $mt_pt" 8 65
-        sleep 3
+        echo "====== $device mounted successfully on $mt_pt ======" &>>$LOGFILE
     else
         TERM=ansi whiptail --title "Mount NOT successful" \
-            --infobox "$device failed mounting on $mt_pt" 8 65
-        sleep 3
-        exit 1
+            --msgbox "$device failed mounting on $mt_pt" 8 65
+        echo "!!!### ===== $device failed mounting on $mt_pt ===== ###!!!"
+        show_error "$device failed to mount on $mt_pt"
     fi
     return 0
 }
