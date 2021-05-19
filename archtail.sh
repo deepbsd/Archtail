@@ -339,7 +339,7 @@ show_hosts(){
 show_error(){
     message=$1
     whiptail --backtitle "ERROR! ERROR!" --title "Error: " --msgbox "$message" 20 80
-    whiptail --backtitle "Quit or Continue" --title "Quit or Continue?" --yesno \
+    whiptail --backtitle "QUIT OR CONTINUE" --title "Quit or Continue?" --yesno \
         --yes-button "Return to startmenu" --no-button "Exit DARCHI"
     ($? && startmenu) || exit 1
 }
