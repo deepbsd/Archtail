@@ -411,9 +411,12 @@ lv_create(){
     # Get EFI or BOOT partition?
     if $(efi_boot_mode); then
 
-        efi_dev=$(whiptail --title "Get EFI Device" \
-            --inputbox "What partition for your EFI Device? \
-            (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&1 1>&2 2>&3) 
+        efi_dev=$(whiptail --title "Get EFI Device" --radiolist \
+            "What partition for your EFI Device?  (sda1 nvme0n1p1, sdb1, etc)" 8 50 4 \
+            "${choices[0]}" "" ON \
+            "${choices[1]}" "" OFF \
+            "${choices[2]}" "" OFF \
+            "${choices[3]}" "" OFF  3>&1 1>&2 2>&3) 
 
         # show an infobox while we wait for partitions
         TERM=ansi whiptail --backtitle "CREATING PARTITIONS" --title "Creating Your Partitions" --infobox "Please wait a moment while we create your partitions..." 8 40
