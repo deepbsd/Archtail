@@ -388,7 +388,7 @@ lv_create(){
 
     # Choose a partition for the root device
     root_dev=$(whiptail --title "Get Physical Volume Device" --radiolist \
-    "What partition for your Physical Volume Group?  (sda2, nvme0n1p2, sdb2, etc)" 20 50 4 \ 
+    "What partition for your Physical Volume Group?  (sda2, nvme0n1p2, sdb2, etc)" 20 50 4 \
     "${choices[0]}" "" OFF \
     "${choices[1]}" "" ON \
     "${choices[2]}" "" OFF \
@@ -396,7 +396,12 @@ lv_create(){
     ROOT_DEVICE=/dev/"$root_dev"
 
     # get root partition or volume
-    rootsize=$(whiptail --title "Get Size of Root Partition or Volume" --inputbox "What size for your root partition? (12G, 50G, 100G, etc)" 8 50 3>&1 1>&2 2>&3)
+    rootsize=$(whiptail --title "Get Size of Root Partition or Volume" --radiolist \
+        "What size for your root partition? (12G, 50G, 100G, etc)" 8 50 4 \
+        "12G" "" ON \
+        "50G" "" OFF \
+        "75G" "" OFF \
+        "100G" "" OFF 3>&1 1>&2 2>&3)
     ROOT_SIZE="$rootsize"
 
     # get size of swap partition or volume
