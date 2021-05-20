@@ -89,7 +89,7 @@ gnome_desktop=( gnome gnome-extra )
 
 i3gaps_desktop=( i3-gaps dmenu feh rofi i3status i3blocks nitrogen i3status ttf-font-awesome ttf-ionicons )
 
-qtile_desktop=( qtile )
+qtile_desktop=( qtile dmenu feh rofi nitrogen ttf-font-awesome ttf-ionicons )
 
 xmonad_desktop=( xmonad xmonad-contrib )
 
@@ -458,8 +458,8 @@ EOF
 
     ## format the volumes
     format_disk /dev/"$VOL_GROUP"/"$LV_ROOT"  root
-    ## Format the EFI partition  
-    ## Have to do this AFTER the root partition or else it won't get mounted properly
+    ## Format the EFI partition:  have to do this AFTER the 
+    ## root partition or else it won't get mounted properly
     format_disk "$EFI_DEVICE" efi
     format_disk /dev/"$VOL_GROUP"/"$LV_HOME"  home
 
