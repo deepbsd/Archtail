@@ -499,6 +499,7 @@ EOF
     lsblk > /tmp/filesystems_created
     whiptail --title "LV's Created and Mounted" --backtitle "Filesystem Created" \
         --textbox /tmp/filesystems_created 30 70
+    sleep 4
     startmenu
 }
 
