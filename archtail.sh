@@ -377,7 +377,22 @@ lv_create(){
     # Choose your installation device
     disk=$(choose_disk)
     IN_DEVICE=/dev/"$disk"
-    root_dev=$(whiptail --title "Get Physical Volume Device" --inputbox "What partition for your Physical Volume Group?  (sda2, nvme0n1p2, sdb2, etc)" 8 50 3>&1 1>&2 2>&3) 
+    choices=()
+
+    # Set up the partition choices for the install disk
+    if [[ $disk =~ 'nvme' ]]; then
+        choices+=( "${disk}p1" "${disk}p2" "${disk}p3" "${disk}p4" )
+    else
+        choices+=( "${disk}1" "${disk}2" "${disk}3" "${disk}4" )
+    fi
+
+    # Choose a partition for the root device
+    root_dev=$(whiptail --title "Get Physical Volume Device" --radiolist "What partition for your Physical \
+Volume Group?  (sda2, nvme0n1p2, sdb2, etc)" 8 50 \ 
+    "${choices[0]}" "" OFF \
+    "${choices[1]}" "" ON \
+    "${choices[2]}" "" OFF \
+    "${choices[3]}" "" OFF \ 3>&1 1>&2 2>&3) 
     ROOT_DEVICE=/dev/"$root_dev"
 
     # get root partition or volume
