@@ -397,7 +397,7 @@ lv_create(){
 
     # get root partition or volume
     rootsize=$(whiptail --title "Get Size of Root Partition or Volume" --radiolist \
-        "What size for your root partition? (12G, 50G, 100G, etc)" 8 50 4 \
+        "What size for your root partition? (12G, 50G, 100G, etc)" 20 50 4 \
         "12G" "" ON \
         "50G" "" OFF \
         "75G" "" OFF \
@@ -412,7 +412,7 @@ lv_create(){
     if $(efi_boot_mode); then
 
         efi_dev=$(whiptail --title "Get EFI Device" --radiolist \
-            "What partition for your EFI Device?  (sda1 nvme0n1p1, sdb1, etc)" 8 50 4 \
+            "What partition for your EFI Device?  (sda1 nvme0n1p1, sdb1, etc)" 20 50 4 \
             "${choices[0]}" "" ON \
             "${choices[1]}" "" OFF \
             "${choices[2]}" "" OFF \
@@ -432,7 +432,7 @@ lv_create(){
     else
         # get boot partition (we're using MBR with LVM here)
         boot_dev=$(whiptail --title "Get Boot Device" --radiolist \
-            "What partition for your Boot Device? (sda1 nvme0n1p1, sdb1, etc)" 8 50 4 \
+            "What partition for your Boot Device? (sda1 nvme0n1p1, sdb1, etc)" 20 50 4 \
             "${choices[0]}" "" ON \
             "${choices[0]}" "" OFF \
             "${choices[0]}" "" OFF \
