@@ -387,8 +387,7 @@ lv_create(){
     fi
 
     # Choose a partition for the root device
-    root_dev=$(whiptail --title "Get Physical Volume Device" --radiolist "What partition for your Physical \
-Volume Group?  (sda2, nvme0n1p2, sdb2, etc)" 8 50 \ 
+    root_dev=$(whiptail --title "Get Physical Volume Device" --radiolist "What partition for your Physical Volume Group?  (sda2, nvme0n1p2, sdb2, etc)" 8 50 \ 
     "${choices[0]}" "" OFF \
     "${choices[1]}" "" ON \
     "${choices[2]}" "" OFF \
