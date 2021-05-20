@@ -602,7 +602,6 @@ EOF
 # DISPLAY AND CHOOSE DISK PREP METHODS
 diskmenu(){
 
-    #check_tasks 2
     while true ; do
 
         diskmenupick=$(whiptail --backtitle "PARTION DISKS" --title "DISK PARTITIONS" \
