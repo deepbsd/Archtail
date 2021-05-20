@@ -642,7 +642,7 @@ diskmenu(){
         "N"   "Prepare Installation Disk with Normal Partitions" \
         "L"   "Prepare Installation Disk with LVM"   \
         "E"   "Prepare Installation Disk Encryption and LVM"   \
-        "M"   "Manually Partition Disk with cfdisk (experimental)"   \
+        "M"   "Manually Partition Disk with cfdisk (not yet functioning)"   \
         "R"   "Return to previous menu"   3>&1 1>&2 2>&3 ) 
 
         case $diskmenupick in
