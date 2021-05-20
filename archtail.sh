@@ -431,9 +431,12 @@ lv_create(){
 
     else
         # get boot partition (we're using MBR with LVM here)
-        boot_dev=$(whiptail --title "Get Boot Device" \
-            --inputbox "What partition for your Boot Device? \
-            (sda1 nvme0n1p1, sdb1, etc)" 8 50 3>&1 1>&2 2>&3) 
+        boot_dev=$(whiptail --title "Get Boot Device" --radiolist \
+            "What partition for your Boot Device? (sda1 nvme0n1p1, sdb1, etc)" 8 50 4 \
+            "${choices[0]}" "" ON \
+            "${choices[0]}" "" OFF \
+            "${choices[0]}" "" OFF \
+            "${choices[0]}" "" OFF  3>&1 1>&2 2>&3) 
 
         # show an infobox while we wait for partitions
         TERM=ansi whiptail --backtitle "CREATING PARTITIONS" --title "Creating Your Partitions" --infobox "Please wait a moment while we create your partitions..." 8 40
