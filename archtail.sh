@@ -405,7 +405,13 @@ lv_create(){
     ROOT_SIZE="$rootsize"
 
     # get size of swap partition or volume
-    swapsize=$(whiptail --title "Get Size of Swap Partition or Volume" --inputbox "What size for your swap partition? (4G, 8G, 16G, etc)" 8 50 3>&1 1>&2 2>&3)
+    swapsize=$(whiptail --title "Get Size of Swap Partition or Volume" --radiolist \
+        "What size for your swap partition? (4G, 8G, 16G, etc)" 8 50 5 \
+    "4G" "" OFF \
+    "8G" "" ON \
+    "16G" "" OFF \
+    "32G" "" OFF \
+    "64G" "" OFF 3>&1 1>&2 2>&3) 
     SWAP_SIZE="$swapsize"
 
     # Get EFI or BOOT partition?
