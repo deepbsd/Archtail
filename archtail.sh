@@ -395,9 +395,9 @@ Volume Group?  (sda2, nvme0n1p2, sdb2, etc)" 8 50 \
     "${choices[3]}" "" OFF \ 3>&1 1>&2 2>&3) 
     ROOT_DEVICE=/dev/"$root_dev"
 
-    # get root partition or volume
-    rootsize=$(whiptail --title "Get Size of Root Partition or Volume" --inputbox "What size for your root partition? (12G, 50G, 100G, etc)" 8 50 3>&1 1>&2 2>&3)
-    ROOT_SIZE="$rootsize"
+    ## get root partition or volume
+    #rootsize=$(whiptail --title "Get Size of Root Partition or Volume" --inputbox "What size for your root partition? (12G, 50G, 100G, etc)" 8 50 3>&1 1>&2 2>&3)
+    #ROOT_SIZE="$rootsize"
 
     # get size of swap partition or volume
     swapsize=$(whiptail --title "Get Size of Swap Partition or Volume" --inputbox "What size for your swap partition? (4G, 8G, 16G, etc)" 8 50 3>&1 1>&2 2>&3)
