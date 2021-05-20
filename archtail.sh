@@ -391,7 +391,7 @@ lv_create(){
     "${choices[0]}" "" OFF \
     "${choices[1]}" "" ON \
     "${choices[2]}" "" OFF \
-    "${choices[3]}" "" OFF \ 3>&1 1>&2 2>&3) 
+    "${choices[3]}" "" OFF 3>&1 1>&2 2>&3) 
     ROOT_DEVICE=/dev/"$root_dev"
 
     ## get root partition or volume
