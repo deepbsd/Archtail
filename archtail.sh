@@ -775,6 +775,9 @@ install_desktop(){
     ## MYDESKTOP gets installed here, either default or user choice
     arch-chroot /mnt pacman -S "${mydesktop[@]}" --noconfirm   &>>$LOGFILE
     arch-chroot /mnt systemctl enable "${display_mgr[@]}" &>>$LOGFILE 2>&1
+
+    ## Give the lightdm service a background
+    sed -i 's|^#background=|background=/usr/share/backgrounds/archlinux/wave.png|g' /mnt/etc/lightdm/lightdm-gtk-greeter.conf
 }
 
 install_extra_stuff(){
