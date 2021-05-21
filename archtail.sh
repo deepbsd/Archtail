@@ -948,7 +948,7 @@ startmenu(){
     while true ; do
         menupick=$(
         whiptail --backtitle "Daves ARCHlinux Installer" --title "Main Menu" --menu "Your choice?" 25 70 16 \
-            "K"   "[$(echo ${completed_tasks[1]}]    Change keyboard keymap status)"  \
+            "K"   "[$(echo ${completed_tasks[1]}]    Change keyboard keymap )"  \
             "C"   "[$(echo ${completed_tasks[2]}]    Check connection and date)"  \
             "D"   "[$(echo ${completed_tasks[3]}]    Prepare Installation Disk)"  \
             "B"   "[$(echo ${completed_tasks[4]}]    Install Base System)"        \
@@ -968,7 +968,7 @@ startmenu(){
 
         case $menupick in
 
-            "K")  change_kmap; check_tasks 1 ;;
+            "K")  change_kb; check_tasks 1 ;;
 
             "C")  check_connect; time_date; check_tasks 2 ;;
 
