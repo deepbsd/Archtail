@@ -145,7 +145,7 @@ auto_tz(){
     TIMEZONE=${TIMEZONE:='America/New_York'}
 }
 
-auto_kb(){
+change_kb(){
     # get a list of all keyboard files on the system
     keybd_files=$(find /usr/share/kbd/keymaps/ -type f -printf "%f\n" | sort -V)
     
@@ -948,26 +948,29 @@ startmenu(){
     while true ; do
         menupick=$(
         whiptail --backtitle "Daves ARCHlinux Installer" --title "Main Menu" --menu "Your choice?" 25 70 16 \
-            "C"   "[$(echo ${completed_tasks[1]}]    Check connection and date)"  \
-            "D"   "[$(echo ${completed_tasks[2]}]    Prepare Installation Disk)"  \
-            "B"   "[$(echo ${completed_tasks[3]}]    Install Base System)"        \
-            "F"   "[$(echo ${completed_tasks[4]}]    New FSTAB and TZ/Locale)"    \
-            "H"   "[$(echo ${completed_tasks[5]}]    Set new hostname)"           \
-            "R"   "[$(echo ${completed_tasks[6]}]    Set root password)"          \
-            "M"   "[$(echo ${completed_tasks[7]}]    Install More network essentials)" \
-            "U"   "[$(echo ${completed_tasks[8]}]    Add user + sudo account) "   \
-            "W"   "[$(echo ${completed_tasks[9]}]    Install Wifi Drivers )"      \
-            "G"   "[$(echo ${completed_tasks[10]}]   Install grub)"               \
-            "E"   "[$(echo ${completed_tasks[11]}]   Choose Your Desktop Environment and Graphics Driver)" \
-            "X"   "[$(echo ${completed_tasks[12]}]   Install Xorg + Desktop)"     \
-            "I"   "[$(echo ${completed_tasks[13]}]   Install Extra Window Mgrs)"  \
-            "P"   "[$(echo ${completed_tasks[14]}]   Check for pkg name changes)" \
-            "L"   "[$(echo ${completed_tasks[15]}]   Exit Script) "  3>&1 1>&2 2>&3
+            "K"   "[$(echo ${completed_tasks[1]}]    Change keyboard keymap status)"  \
+            "C"   "[$(echo ${completed_tasks[2]}]    Check connection and date)"  \
+            "D"   "[$(echo ${completed_tasks[3]}]    Prepare Installation Disk)"  \
+            "B"   "[$(echo ${completed_tasks[4]}]    Install Base System)"        \
+            "F"   "[$(echo ${completed_tasks[5]}]    New FSTAB and TZ/Locale)"    \
+            "H"   "[$(echo ${completed_tasks[6]}]    Set new hostname)"           \
+            "R"   "[$(echo ${completed_tasks[7]}]    Set root password)"          \
+            "M"   "[$(echo ${completed_tasks[8]}]    Install More network essentials)" \
+            "U"   "[$(echo ${completed_tasks[9]}]    Add user + sudo account) "   \
+            "W"   "[$(echo ${completed_tasks[10]}]    Install Wifi Drivers )"      \
+            "G"   "[$(echo ${completed_tasks[11]}]   Install grub)"               \
+            "E"   "[$(echo ${completed_tasks[12]}]   Choose Your Desktop Environment and Graphics Driver)" \
+            "X"   "[$(echo ${completed_tasks[13]}]   Install Xorg + Desktop)"     \
+            "I"   "[$(echo ${completed_tasks[14]}]   Install Extra Window Mgrs)"  \
+            "P"   "[$(echo ${completed_tasks[15]}]   Check for pkg name changes)" \
+            "L"   "[$(echo ${completed_tasks[16]}]   Exit Script) "  3>&1 1>&2 2>&3
         )
 
         case $menupick in
 
-            "C")  check_connect; time_date; check_tasks 1 ;;
+            "K")  check_connect; time_date; check_tasks 1 ;;
+
+            "C")  check_connect; time_date; check_tasks 2 ;;
 
             "D")  diskmenu ;;
 
@@ -977,22 +980,22 @@ startmenu(){
                       --msgbox "Your base system has been installed.  Click OK to continue." 10 80;
                   whiptail --backtitle "YOUR LOGFILE FOR INSTALLATION" --title "LOGFILE for your installation" \
                       --textbox /tmp/install.log --scrolltext 30 80;
-                  check_tasks 3 ;;
+                  check_tasks 4 ;;
 
-            "F")  gen_fstab; set_tz; set_locale; check_tasks 4 ;;
+            "F")  gen_fstab; set_tz; set_locale; check_tasks 5 ;;
 
-            "H")  set_hostname; check_tasks 5 ;;
+            "H")  set_hostname; check_tasks 6 ;;
 
             "R")  password=$(whiptail --passwordbox "Please set your new root password..." \
                       --backtitle "SETTING ROOT PASSWORD" --title "Set new root password"   8 48 3>&1 1>&2 2>&3);
                   echo -e "$password\n$password" | arch-chroot /mnt passwd;
-                  check_tasks 6 ;; 
+                  check_tasks 7 ;; 
 
             "M")  specialprogressgauge install_essential "Installing dhcpcd, sshd, ssh, networkmanager, etc..." \
                   "INSTALLING NETWORK ESSENTIALS "; 
                   whiptail --title "Network Essentials Installed" --msgbox "Network Essentials Installed.  OK to continue." 8 78;
                   whiptail --title "Current Install Progress" --textbox /tmp/install.log --scrolltext 25 80;
-                  check_tasks 7 ;;
+                  check_tasks 8 ;;
 
             "U")  add_user_acct; check_tasks 8 ;;
 
@@ -1026,7 +1029,7 @@ startmenu(){
 }
 
 welcome
-#auto_kb
+#change_kb
 auto_tz
 checkpath
 startmenu
