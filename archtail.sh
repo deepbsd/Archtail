@@ -670,13 +670,13 @@ diskmenu(){
 
         case $diskmenupick in
 
-            "N") check_tasks 2; get_install_device ;;
+            "N") check_tasks 3; get_install_device ;;
 
-            "L") USE_LVM='TRUE'; check_tasks 2; lv_create ;;
+            "L") USE_LVM='TRUE'; check_tasks 3; lv_create ;;
 
-            "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; check_tasks 2; lv_create ;;
+            "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; check_tasks 3; lv_create ;;
             
-            "E") cfdisk /dev/sda; check_tasks 2; _lv_create ;;
+            "E") cfdisk /dev/sda; check_tasks 3; _lv_create ;;
 
             "R") startmenu ;;
         esac
