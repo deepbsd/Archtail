@@ -146,7 +146,23 @@ auto_tz(){
 }
 
 auto_kb(){
-    KEYBOARD=$(setxkbmap -query |grep layout | awk '{print $2}')
+    # get a list of all keyboard files on the system
+    keybd_files=$(find /usr/share/kbd/keymaps/ -type f -printf "%f\n" | sort -V)
+    
+    # populate list of keyboard options without file suffixes
+    options=()
+    for file in ${keybd_files[@]}; do
+        if [[ "${file%%.*}" == "us" ]] ; then 
+            status="ON"
+        else
+            status="OFF"
+        fi
+        options+=( "${file%%.*}" "" "$status" )
+    done
+    KEYBOARD=$(whiptail --backtitle "CHOOSE KEYBOARD" --title "Choose Your Keyboard" \
+        --menu "Default keymap is US" 0 0 0 \ 
+        "${options[@]}" 2>&1 1>&2 2>&3 )
+
     # Set default value for us in case setxkbmap doesn't work
     KEYBOARD=${KEYBOARD:='us'}
     # Default value is 'us'; therefore load new value if we're not in US
@@ -1005,8 +1021,8 @@ startmenu(){
 }
 
 welcome
+#auto_kb
 auto_tz
-auto_kb
 checkpath
 startmenu
 
