@@ -968,7 +968,7 @@ startmenu(){
 
         case $menupick in
 
-            "K")  check_connect; time_date; check_tasks 1 ;;
+            "K")  change_kmap; check_tasks 1 ;;
 
             "C")  check_connect; time_date; check_tasks 2 ;;
 
@@ -997,29 +997,29 @@ startmenu(){
                   whiptail --title "Current Install Progress" --textbox /tmp/install.log --scrolltext 25 80;
                   check_tasks 8 ;;
 
-            "U")  add_user_acct; check_tasks 8 ;;
+            "U")  add_user_acct; check_tasks 9 ;;
 
-            "W")  wl_wifi; check_tasks 9 ;;
+            "W")  wl_wifi; check_tasks 10 ;;
 
-            "G")  install_grub; check_tasks 10 ;;
+            "G")  install_grub; check_tasks 11 ;;
             
-            "E")  pick_desktop ; check_tasks 11 ;;
+            "E")  pick_desktop ; check_tasks 12 ;;
 
             "X")  specialprogressgauge install_desktop "Installing Xorg and Desktop Resources..." "INSTALLING XORG"; 
                   whiptail --backtitle "X AND DESKTOPS INSTALLED" --title "Desktops Installed" \
                       --msgbox "Xorg and Extras and Desktops are installed.  OK to check install.log." 8 70 ;
                   whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Xorg Install Log" \
                       --textbox /tmp/install.log --scrolltext 25 80 ;
-                  check_tasks 12 ;;
+                  check_tasks 13 ;;
 
             "I")  specialprogressgauge install_extra_stuff "Installing All My Xorg Extras" "ALL MY EXTRAS FOR XORG"; 
                   whiptail --backtitle "XTRA X STUFF INSTALLED" --title "Extra Desktops Installed" \
                       --msgbox "Extra Goodies Installed.  Click OK to see Install Log." 8 70 ;
                   whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Extra Xorg Stuff Install Log" \
                       --textbox /tmp/install.log --scrolltext 25 80 ;
-                  check_tasks 13 ;;
+                  check_tasks 14 ;;
 
-            "P")  validate_pkgs; check_tasks 14 ;;
+            "P")  validate_pkgs; check_tasks 15 ;;
 
             "L")  TERM=ansi whiptail --title "exit installer" \
                   --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; 
