@@ -159,12 +159,17 @@ auto_kb(){
         fi
         options+=( "${file%%.*}" "" "$status" )
     done
-    KEYBOARD=$(whiptail --backtitle "CHOOSE KEYBOARD" --title "Choose Your Keyboard" \
-        --menu "Default keymap is US" 0 0 0 \ 
-        "${options[@]}" 2>&1 1>&2 2>&3 )
 
-    # Set default value for us in case setxkbmap doesn't work
-    KEYBOARD=${KEYBOARD:='us'}
+    if (whiptail --backtitle "US KEYMAP?" --title "Do you want a US Keymap?" \
+        --yesno "Keep a US keyboard keymap?" 20 80) ; then
+        # Set default value for us in case setxkbmap doesn't work
+        KEYBOARD=${KEYBOARD:='us'}
+    else
+        KEYBOARD=$(whiptail --backtitle "CHOOSE KEYBOARD" --title "Choose Your Keyboard" \
+            --menu "Default keymap is US" 0 0 0 \ 
+            "${options[@]}" 2>&1 1>&2 2>&3 )
+    fi
+
     # Default value is 'us'; therefore load new value if we're not in US
     # loadkeys is not persistent.  Only loads for current session
     if [[ ! $KEYBOARD =~ 'us' ]] ; then loadkeys $KEYBOARD ; fi
