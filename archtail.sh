@@ -18,7 +18,7 @@ ROOT_SLICE=''
 HOME_SLICE=''
 SWAP_SLICE=''
 
-# GRAPHICS DRIVERS ETC   ---  change as needed ---
+# GRAPHICS DRIVERS ETC   ---  change as needed via whiptail later in script ---
 wifi_drivers=(broadcom-wl-dkms iwd)   # find chipset for YOUR wifi card!
 graphics_driver=(xf86-video-vmware)   # $( pacman -Ss xf86-video- ) will list available drivers...
 display_mgr=(lightdm)                 # lightdm goes well with cinnamon desktop
@@ -44,6 +44,7 @@ HOME_SIZE=''       # Takes up rest of drive
 TIMEZONE='America/New_York'
 LOCALE="en_US.UTF-8"
 KEYBOARD="us"
+# Perhaps I will use this to determine a user's locale setting
 EXT_IP=$( dig +short myip.opendns.com @resolver1.opendns.com )
 
 

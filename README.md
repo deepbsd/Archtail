@@ -33,6 +33,11 @@ of containers, for example.  I'd like to try that.
 Anyway, I'm glad to say it works.  All the features except cryptsetup.  Everything else.
 Yaaay!
 
+## Friday, May 21, 2021
+
+I've done a fair amount of work on the script.  lv\_create now calls external scripts.  Also
+we're giving the user the chance to install a non-us keyboard keymap.  
+
 ## TODO
 
 Eventually, I'll need to break this sucker up into separate files, and at that
