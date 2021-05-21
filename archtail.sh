@@ -170,6 +170,8 @@ change_kb(){
             "${options[@]}" 2>&1 1>&2 2>&3 )
     fi
 
+    echo "==> Using $KEYBOARD keyboard keymap..." >>$LOGFILE
+
     # Default value is 'us'; therefore load new value if we're not in US
     # loadkeys is not persistent.  Only loads for current session
     if [[ ! $KEYBOARD =~ 'us' ]] ; then loadkeys $KEYBOARD ; fi
