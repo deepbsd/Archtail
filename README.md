@@ -45,14 +45,15 @@ There are some other things that have struck me though:
    lv\_create.  That one is too big.  UPDATE: Haven't done this, but I have re-
    organized the sequence of the functions into Utility functions, Disk functions,
    Installation functions, and Other functions.  These could later be broken out 
-   into separate files.
+   into separate files. NOTE: lv\_create now calls external functions.  But it's still
+   pretty big.
 
-2. I want to have a list of all executables in the script and at the start of the
+2. (DONE) I want to have a list of all executables in the script and at the start of the
    script make sure they are all in the $PATH (or at least are all executable).
    UPDATE: This currently works now, but the extra repo is not active by default.  
    Still looking into that.
 
-3. The user should be able to determine his/her own desktop environment or window
+3. (DONE) The user should be able to determine his/her own desktop environment or window
    manager.  Right now they're getting Cinnamon and lightdm whether they want it or
    not.  UPDATE:  This currently is how the script works.  The default is still Cinnamon
    with lightdm, however.  But whatever the user selects will become the default environment.
@@ -63,14 +64,14 @@ There are some other things that have struck me though:
    Not sure on this.  I could just survey the top Linux installers and see what
    they do. 
 
-5. Is there a way to re-use the same functions for creating LVs and regular
+5. (DONE) Is there a way to re-use the same functions for creating LVs and regular
    partitions?  Seems like there should be, but I should find out.
    UPDATE:  If I decide to do away with non-LVM disk prep, that will remove
    quite a few functions.
 
 6. Cryptsetup:  Do I want to bother with it or not?  (Still haven't worked on this again.)
 
-7. Use a checkmark to indicate the item is complete on the main menu.
+7. (DONE) Use a checkmark to indicate the item is complete on the main menu.
    UPDATE: Creating an actual checkmark on a TTY is actually more trouble than it's worth,
    so I just created an 'X' in a box in front of each startmenu pick item.
 
