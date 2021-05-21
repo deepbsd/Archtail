@@ -1029,7 +1029,6 @@ startmenu(){
 }
 
 welcome
-#change_kb
 auto_tz
 checkpath
 startmenu
