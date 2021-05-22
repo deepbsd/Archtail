@@ -158,7 +158,9 @@ change_kb(){
         else
             status="OFF"
         fi
-        options+=( "${file%%.*}" "" "$status" )
+        ## If we use ${file%%.*} then we wind up with duplicate entries
+        #options+=( "${file%%.*}" "" "$status" )
+        options+=( "$(echo $file | sed 's/.map.gz//g')" "" "$status" )
     done
 
     if (whiptail --backtitle "US KEYMAP?" --title "Do you want a US Keymap?" \
