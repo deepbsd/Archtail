@@ -140,6 +140,7 @@ welcome(){
 
 # AUTO SET TIMEZONE
 auto_tz(){
+    # Try to get the Timezone via wget.  If that fails, default to America/New_York
     pacman -Sy  &>>$LOGFILE 
     pacman -S wget --noconfirm &>>$LOGFILE
     TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
