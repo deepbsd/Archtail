@@ -915,7 +915,7 @@ HOSTS
 add_user_acct(){
 
     TERM=ansi whiptail --backtitle "ADDING SUDO USER" --title \
-        "Adding sudo + user acct..." --infobox "Adding sudo user to new system" 20 50 
+        "Adding sudo + user acct..." --infobox "Adding sudo user to new system" 10 50 
 
     sleep 2
 
