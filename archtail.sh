@@ -431,8 +431,8 @@ lv_create(){
     # get size of swap partition or volume
     swapsize=$(whiptail --title "Get Size of Swap Partition or Volume" --radiolist \
         "What size for your swap partition? (4G, 8G, 16G, etc)" 20 50 5 \
-    "4G" "" OFF \
-    "8G" "" ON \
+    "4G" "" ON \
+    "8G" "" OFF \
     "16G" "" OFF \
     "32G" "" OFF \
     "64G" "" OFF 3>&1 1>&2 2>&3) 
