@@ -675,19 +675,19 @@ crypt_setup(){
         "Please enter a memorable passphrase: " 12 80 3>&1 1>&2 2>&3 )
 
     #echo -n "$passphrase" | cryptsetup -q luksFormat $1 -
-    echo -n "$passphrase" | cryptsetup -q luksFormat --hash=sha512 --key-size=512 --cipher=aes-xts-plain64 --verify-passphrase $1 -  &>>$LOGFILE
+    echo -n "$passphrase" | cryptsetup -q luksFormat --hash=sha512 --key-size=512 --cipher=aes-xts-plain64 --verify-passphrase $1 -  2>&1 &>>$LOGFILE
 
-    cryptsetup luksOpen  $1 sda_crypt  &>>$LOGFILE
+    cryptsetup luksOpen  $1 sda_crypt          2>&1 &>>$LOGFILE
 
     term=ANSI whiptail --backtitle $back_message --title $title_message \
         --infobox "Wiping every byte of device with zeroes, could take a while..." 24 80
 
-    dd if=/dev/zero of=/dev/mapper/sda_crypt bs=1M    &>>$LOGFILE
-    cryptsetup luksClose sda_crypt                    &>>$LOGFILE
+    dd if=/dev/zero of=/dev/mapper/sda_crypt bs=1M    2>&1  &>>$LOGFILE
+    cryptsetup luksClose sda_crypt                    2>&1  &>>$LOGFILE
     
     term=ANSI whiptail --backtitle $back_message --title $title_message \
         --infobox "Filling header of device with random data..." 24 80
-    dd if=/dev/urandom of="$1" bs=512 count=20480     &>>$LOGFILE
+    dd if=/dev/urandom of="$1" bs=512 count=20480     2>&1  &>>$LOGFILE
 }
 
 # DISPLAY AND CHOOSE DISK PREP METHODS
