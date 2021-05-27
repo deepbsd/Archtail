@@ -663,14 +663,7 @@ EOF
 crypt_setup(){
     # Takes a disk partition as an argument
     # Give msg to user about purpose of encrypted physical volume
-    message=$(cat <<END_OF_MSG
-
-"You are about to encrypt a physical volume.  Your data will be stored in an encrypted
-state when powered off.  Your files will only be protected while the system is powered off.
-This could be very useful if your laptop gets stolen, for example. Hit OK to continue."
-
-END_OF_MSG
-)
+    message=$( "You are about to encrypt a physical volume.  Your data will be stored in an encrypted state when powered off.  Your files will only be protected while the system is powered off.  This could be very useful if your laptop gets stolen, for example. Hit OK to continue.")
 
     back_message="ENCRYPTING PARTITION WITH LUKS"
     title_message="Encrypting Paritition"
