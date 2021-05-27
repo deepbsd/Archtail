@@ -491,7 +491,7 @@ EOF
     fi
 
     # run cryptsetup on root device  # uncomment this later
-    #[[ "$USE_CRYPT" == 'TRUE' ]] && crypt_setup "$ROOT_DEVICE"
+    [[ "$USE_CRYPT" == 'TRUE' ]] && crypt_setup "$ROOT_DEVICE"
 
     # create the physical volumes
     pvcreate "$ROOT_DEVICE"                &>> $LOGFILE
@@ -718,7 +718,7 @@ diskmenu(){
 
             "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; check_tasks 3; lv_create ;;
             
-            "E") cfdisk /dev/sda; check_tasks 3; _lv_create ;;
+            "E") cfdisk /dev/sda; check_tasks 3; lv_create ;;
 
             "R") startmenu ;;
         esac
