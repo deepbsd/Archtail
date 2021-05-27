@@ -659,6 +659,36 @@ EOF
     whiptail --backtitle "DISKS PARTITIONED, FORMATTED and MOUNTED" --title "DISKS OKAY?" --msgbox "$message" 25 75 
 }
 
+# ENCRYPT DISK WHEN POWER IS OFF
+crypt_setup(){
+    # Takes a disk partition as an argument
+    # Give msg to user about purpose of encrypted physical volume
+    message=$(cat <<END_OF_MSG
+
+"You are about to encrypt a physical volume.  Your data will be stored in an encrypted
+state when powered off.  Your files will only be protected while the system is powered off.
+This could be very useful if your laptop gets stolen, for example. Hit OK to continue."
+
+END_OF_MSG
+)
+
+    back_message="ENCRYPTING PARTITION WITH LUKS"
+    title_message="Encrypting Paritition"
+
+    whiptail --backtitle $back_message --title $title_message --msgbox $message 25 80
+
+    read -p "Encrypting a disk partition. Please enter a memorable passphrase: " -s passphrase
+    #echo -n "$passphrase" | cryptsetup -q luksFormat $1 -
+    echo -n "$passphrase" | cryptsetup -q luksFormat --hash=sha512 --key-size=512 --cipher=aes-xts-plain64 --verify-passphrase $1 -
+
+    cryptsetup luksOpen  $1 sda_crypt
+    echo "Wiping every byte of device with zeros, could take a while..."
+    dd if=/dev/zero of=/dev/mapper/sda_crypt bs=1M
+    cryptsetup luksClose sda_crypt
+    echo "Filling header of device with random data..."
+    dd if=/dev/urandom of="$1" bs=512 count=20480
+}
+
 # DISPLAY AND CHOOSE DISK PREP METHODS
 diskmenu(){
 
