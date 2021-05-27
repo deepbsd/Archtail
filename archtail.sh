@@ -354,7 +354,7 @@ validate_pkgs(){
 # CHECK FOR ALL EXECUTABLES BEING AVAILABLE FOR THIS SCRIPT
 checkpath(){
     echo "=== MISSING EXECUTABLES: ===" &>>$LOGFILE
-    echo "${#executables[@]} executables being checked..." &>>$LOGFILE
+    echo "${#executables[@]} executables being checked. Good if none are found!" &>>$LOGFILE
     for ex in "${executables[@]}"; do
         $( command -v $ex &>/dev/null) || ( echo $ex &>>$LOGFILE )
     done
@@ -682,19 +682,19 @@ END_OF_MSG
         "Please enter a memorable passphrase: " 12 80 3>&1 1>&2 2>&3 )
 
     #echo -n "$passphrase" | cryptsetup -q luksFormat $1 -
-    echo -n "$passphrase" | cryptsetup -q luksFormat --hash=sha512 --key-size=512 --cipher=aes-xts-plain64 --verify-passphrase $1 -  >>$LOGFILE
+    echo -n "$passphrase" | cryptsetup -q luksFormat --hash=sha512 --key-size=512 --cipher=aes-xts-plain64 --verify-passphrase $1 -  &>>$LOGFILE
 
-    cryptsetup luksOpen  $1 sda_crypt  >>$LOGFILE
+    cryptsetup luksOpen  $1 sda_crypt  &>>$LOGFILE
 
     term=ANSI whiptail --backtitle $back_message --title $title_message \
         --infobox "Wiping every byte of device with zeroes, could take a while..." 24 80
 
-    dd if=/dev/zero of=/dev/mapper/sda_crypt bs=1M    >>$LOGFILE
-    cryptsetup luksClose sda_crypt                    >>$LOGFILE
+    dd if=/dev/zero of=/dev/mapper/sda_crypt bs=1M    &>>$LOGFILE
+    cryptsetup luksClose sda_crypt                    &>>$LOGFILE
     
     term=ANSI whiptail --backtitle $back_message --title $title_message \
         --infobox "Filling header of device with random data..." 24 80
-    dd if=/dev/urandom of="$1" bs=512 count=20480
+    dd if=/dev/urandom of="$1" bs=512 count=20480     &>>$LOGFILE
 }
 
 # DISPLAY AND CHOOSE DISK PREP METHODS
