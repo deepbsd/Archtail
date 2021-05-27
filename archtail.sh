@@ -677,15 +677,23 @@ END_OF_MSG
 
     whiptail --backtitle $back_message --title $title_message --msgbox $message 25 80
 
-    read -p "Encrypting a disk partition. Please enter a memorable passphrase: " -s passphrase
-    #echo -n "$passphrase" | cryptsetup -q luksFormat $1 -
-    echo -n "$passphrase" | cryptsetup -q luksFormat --hash=sha512 --key-size=512 --cipher=aes-xts-plain64 --verify-passphrase $1 -
+    #read -p "Encrypting a disk partition. Please enter a memorable passphrase: " -s passphrase
+    passphrase=$( whiptail --backtitle $back_message --title $title_message --passwordbox \
+        "Please enter a memorable passphrase: " 12 80 3>&1 1>&2 2>&3 )
 
-    cryptsetup luksOpen  $1 sda_crypt
-    echo "Wiping every byte of device with zeros, could take a while..."
-    dd if=/dev/zero of=/dev/mapper/sda_crypt bs=1M
-    cryptsetup luksClose sda_crypt
-    echo "Filling header of device with random data..."
+    #echo -n "$passphrase" | cryptsetup -q luksFormat $1 -
+    echo -n "$passphrase" | cryptsetup -q luksFormat --hash=sha512 --key-size=512 --cipher=aes-xts-plain64 --verify-passphrase $1 -  >>$LOGFILE
+
+    cryptsetup luksOpen  $1 sda_crypt  >>$LOGFILE
+
+    term=ANSI whiptail --backtitle $back_message --title $title_message \
+        --infobox "Wiping every byte of device with zeroes, could take a while..." 24 80
+
+    dd if=/dev/zero of=/dev/mapper/sda_crypt bs=1M    >>$LOGFILE
+    cryptsetup luksClose sda_crypt                    >>$LOGFILE
+    
+    term=ANSI whiptail --backtitle $back_message --title $title_message \
+        --infobox "Filling header of device with random data..." 24 80
     dd if=/dev/urandom of="$1" bs=512 count=20480
 }
 
