@@ -674,10 +674,10 @@ crypt_setup(){
     passphrase=$( whiptail --backtitle $back_message --title $title_message --passwordbox \
         "Please enter a memorable passphrase: " 12 80 3>&1 1>&2 2>&3 )
 
-    #echo -n "$passphrase" | cryptsetup -q luksFormat $1 -
-    echo -n "$passphrase" | cryptsetup -q luksFormat --hash=sha512 --key-size=512 --cipher=aes-xts-plain64 --verify-passphrase $1 -  2>&1 &>>$LOGFILE
+    echo -n "$passphrase" | cryptsetup -q luksFormat $1 -   2>&1 &>>$LOGFILE
+    #echo -n "$passphrase" | cryptsetup -q luksFormat --hash=sha512 --key-size=512 --cipher=aes-xts-plain64 --verify-passphrase $1 -  2>&1 &>>$LOGFILE
 
-    cryptsetup luksOpen  $1 sda_crypt          2>&1 &>>$LOGFILE
+    cryptsetup luksOpen  $1 sda_crypt         
 
     term=ANSI whiptail --backtitle $back_message --title $title_message \
         --infobox "Wiping every byte of device with zeroes, could take a while..." 24 80
