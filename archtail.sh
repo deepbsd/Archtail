@@ -152,34 +152,59 @@ auto_tz(){
 }
 
 change_kb(){
+    ## get a list of all keyboard files on the system
+    #keybd_files=$(find /usr/share/kbd/keymaps/ -type f -printf "%f\n" | sort -V)
+    #keybd_files=( $keybd_files )
+    #
+    ## status will be part of the menu list of kbd choices
+    #status=""
+    ## populate list of keyboard options without file suffixes
+    #options=()
+    #for file in "${keybd_files[@]}"; do
+    #    if [[ "${file%%.*}" == "us" ]] ; then 
+    #        status="ON"
+    #    else
+    #        status="OFF"
+    #    fi
+    #    ## If we use ${file%%.*} then we wind up with duplicate entries
+    #    #options+=( "${file%%.*}" "" "$status" )
+    #    options+=( "$(echo $file | sed 's/.map.gz//g')" "" "$status" )
+    #done
+    ######
+
     # get a list of all keyboard files on the system
-    declare -a keybd_files
-    keybd_files=$(find /usr/share/kbd/keymaps/ -type f -printf "%f\n" | sort -V)
-    keybd_files=( $keybd_files )
-    
+    keymaps=$(find /usr/share/kbd/keymaps/ -type f -printf "%f\n" | sort -V)
+    # get the list into an array
+    keymaps=( $keymaps )
+
     # status will be part of the menu list of kbd choices
     status=""
-    # populate list of keyboard options without file suffixes
+    # these will be menu options
     options=()
-    for file in "${keybd_files[@]}"; do
-        if [[ "${file%%.*}" == "us" ]] ; then 
+
+    # only turn on us keymap for default
+    for file in "${keymaps[@]}"; do
+        if [[ "${file%%.*}" == 'us' ]]; then
             status="ON"
         else
             status="OFF"
         fi
-        ## If we use ${file%%.*} then we wind up with duplicate entries
-        #options+=( "${file%%.*}" "" "$status" )
-        options+=( "$(echo $file | sed 's/.map.gz//g')" "" "$status" )
+
+        # remove the suffix for the loadkeys command
+        newfile=$( echo $file | sed 's/.map.gz//g' )
+        # set up the line for the whiptail menu
+        options+=( "$newfile \"\"  $status"  )
     done
 
+
+    #####
     if (whiptail --backtitle "US KEYMAP?" --title "Do you want a US Keymap?" \
         --yesno "Keep a US keyboard keymap?" 20 80) ; then
         # Set default value for us in case setxkbmap doesn't work
         KEYBOARD=${KEYBOARD:='us'}
     else
         KEYBOARD=$(whiptail --backtitle "CHOOSE KEYBOARD" --title "Choose Your Keyboard" \
-            --menu "Default keymap is US" 50 80 40 \ 
-            "${options[@]}" 3>&1 1>&2 2>&3 )
+            --menu "Default keymap is US" 50 80 40 "${options[@]}" 3>&1 1>&2 2>&3 )
     fi
 
     echo "==> Using $KEYBOARD keyboard keymap..." &>>$LOGFILE
