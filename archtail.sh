@@ -156,7 +156,7 @@ change_kb(){
     status=""
     # populate list of keyboard options without file suffixes
     options=()
-    for file in "$keybd_files"; do
+    for file in "${keybd_files[@]}"; do
         if [[ "${file%%.*}" == "us" ]] ; then 
             status="ON"
         else
