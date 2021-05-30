@@ -149,6 +149,7 @@ auto_tz(){
 
 change_kb(){
     # get a list of all keyboard files on the system
+    declare -a keybd_files
     keybd_files=$(find /usr/share/kbd/keymaps/ -type f -printf "%f\n" | sort -V)
     
     # status will be part of the menu list of kbd choices
