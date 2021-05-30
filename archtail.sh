@@ -171,7 +171,7 @@ change_kb(){
     else
         KEYBOARD=$(whiptail --backtitle "CHOOSE KEYBOARD" --title "Choose Your Keyboard" \
             --menu "Default keymap is US" 50 80 40 \ 
-            "${options[@]}" 2>&1 1>&2 2>&3 )
+            "${options[@]}" 3>&1 1>&2 2>&3 )
     fi
 
     echo "==> Using $KEYBOARD keyboard keymap..." &>>$LOGFILE
