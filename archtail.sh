@@ -152,25 +152,6 @@ auto_tz(){
 }
 
 change_kb(){
-    ## get a list of all keyboard files on the system
-    #keybd_files=$(find /usr/share/kbd/keymaps/ -type f -printf "%f\n" | sort -V)
-    #keybd_files=( $keybd_files )
-    #
-    ## status will be part of the menu list of kbd choices
-    #status=""
-    ## populate list of keyboard options without file suffixes
-    #options=()
-    #for file in "${keybd_files[@]}"; do
-    #    if [[ "${file%%.*}" == "us" ]] ; then 
-    #        status="ON"
-    #    else
-    #        status="OFF"
-    #    fi
-    #    ## If we use ${file%%.*} then we wind up with duplicate entries
-    #    #options+=( "${file%%.*}" "" "$status" )
-    #    options+=( "$(echo $file | sed 's/.map.gz//g')" "" "$status" )
-    #done
-    ######
 
     # get a list of all keyboard files on the system
     keymaps=$(find /usr/share/kbd/keymaps/ -type f -printf "%f\n" | sort -V)
