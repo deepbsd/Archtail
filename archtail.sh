@@ -177,13 +177,13 @@ change_kb(){
         options+=( "$newfile \"\"  $status"  )
     done
 
-
-    #####
+    # Ask the user if he/she wants to keep a us keymap
     if (whiptail --backtitle "US KEYMAP?" --title "Do you want a US Keymap?" \
         --yesno "Keep a US keyboard keymap?" 20 80) ; then
         # Set default value for us in case setxkbmap doesn't work
         KEYBOARD=${KEYBOARD:='us'}
     else
+        # if not, there are about 260 other options...
         KEYBOARD=$(whiptail --backtitle "CHOOSE KEYBOARD" --title "Choose Your Keyboard" \
             --menu "Default keymap is US" --scrolltext 50 80 "${#options[@]}" "${options[@]}" 3>&1 1>&2 2>&3 )
     fi
