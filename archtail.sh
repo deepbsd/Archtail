@@ -153,7 +153,7 @@ change_kb(){
     
     # populate list of keyboard options without file suffixes
     options=()
-    for file in ${keybd_files[@]}; do
+    for file in "$keybd_files"; do
         if [[ "${file%%.*}" == "us" ]] ; then 
             status="ON"
         else
@@ -170,7 +170,7 @@ change_kb(){
         KEYBOARD=${KEYBOARD:='us'}
     else
         KEYBOARD=$(whiptail --backtitle "CHOOSE KEYBOARD" --title "Choose Your Keyboard" \
-            --menu "Default keymap is US" 0 0 0 \ 
+            --menu "Default keymap is US" 50 80 40 \ 
             "${options[@]}" 2>&1 1>&2 2>&3 )
     fi
 
