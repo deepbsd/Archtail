@@ -40,11 +40,11 @@ SWAP_SIZE=4G       # calculate this with SWAP_SIZE="$(free | awk '/^Mem/ {mem=$2
 HOME_SIZE=''       # Takes up rest of drive
 
 # You can edit this if you want
-# For some reason the ubuntu geoip server doesn't always respond work
+# For some reason the ubuntu geoip server doesn't always work
 TIMEZONE='America/New_York'
 LOCALE="en_US.UTF-8"
 KEYBOARD="us"
-# Perhaps I will use this to determine a user's locale setting
+# Perhaps I will use this to determine a user's locale setting; I don't use it right now.
 EXT_IP=$( dig +short myip.opendns.com @resolver1.opendns.com )
 
 
@@ -52,6 +52,10 @@ EXT_IP=$( dig +short myip.opendns.com @resolver1.opendns.com )
 ##############################################
 ########     SOFTWARE SETS    ################
 ##############################################
+
+# Contents of arrays are archlinux package names.  Sometimes these change. 
+# The validate_pkgs function is supposed to check whether pkg names have dropped
+# out or have changed.
 
 # these are all executables in script that should be in $PATH
 executables=( "date" "whiptail" "rm" "echo" "ls" "sed" "grep" "sleep" "exit" "shuf" "eval" \
@@ -112,7 +116,7 @@ all_extras=( "${kde_desktop[@]}" "${xmonad_desktop[@]}" "${qtile_desktop[@]}" "$
 # This will exclude services because they are often named differently and are duplicates
 all_pkgs=( base_system base_essentials network_essentials basic_x extra_x1 extra_x2 extra_x3 extra_x4 cinnamon_desktop xfce_desktop mate_desktop i3gaps_desktop devel_stuff printing_stuff multimedia_stuff qtile_desktop kde_desktop )
 
-# Can't show checkmarks very easily...
+# Can't show checkmarks very easily...  This array will help show the user which tasks are completed or not
 completed_tasks=( "X" )
 
 
