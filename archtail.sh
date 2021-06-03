@@ -186,6 +186,7 @@ change_kb(){
         # if not, there are about 260 other options...
         KEYBOARD=$(eval resize; whiptail --backtitle "CHOOSE KEYBOARD" --title "Choose Your Keyboard" \
             --menu "Default keymap is US"  $LINES $COLUMNS $(( $LINES - 8 )) "${options[@]}" 3>&1 1>&2 2>&3 )
+        # set default kb map to be us, incase above doesn't get set properly or user cancels
         KEYBOARD=${KEYBOARD:='us'}
     fi
 
