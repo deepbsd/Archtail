@@ -174,7 +174,7 @@ change_kb(){
         # remove the suffix for the loadkeys command
         newfile=$( echo $file | sed 's/.map.gz//g' )
         # set up the line for the whiptail menu
-        options+=( "$newfile \"\"  $status"  )
+        options+=( "$newfile \"=====\""  )
     done
 
     # Ask the user if he/she wants to keep a us keymap
@@ -184,8 +184,8 @@ change_kb(){
         KEYBOARD=${KEYBOARD:='us'}
     else
         # if not, there are about 260 other options...
-        KEYBOARD=$(whiptail --backtitle "CHOOSE KEYBOARD" --title "Choose Your Keyboard" \
-            --radiolist "Default keymap is US" --scrolltext 50 80 "${#options[@]}" "${options[@]}" 3>&1 1>&2 2>&3 )
+        KEYBOARD=$(eval resize; whiptail --backtitle "CHOOSE KEYBOARD" --title "Choose Your Keyboard" \
+            --menu "Default keymap is US"  $LINES $COLUMNS $(( $LINES - 8 )) "${options[@]}" 3>&1 1>&2 2>&3 )
     fi
 
     echo "==> Using $KEYBOARD keyboard keymap..." &>>$LOGFILE
