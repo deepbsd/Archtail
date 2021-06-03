@@ -174,7 +174,7 @@ change_kb(){
         # remove the suffix for the loadkeys command
         newfile=$( echo $file | sed 's/.map.gz//g' )
         # set up the line for the whiptail menu
-        options+=( printf "%s\t\t%s" $newfile "====="  )
+        options+=( $( printf "%s\t\t%s" $newfile "=====" ) )
     done
 
     # Ask the user if he/she wants to keep a us keymap
