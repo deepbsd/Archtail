@@ -367,7 +367,7 @@ validate_pkgs(){
        "These packages not in repos" --textbox $MISSING_LOG --scrolltext 20 80
 }
 
-# CHECK FOR ALL EXECUTABLES BEING AVAILABLE FOR THIS SCRIPT
+# CHECK THAT ALL EXECUTABLES ARE AVAILABLE FOR THIS SCRIPT
 checkpath(){
     echo "=== MISSING EXECUTABLES: ===" &>>$LOGFILE
     echo "${#executables[@]} executables being checked. Good if none are found!" &>>$LOGFILE
