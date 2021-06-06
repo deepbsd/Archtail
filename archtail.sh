@@ -164,6 +164,8 @@ change_kb(){
     options=()
 
     # only turn on us keymap for default
+    # Turns out I chose a --menu for whiptail and not a --radiolist
+    # but I keep this around in case I want to go back to a --radiolist
     for file in "${keymaps[@]}"; do
         if [[ "${file%%.*}" == 'us' ]]; then
             status="ON"
