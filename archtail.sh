@@ -1116,7 +1116,7 @@ startmenu(){
                       --textbox /tmp/install.log --scrolltext 25 80 ;
                   check_tasks 15 ;;
 
-            "P")  validate_pkgs; check_tasks 16 ;;
+            "P")  validate_pkgs; check_tasks 17 ;;
 
             "Q")  TERM=ansi whiptail --title "exit installer" \
                   --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; 
