@@ -929,8 +929,13 @@ set_locale(){
     #TERM=ansi whiptail --backtitle "SETTING LOCALE" --title \
     #    "Setting Locale to $LOCALE" --infobox "Setting Locale to $LOCALE" 8 78
 
-    change_locale=$(whiptail --backtitle "CHANGE LOCALE?" --title "Want to change Your LOCALE from en_US.UTF-8?" \
-        --yesno --yes "Keep en_US.UTF-8" --no "Change LOCALE" )
+    if $(whiptail --backtitle "CHANGE LOCALE?" --title "Want to change Your LOCALE from en_US.UTF-8?" \
+        --yesno --yes "Keep en_US.UTF-8" --no "Change LOCALE" ); then
+        LOCALE=${LOCALE:="en_US.UTF-8"}
+    else
+       echo 
+
+    fi
 
     LOCALE=${LOCALE:="en_US.UTF-8"}
     sleep 2
