@@ -1022,28 +1022,31 @@ startmenu(){
         menupick=$(
         whiptail --backtitle "Daves ARCHlinux Installer" --title "Main Menu" --menu "Your choice?" 25 70 16 \
             "K"   "[$(echo ${completed_tasks[1]}]    Change keyboard keymap )"  \
-            "C"   "[$(echo ${completed_tasks[2]}]    Check connection and date)"  \
-            "D"   "[$(echo ${completed_tasks[3]}]    Prepare Installation Disk)"  \
-            "B"   "[$(echo ${completed_tasks[4]}]    Install Base System)"        \
-            "F"   "[$(echo ${completed_tasks[5]}]    New FSTAB and TZ/Locale)"    \
-            "H"   "[$(echo ${completed_tasks[6]}]    Set new hostname)"           \
-            "R"   "[$(echo ${completed_tasks[7]}]    Set root password)"          \
-            "M"   "[$(echo ${completed_tasks[8]}]    Install More network essentials)" \
-            "U"   "[$(echo ${completed_tasks[9]}]    Add user + sudo account) "   \
-            "W"   "[$(echo ${completed_tasks[10]}]    Install Wifi Drivers )"      \
-            "G"   "[$(echo ${completed_tasks[11]}]   Install grub)"               \
-            "E"   "[$(echo ${completed_tasks[12]}]   Choose Your Desktop Environment and Graphics Driver)" \
-            "X"   "[$(echo ${completed_tasks[13]}]   Install Xorg + Desktop)"     \
-            "I"   "[$(echo ${completed_tasks[14]}]   Install Extra Window Mgrs)"  \
-            "P"   "[$(echo ${completed_tasks[15]}]   Check for pkg name changes)" \
-            "L"   "[$(echo ${completed_tasks[16]}]   Exit Script) "  3>&1 1>&2 2>&3
+            "L"   "[$(echo ${completed_tasks[2]}]    Change en_US locale or not )"  \
+            "C"   "[$(echo ${completed_tasks[3]}]    Check connection and date)"  \
+            "D"   "[$(echo ${completed_tasks[4]}]    Prepare Installation Disk)"  \
+            "B"   "[$(echo ${completed_tasks[5]}]    Install Base System)"        \
+            "F"   "[$(echo ${completed_tasks[6]}]    New FSTAB and TZ/Locale)"    \
+            "H"   "[$(echo ${completed_tasks[7]}]    Set new hostname)"           \
+            "R"   "[$(echo ${completed_tasks[8]}]    Set root password)"          \
+            "M"   "[$(echo ${completed_tasks[9]}]    Install More network essentials)" \
+            "U"   "[$(echo ${completed_tasks[10]}]    Add user + sudo account) "   \
+            "W"   "[$(echo ${completed_tasks[11]}]    Install Wifi Drivers )"      \
+            "G"   "[$(echo ${completed_tasks[12]}]   Install grub)"               \
+            "E"   "[$(echo ${completed_tasks[13]}]   Choose Your Desktop Environment and Graphics Driver)" \
+            "X"   "[$(echo ${completed_tasks[14]}]   Install Xorg + Desktop)"     \
+            "I"   "[$(echo ${completed_tasks[15]}]   Install Extra Window Mgrs)"  \
+            "P"   "[$(echo ${completed_tasks[16]}]   Check for pkg name changes)" \
+            "Q"   "[$(echo ${completed_tasks[17]}]   Quit Script) "  3>&1 1>&2 2>&3
         )
 
         case $menupick in
 
             "K")  change_kb; check_tasks 1 ;;
 
-            "C")  check_connect; time_date; check_tasks 2 ;;
+            "L")  set_locale; check_tasks 2 ;;
+
+            "C")  check_connect; time_date; check_tasks 3 ;;
 
             "D")  diskmenu ;;
 
@@ -1055,7 +1058,7 @@ startmenu(){
                       --textbox /tmp/install.log --scrolltext 30 80;
                   check_tasks 4 ;;
 
-            "F")  gen_fstab; set_tz; set_locale; check_tasks 5 ;;
+            "F")  gen_fstab; set_tz; check_tasks 5 ;;
 
             "H")  set_hostname; check_tasks 6 ;;
 
@@ -1094,7 +1097,7 @@ startmenu(){
 
             "P")  validate_pkgs; check_tasks 15 ;;
 
-            "L")  TERM=ansi whiptail --title "exit installer" \
+            "Q")  TERM=ansi whiptail --title "exit installer" \
                   --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; 
                   sleep 2; exit 0 ;;
         esac
