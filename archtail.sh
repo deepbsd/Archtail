@@ -152,7 +152,6 @@ auto_tz(){
 }
 
 change_kb(){
-
     # get a list of all keyboard files on the system
     keymaps=$(find /usr/share/kbd/keymaps/ -type f -printf "%f\n" | sort -V)
     # get the list into an array
@@ -927,8 +926,13 @@ set_tz(){
 
 # LOCALE
 set_locale(){
-    TERM=ansi whiptail --backtitle "SETTING LOCALE" --title \
-        "Setting Locale to $LOCALE" --infobox "Setting Locale to $LOCALE" 8 78
+    #TERM=ansi whiptail --backtitle "SETTING LOCALE" --title \
+    #    "Setting Locale to $LOCALE" --infobox "Setting Locale to $LOCALE" 8 78
+
+    change_locale=$(whiptail --backtitle "CHANGE LOCALE?" --title "Want to change Your LOCALE from en_US.UTF-8?" \
+        --yesno --yes "Keep en_US.UTF-8" --no "Change LOCALE" )
+
+    LOCALE=${LOCALE:="en_US.UTF-8"}
     sleep 2
     arch-chroot /mnt sed -i "s/#$LOCALE/$LOCALE/g" /etc/locale.gen
     arch-chroot /mnt locale-gen   &>>$LOGFILE
