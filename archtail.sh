@@ -931,17 +931,18 @@ set_locale(){
     LOCALES=()
 
     if $(whiptail --backtitle "KEEP LOCALE?" --title "Want to keep LOCALE as en_US.UTF-8?" \
-        --yesno --yes "Keep en_US.UTF-8" --no "Change LOCALE" ); then
+        --yesno "Choose whether to keep en_US.UTF-8" --yes "Keep en_US.UTF-8" \
+        --no "Change LOCALE" 20 80 3>&1 1>&2 2>&3 ); then
         LOCALE=${LOCALE:="en_US.UTF-8"}
     else
         # Here's the array of available locales:
-        for locale in $(egrep '^#?[a-z]{2}_*' /etc/locale.gen | sed 's/^#//g'); do
-            LOCALES+=( $(printf "%s\t\t%s\n" $locale "=======")  )
+        for locale in $(egrep '^#?[a-z]{2}_*' /etc/locale.gen | awk '{print $1}' | sed 's/^#//g'); do
+            LOCALES+=( $(printf "%s\t\t%s\n" $locale "Locale")  )
         done
 
         # Come up with a whiptail selection menu of all available locales on system
-        echo "${LOCALES[@]}"
-
+        LOCALE=$(eval `resize`; whiptail --backtitle "CHOOSE LOCALE" --title "Choose Your Locale" \
+        --menu "Default Locale is en_US.UTF-8" $LINES $COLUMNS $(( $LINES - 8 )) "${locales[@]}" 3>&1 1>&2 2>&3 )
     fi
 
     LOCALE=${LOCALE:="en_US.UTF-8"}
