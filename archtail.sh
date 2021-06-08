@@ -720,13 +720,13 @@ diskmenu(){
 
         case $diskmenupick in
 
-            "N") check_tasks 3; get_install_device ;;
+            "N") check_tasks 4; get_install_device ;;
 
-            "L") USE_LVM='TRUE'; check_tasks 3; lv_create ;;
+            "L") USE_LVM='TRUE'; check_tasks 4; lv_create ;;
 
-            "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; check_tasks 3; lv_create ;;
+            "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; check_tasks 4; lv_create ;;
             
-            "E") cfdisk /dev/sda; check_tasks 3; lv_create ;;
+            "E") cfdisk /dev/sda; check_tasks 4; lv_create ;;
 
             "R") startmenu ;;
         esac
@@ -1056,7 +1056,7 @@ startmenu(){
                       --msgbox "Your base system has been installed.  Click OK to continue." 10 80;
                   whiptail --backtitle "YOUR LOGFILE FOR INSTALLATION" --title "LOGFILE for your installation" \
                       --textbox /tmp/install.log --scrolltext 30 80;
-                  check_tasks 4 ;;
+                  check_tasks 5 ;;
 
             "F")  gen_fstab; set_tz; check_tasks 5 ;;
 
