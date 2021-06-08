@@ -1041,7 +1041,7 @@ startmenu(){
     check_reflector
     while true ; do
         menupick=$(
-        whiptail --backtitle "Daves ARCHlinux Installer" --title "Main Menu" --menu "Your choice?" 30 70 16 \
+        whiptail --backtitle "Daves ARCHlinux Installer" --title "Main Menu" --menu "Your choice?" 30 70 20 \
             "K"   "[$(echo ${completed_tasks[1]}]    Change keyboard keymap )"  \
             "L"   "[$(echo ${completed_tasks[2]}]    Change en_US locale or not )"  \
             "C"   "[$(echo ${completed_tasks[3]}]    Check connection and date)"  \
