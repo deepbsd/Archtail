@@ -1079,44 +1079,44 @@ startmenu(){
                       --textbox /tmp/install.log --scrolltext 30 80;
                   check_tasks 5 ;;
 
-            "F")  gen_fstab; set_locale; set_tz; check_tasks 5 ;;
+            "F")  gen_fstab; set_locale; set_tz; check_tasks 6 ;;
 
-            "H")  set_hostname; check_tasks 6 ;;
+            "H")  set_hostname; check_tasks 7 ;;
 
             "R")  password=$(whiptail --passwordbox "Please set your new root password..." \
                       --backtitle "SETTING ROOT PASSWORD" --title "Set new root password"   8 48 3>&1 1>&2 2>&3);
                   echo -e "$password\n$password" | arch-chroot /mnt passwd;
-                  check_tasks 7 ;; 
+                  check_tasks 8 ;; 
 
             "M")  specialprogressgauge install_essential "Installing dhcpcd, sshd, ssh, networkmanager, etc..." \
                   "INSTALLING NETWORK ESSENTIALS "; 
                   whiptail --title "Network Essentials Installed" --msgbox "Network Essentials Installed.  OK to continue." 8 78;
                   whiptail --title "Current Install Progress" --textbox /tmp/install.log --scrolltext 25 80;
-                  check_tasks 8 ;;
+                  check_tasks 9 ;;
 
-            "U")  add_user_acct; check_tasks 9 ;;
+            "U")  add_user_acct; check_tasks 10 ;;
 
-            "W")  wl_wifi; check_tasks 10 ;;
+            "W")  wl_wifi; check_tasks 11 ;;
 
-            "G")  install_grub; check_tasks 11 ;;
+            "G")  install_grub; check_tasks 12 ;;
             
-            "E")  pick_desktop ; check_tasks 12 ;;
+            "E")  pick_desktop ; check_tasks 13 ;;
 
             "X")  specialprogressgauge install_desktop "Installing Xorg and Desktop Resources..." "INSTALLING XORG"; 
                   whiptail --backtitle "X AND DESKTOPS INSTALLED" --title "Desktops Installed" \
                       --msgbox "Xorg and Extras and Desktops are installed.  OK to check install.log." 8 70 ;
                   whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Xorg Install Log" \
                       --textbox /tmp/install.log --scrolltext 25 80 ;
-                  check_tasks 13 ;;
+                  check_tasks 14 ;;
 
             "I")  specialprogressgauge install_extra_stuff "Installing All My Xorg Extras" "ALL MY EXTRAS FOR XORG"; 
                   whiptail --backtitle "XTRA X STUFF INSTALLED" --title "Extra Desktops Installed" \
                       --msgbox "Extra Goodies Installed.  Click OK to see Install Log." 8 70 ;
                   whiptail --backtitle "CHECK INSTALL LOGFILE" --title "Extra Xorg Stuff Install Log" \
                       --textbox /tmp/install.log --scrolltext 25 80 ;
-                  check_tasks 14 ;;
+                  check_tasks 15 ;;
 
-            "P")  validate_pkgs; check_tasks 15 ;;
+            "P")  validate_pkgs; check_tasks 16 ;;
 
             "Q")  TERM=ansi whiptail --title "exit installer" \
                   --infobox "Type 'shutdown -h now' and then remove USB/DVD, then reboot" 10 60; 
