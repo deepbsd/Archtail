@@ -930,13 +930,17 @@ set_locale(){
     #    "Setting Locale to $LOCALE" --infobox "Setting Locale to $LOCALE" 8 78
     LOCALES=()
 
-    if $(whiptail --backtitle "CHANGE LOCALE?" --title "Want to change Your LOCALE from en_US.UTF-8?" \
+    if $(whiptail --backtitle "KEEP LOCALE?" --title "Want to keep LOCALE as en_US.UTF-8?" \
         --yesno --yes "Keep en_US.UTF-8" --no "Change LOCALE" ); then
         LOCALE=${LOCALE:="en_US.UTF-8"}
     else
+        # Here's the array of available locales:
         for locale in $(egrep '^#?[a-z]{2}_*' /etc/locale.gen | sed 's/^#//g'); do
             LOCALES+=($locale)
         done
+
+        # Come up with a whiptail selection menu of all available locales on system
+
     fi
 
     LOCALE=${LOCALE:="en_US.UTF-8"}
