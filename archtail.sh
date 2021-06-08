@@ -924,10 +924,7 @@ set_tz(){
         "HW CLOCK AND TIMEZONE SET to $TIMEZONE" --msgbox "$message" 8 78
 }
 
-# LOCALE
-set_locale(){
-    #TERM=ansi whiptail --backtitle "SETTING LOCALE" --title \
-    #    "Setting Locale to $LOCALE" --infobox "Setting Locale to $LOCALE" 8 78
+choose_locale(){
     LOCALES=()
 
     if $(whiptail --backtitle "KEEP LOCALE?" --title "Want to keep LOCALE as en_US.UTF-8?" \
@@ -944,6 +941,31 @@ set_locale(){
         LOCALE=$(eval `resize`; whiptail --backtitle "CHOOSE LOCALE" --title "Choose Your Locale" \
         --menu "Default Locale is en_US.UTF-8" $LINES $COLUMNS $(( $LINES - 8 )) "${locales[@]}" 3>&1 1>&2 2>&3 )
     fi
+
+    LOCALE=${LOCALE:="en_US.UTF-8"}
+
+}
+
+# LOCALE
+set_locale(){
+    #TERM=ansi whiptail --backtitle "SETTING LOCALE" --title \
+    #    "Setting Locale to $LOCALE" --infobox "Setting Locale to $LOCALE" 8 78
+    #LOCALES=()
+
+    #if $(whiptail --backtitle "KEEP LOCALE?" --title "Want to keep LOCALE as en_US.UTF-8?" \
+    #    --yesno "Choose whether to keep en_US.UTF-8" --yes "Keep en_US.UTF-8" \
+    #    --no "Change LOCALE" 20 80 3>&1 1>&2 2>&3 ); then
+    #    LOCALE=${LOCALE:="en_US.UTF-8"}
+    #else
+    #    # Here's the array of available locales:
+    #    for locale in $(egrep '^#?[a-z]{2}_*' /etc/locale.gen | awk '{print $1}' | sed 's/^#//g'); do
+    #        LOCALES+=( $(printf "%s\t\t%s\n" $locale "Locale")  )
+    #    done
+
+    #    # Come up with a whiptail selection menu of all available locales on system
+    #    LOCALE=$(eval `resize`; whiptail --backtitle "CHOOSE LOCALE" --title "Choose Your Locale" \
+    #    --menu "Default Locale is en_US.UTF-8" $LINES $COLUMNS $(( $LINES - 8 )) "${locales[@]}" 3>&1 1>&2 2>&3 )
+    #fi
 
     LOCALE=${LOCALE:="en_US.UTF-8"}
     sleep 2
@@ -1044,7 +1066,7 @@ startmenu(){
 
             "K")  change_kb; check_tasks 1 ;;
 
-            "L")  set_locale; check_tasks 2 ;;
+            "L")  choose_locale; check_tasks 2 ;;
 
             "C")  check_connect; time_date; check_tasks 3 ;;
 
@@ -1058,7 +1080,7 @@ startmenu(){
                       --textbox /tmp/install.log --scrolltext 30 80;
                   check_tasks 5 ;;
 
-            "F")  gen_fstab; set_tz; check_tasks 5 ;;
+            "F")  gen_fstab; set_locale; set_tz; check_tasks 5 ;;
 
             "H")  set_hostname; check_tasks 6 ;;
 
