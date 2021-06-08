@@ -928,8 +928,8 @@ choose_locale(){
     LOCALES=()
 
     if $(whiptail --backtitle "KEEP LOCALE?" --title "Want to keep LOCALE as en_US.UTF-8?" \
-        --yesno "Choose whether to keep en_US.UTF-8" --yes "Keep en_US.UTF-8" \
-        --no "Change LOCALE" 20 80 ); then
+        --yesno "Choose whether to keep en_US.UTF-8" --yes-button "Keep en_US.UTF-8" \
+        --no-button "Change LOCALE" 20 80 ); then
         LOCALE=${LOCALE:="en_US.UTF-8"}
     else
         # Here's the array of available locales:
