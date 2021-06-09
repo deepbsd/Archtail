@@ -3,6 +3,15 @@
 Archtail is a Archlinux installer using whiptail.  It's supposed to be a simple Arch
 installer for the masses.  But mainly it was an excuse for me to learn whiptail.
 
+To use this script, issue this command from your freshly booted archiso image:
+```
+curl -O https://raw.githubusercontent.com/deepbsd/Archtail/master/archtail.sh
+```
+
+It will be best if you use three different tty's.  Open the script in your editor on tty1
+and run the script ( `bash archtail.sh` ) on tty2.  On tty3 you can watch the installation
+progress by tailing the install log: `tail -f /tmp/install.log`
+
 ## Current Status
 
 I'm new to whiptail, so I ran into a problem with the `--gauge` switch.  Apparently, if you
