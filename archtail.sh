@@ -938,7 +938,8 @@ choose_locale(){
             locales+=( $(printf "%s\t\t%s\n" $locale "Locale")  )
         done
         # whiptail selection menu of all available locales on system
-        LOCALE=$(eval `resize`; whiptail --backtitle "CHOOSE LOCALE" --title "Choose Your Locale" --menu "Default Locale is en_US.UTF-8" $LINES $COLUMNS $(( $LINES - 8 )) "${locales[@]}" 3>&1 1>&2 2>&3 )
+        LOCALE=$(eval `resize`; whiptail --backtitle "CHOOSE LOCALE" --title "Choose Your Locale" \
+            --menu "Default Locale is en_US.UTF-8" $LINES $COLUMNS $(( $LINES - 8 )) "${locales[@]}" 3>&1 1>&2 2>&3 )
     fi
 
     LOCALE=${LOCALE:="en_US.UTF-8"}
