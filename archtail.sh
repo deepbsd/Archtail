@@ -943,7 +943,7 @@ gen_fstab(){
 
     # take a look at new fstab file
     whiptail --backtitle "Checkout New /etc/fstab" --title \
-        "Here's your new /etc/fstab" --textbox /mnt/etc/fstab --scrolltext 35 85
+        "Here's your new /etc/fstab" --textbox /mnt/etc/fstab --scrolltext 30 85
 }
 
 # TIMEZONE
