@@ -174,7 +174,7 @@ change_tz(){
             --menu "Here are your timezones:" $LINES $COLUMNS $(( $LINES - 8 )) \
             "${timezones[@]}"  3>&1 1>&2 2>&3)
         
-        # default to America/New_York if the user cancels the previous form
+        # default to $TIMEZONE variable from auto_tz if the user cancels the previous form
         TIMEZONE=${timezone:=TIMEZONE}
     
     fi
@@ -1078,7 +1078,7 @@ startmenu(){
 
             "K")  change_kb; check_tasks 1 ;;
 
-            "L")  choose_locale; check_tasks 2 ;;
+            "L")  choose_locale; change_tz; check_tasks 2 ;;
 
             "C")  check_connect; time_date; check_tasks 3 ;;
 
