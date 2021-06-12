@@ -162,6 +162,10 @@ change_tz(){
         "Change timezone from $TIMEZONE?" --yes-button "Keep $TIMEZONE" \
         --no-button "Change timezone" 20 70 3>&1 1>&2 2>&3); then
 
+        timezone='America/New_York'
+    
+    else
+
         timezones=()
         # populate array with possible TZ's
         for timezone in $(timedatectl list-timezones); do
@@ -175,12 +179,10 @@ change_tz(){
         timezone=$(eval `resize`; whiptail --backtitle "$backmessage" --title "$message" \
             --menu "Here are your timezones:" $LINES $COLUMNS $(( $LINES - 8 )) \
             "${timezones[@]}"  3>&1 1>&2 2>&3)
-        
-        # default to $TIMEZONE variable from auto_tz if the user cancels the previous form
-        TIMEZONE=${timezone:=TIMEZONE}
-    
     fi
 
+    # default to $TIMEZONE variable from auto_tz if the user cancels the previous form
+    TIMEZONE=${timezone:=TIMEZONE}
 }
 
 change_kb(){
