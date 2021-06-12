@@ -150,6 +150,8 @@ auto_tz(){
     TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
     TIMEZONE=${TIMEZONE:='America/New_York'}
 
+    echo "***   auto_tz() says TIMEZONE is $TIMEZONE   ***"  &>>$LOGFILE
+
 }
 
 change_tz(){
