@@ -150,32 +150,34 @@ auto_tz(){
     TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
     TIMEZONE=${TIMEZONE:='America/New_York'}
 
+}
+
+change_tz(){
     # Offer user chance to select a new tz incase wget didn't work properly
     backmessage="CHANGE TZ?"; message="Want to change TZ from $TIMEZONE?"
     # whiptail --yesno dialog
     if $(whiptail --backtitle "$backmessage" --title "$message" --yesno \
         "Change timezone from $TIMEZONE?" --yes-button "Keep $TIMEZONE" \
         --no-button "Change timezone" 20 70 3>&1 1>&2 2>&3); then
-        change_tz
-    fi
-}
 
-change_tz(){
-    timezones=()
-    # populate array with possible TZ's
-    for timezone in $(timedatectl list-timezones); do
-        timezones+=( $(printf "%s\t\t%s\n" $timezone 'timezone') )
-    done
+        timezones=()
+        # populate array with possible TZ's
+        for timezone in $(timedatectl list-timezones); do
+            timezones+=( $(printf "%s\t\t%s\n" $timezone 'timezone') )
+        done
 
-    backmessage="CHOOSE YOUR TIMEZONE"
-    message="Please choose your timezone"
+        backmessage="CHOOSE YOUR TIMEZONE"
+        message="Please choose your timezone"
 
-    # Let user pick the timezone
-    timezone=$(eval `resize`; whiptail --backtitle "$backmessage" --title "$message" \
-        --menu "Here are your timezones:" $LINES $COLUMNS $(( $LINES - 8 )) "${timezones[@]}"  3>&1 1>&2 2>&3)
+        # Let user pick the timezone
+        timezone=$(eval `resize`; whiptail --backtitle "$backmessage" --title "$message" \
+            --menu "Here are your timezones:" $LINES $COLUMNS $(( $LINES - 8 )) \
+            "${timezones[@]}"  3>&1 1>&2 2>&3)
+        
+        # default to America/New_York if the user cancels the previous form
+        TIMEZONE=${timezone:=TIMEZONE}
     
-    # default to America/New_York if the user cancels the previous form
-    TIMEZONE=${timezone:=TIMEZONE}
+    fi
 
 }
 
