@@ -162,7 +162,7 @@ change_tz(){
         "Change timezone from $TIMEZONE?" --yes-button "Keep $TIMEZONE" \
         --no-button "Change timezone" 20 70 3>&1 1>&2 2>&3); then
 
-        timezone='America/New_York'
+        timezone=${TIMEZONE}
     
     else
 
