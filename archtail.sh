@@ -1056,7 +1056,7 @@ startmenu(){
         menupick=$(
         whiptail --backtitle "Daves ARCHlinux Installer" --title "Main Menu" --menu "Your choice?" 30 70 20 \
             "K"   "[$(echo ${completed_tasks[1]}]    Change keyboard keymap )"  \
-            "L"   "[$(echo ${completed_tasks[2]}]    Change en_US locale or not )"  \
+            "L"   "[$(echo ${completed_tasks[2]}]    Change en_US/TimeZone and locale or not )"  \
             "C"   "[$(echo ${completed_tasks[3]}]    Check connection and date)"  \
             "D"   "[$(echo ${completed_tasks[4]}]    Prepare Installation Disk)"  \
             "B"   "[$(echo ${completed_tasks[5]}]    Install Base System)"        \
