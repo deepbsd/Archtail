@@ -154,7 +154,7 @@ auto_tz(){
     backmessage="CHANGE TZ?"; message="Want to change TZ from $TIMEZONE?"
     # whiptail --yesno dialog
     if $(whiptail --backtitle "$backmessage" --title "$message" --yesno \
-        "Change timezone from $TIMEZONE?" --yes-button "Keep TZ as $TIMEZONE" \
+        "Change timezone from $TIMEZONE?" --yes-button "Keep $TIMEZONE" \
         --no-button "Change timezone" 20 70 3>&1 1>&2 2>&3); then
         change_tz
     fi
