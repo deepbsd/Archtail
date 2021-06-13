@@ -148,6 +148,8 @@ auto_tz(){
     pacman -Sy  &>>$LOGFILE 
     pacman -S wget --noconfirm &>>$LOGFILE
     TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
+
+    # Default TZ is America/New_York
     TIMEZONE=${TIMEZONE:='America/New_York'}
 
     echo "***   auto_tz() says TIMEZONE is $TIMEZONE   ***"  &>>$LOGFILE
