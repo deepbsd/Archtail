@@ -1071,7 +1071,7 @@ startmenu(){
             "U"   "[$(echo ${completed_tasks[10]}]    Add user + sudo account) "   \
             "W"   "[$(echo ${completed_tasks[11]}]    Install Wifi Drivers )"      \
             "G"   "[$(echo ${completed_tasks[12]}]   Install grub)"               \
-            "E"   "[$(echo ${completed_tasks[13]}]   Choose Your Desktop Environment and Graphics Driver)" \
+            "E"   "[$(echo ${completed_tasks[13]}]   Choose Graphics Driver and Desktop Environment)" \
             "X"   "[$(echo ${completed_tasks[14]}]   Install Xorg + Desktop)"     \
             "I"   "[$(echo ${completed_tasks[15]}]   Install Extra Window Mgrs)"  \
             "P"   "[$(echo ${completed_tasks[16]}]   Check for pkg name changes)" \
