@@ -147,7 +147,12 @@ auto_tz(){
     # Try to get the Timezone via wget.  If that fails, default to America/New_York
     pacman -Sy  &>>$LOGFILE 
     pacman -S wget --noconfirm &>>$LOGFILE
-    TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
+
+    # Check that service is up first...
+    server='http://geoip.ubuntu.com/lookup'
+    if $( ping -c3 "$server" 2>/dev/null ); then
+        TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
+    fi
 
     # Default TZ is America/New_York
     TIMEZONE=${TIMEZONE:='America/New_York'}
