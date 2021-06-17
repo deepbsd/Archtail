@@ -727,7 +727,10 @@ crypt_setup(){
     passphrase=$( whiptail --backtitle $back_message --title $title_message --passwordbox \
         "Please enter a memorable passphrase: " 12 80 3>&1 1>&2 2>&3 )
 
-    echo -n "$passphrase" | cryptsetup -q luksFormat $1 -   2>&1 &>>$LOGFILE
+    echo "$passphrase" > /tmp/passphrase
+
+    #echo -n "$passphrase" | cryptsetup -q luksFormat $1 -   2>&1 &>>$LOGFILE
+    cryptsetup luksFormat $1 --key-file /tmp/passphrase   2>&1 &>>$LOGFILE
     #echo -n "$passphrase" | cryptsetup -q luksFormat --hash=sha512 --key-size=512 --cipher=aes-xts-plain64 --verify-passphrase $1 -  2>&1 &>>$LOGFILE
 
     cryptsetup luksOpen  $1 sda_crypt   2>&1 &>>$LOGFILE      
