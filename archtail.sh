@@ -173,7 +173,7 @@ change_tz(){
     # whiptail --yesno dialog
     if $(whiptail --backtitle "$backmessage" --title "$message" --yesno \
         "Keep timezone of $TIMEZONE?" --yes-button "Keep $TIMEZONE" \
-        --no-button "Change timezone" 20 70 3>&1 1>&2 2>&3); then
+        --no-button "Change timezone" 10 70 3>&1 1>&2 2>&3); then
 
         timezone=${TIMEZONE}
     
