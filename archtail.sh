@@ -227,7 +227,7 @@ change_kb(){
 
     # Ask the user if he/she wants to keep a us keymap
     if (whiptail --backtitle "US KEYMAP?" --title "Do you want a US Keymap?" \
-        --yesno "Keep a US keyboard keymap?" 20 80) ; then
+        --yesno "Keep a US keyboard keymap?" 10 80) ; then
         # Set default value for us in case setxkbmap doesn't work
         KEYBOARD=${KEYBOARD:='us'}
     else
