@@ -725,7 +725,7 @@ crypt_setup(){
     back_message="ENCRYPTING PARTITION WITH LUKS"
     title_message="Encrypting Paritition"
 
-    whiptail --backtitle "$back_message" --title "$title_message" --msgbox "$message" 25 80
+    whiptail --backtitle "$back_message" --title "$title_message" --msgbox "$message" 15 80
 
     #read -p "Encrypting a disk partition. Please enter a memorable passphrase: " -s passphrase
     passphrase=$( whiptail --backtitle "$back_message" --title "$title_message" --passwordbox \
