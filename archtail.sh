@@ -726,10 +726,10 @@ crypt_setup(){
     back_message="ENCRYPTING PARTITION WITH LUKS"
     title_message="Encrypting Paritition"
 
-    whiptail --backtitle $back_message --title $title_message --msgbox $message 25 80
+    whiptail --backtitle "$back_message" --title "$title_message" --msgbox "$message" 25 80
 
     #read -p "Encrypting a disk partition. Please enter a memorable passphrase: " -s passphrase
-    passphrase=$( whiptail --backtitle $back_message --title $title_message --passwordbox \
+    passphrase=$( whiptail --backtitle "$back_message" --title "$title_message" --passwordbox \
         "Please enter a memorable passphrase: " 12 80 3>&1 1>&2 2>&3 )
 
     echo "$passphrase" > /tmp/passphrase
@@ -740,12 +740,12 @@ crypt_setup(){
 
     cryptsetup luksOpen  $1 sda_crypt   2>&1 &>>$LOGFILE      
 
-    term=ANSI whiptail --backtitle $back_message --title $title_message --infobox "Wiping every byte of device with zeroes, could take a while..." 24 80
+    term=ANSI whiptail --backtitle "$back_message" --title "$title_message" --infobox "Wiping every byte of device with zeroes, could take a while..." 24 80
 
     dd if=/dev/zero of=/dev/mapper/sda_crypt bs=1M    2>&1  &>>$LOGFILE
     cryptsetup luksClose sda_crypt                    2>&1  &>>$LOGFILE
     
-    term=ANSI whiptail --backtitle $back_message --title $title_message --infobox "Filling header of device with random data..." 24 80
+    term=ANSI whiptail --backtitle "$back_message" --title "$title_message" --infobox "Filling header of device with random data..." 24 80
     dd if=/dev/urandom of="$1" bs=512 count=20480     2>&1  &>>$LOGFILE
 }
 
