@@ -5,6 +5,12 @@
 ###    GLOBAL VARIABLES  #######
 ################################
 
+# VERIFY BOOT MODE
+efi_boot_mode(){
+    # if the efivars directory exists we definitely have an EFI BIOS
+    # otherwise, we could have a non-standard EFI or even an MBR-only system
+    ( $(ls /sys/firmware/efi/efivars &>/dev/null) && return 0 ) || return 1
+}
 
 LOGFILE='/tmp/install.log'
 if $(efi_boot_mode); then 
@@ -237,13 +243,6 @@ change_kb(){
     # Default value is 'us'; therefore load new value if we're not in US
     # loadkeys is not persistent.  Only loads for current session
     if [[ ! $KEYBOARD =~ 'us' ]] ; then loadkeys $KEYBOARD ; fi
-}
-
-# VERIFY BOOT MODE
-efi_boot_mode(){
-    # if the efivars directory exists we definitely have an EFI BIOS
-    # otherwise, we could have a non-standard EFI or even an MBR-only system
-    ( $(ls /sys/firmware/efi/efivars &>/dev/null) && return 0 ) || return 1
 }
 
 # FIND GRAPHICS CARD
