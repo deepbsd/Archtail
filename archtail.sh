@@ -970,8 +970,8 @@ set_tz(){
 choose_locale(){
     locales=()
 
-    if $(whiptail --backtitle "KEEP LOCALE?" --title "Want to keep LOCALE as en_US.UTF-8?" \
-        --yesno "Choose whether to keep en_US.UTF-8" --yes-button "Keep en_US.UTF-8" \
+    if $(whiptail --backtitle "KEEP LOCALE?" --title "Want to keep LOCALE as default en_US.UTF-8?" \
+        --yesno "Choose whether to keep default en_US.UTF-8" --yes-button "Keep en_US.UTF-8" \
         --no-button "Change LOCALE" 20 80 3>&1 1>&2 2>&3 ); then
 
         LOCALE=${LOCALE:="en_US.UTF-8"}
@@ -1069,7 +1069,7 @@ startmenu(){
         menupick=$(
         whiptail --backtitle "Daves ARCHlinux Installer" --title "Main Menu" --menu "Your choice?" 30 70 20 \
             "K"   "[$(echo ${completed_tasks[1]}]    Change keyboard keymap )"  \
-            "L"   "[$(echo ${completed_tasks[2]}]    Change en_US/TimeZone and locale or not )"  \
+            "L"   "[$(echo ${completed_tasks[2]}]    Choose your TimeZone and Locale)"  \
             "C"   "[$(echo ${completed_tasks[3]}]    Check connection and date)"  \
             "D"   "[$(echo ${completed_tasks[4]}]    Prepare Installation Disk)"  \
             "B"   "[$(echo ${completed_tasks[5]}]    Install Base System)"        \
