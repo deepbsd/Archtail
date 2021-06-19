@@ -907,7 +907,7 @@ pick_desktop(){
 install_desktop(){
 
     # UPDATE FROM LATEST DESKTOP CHOICE
-    #desktop=( "${mydesktop[@]}" )
+    desktop=( "${mydesktop[@]}" )
 
     # EXTRA PACKAGES, FONTS, THEMES, CURSORS
     arch-chroot /mnt pacman -S "${basic_x[@]}" --noconfirm   &>>$LOGFILE
@@ -924,7 +924,8 @@ install_desktop(){
     arch-chroot /mnt pacman -S "${graphics_driver[@]}" --noconfirm    &>>$LOGFILE 
 
     ## MYDESKTOP gets installed here, either default or user choice
-    arch-chroot /mnt pacman -S "${mydesktop[@]}" --noconfirm   &>>$LOGFILE
+    #arch-chroot /mnt pacman -S "${mydesktop[@]}" --noconfirm   &>>$LOGFILE
+    arch-chroot /mnt pacman -S "${desktop[@]}" --noconfirm   &>>$LOGFILE
     arch-chroot /mnt systemctl enable "${display_mgr[@]}" &>>$LOGFILE 2>&1
 
     ## Give the lightdm service a background
