@@ -758,7 +758,7 @@ diskmenu(){
         "N"   "Prepare Installation Disk with Normal Partitions" \
         "L"   "Prepare Installation Disk with LVM"   \
         "E"   "Prepare Installation Disk Encryption and LVM"   \
-        "M"   "Manually Partition Disk with cfdisk (not yet functioning)"   \
+        "M"   "Manually Partition Disk with parted "   \
         "R"   "Return to previous menu"   3>&1 1>&2 2>&3 ) 
 
         case $diskmenupick in
@@ -769,7 +769,7 @@ diskmenu(){
 
             "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; check_tasks 4; lv_create ;;
             
-            "M") device=$(choose_disk); clear; cfdisk /dev/sda "$device" 1>&1 2>&2 ; check_tasks 4 ;;
+            "M") device=$(choose_disk); clear; parted "$device" 1>&1 2>&2 ; check_tasks 4 ;;
 
             "R") startmenu ;;
         esac
