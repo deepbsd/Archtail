@@ -106,7 +106,7 @@ xmonad_desktop=( xmonad xmonad-contrib )
 
 awesome_desktop=( awesome vicious )
 
-kde_desktop=( plasma plasma-wayland-session kde-applications )
+kde_desktop=( plasma plasma-wayland-session kde-applications plasma-wallpapers )
 
 ## Python3 should be installed by default
 devel_stuff=( git nodejs npm npm-check-updates ruby )
