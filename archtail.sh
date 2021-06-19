@@ -41,7 +41,7 @@ LV_SWAP="ArchSwap"
 # PARTITION SIZES  (You can edit these if desired)
 BOOT_SIZE=512M     # BOOT applies to non-efi BIOS and MBR disklable
 EFI_SIZE=512M      # EFI applies to GPT disklable
-ROOT_SIZE=13G      # Applies to either root partition or root logical volume
+ROOT_SIZE=15G      # Applies to either root partition or root logical volume
 SWAP_SIZE=4G       # calculate this with SWAP_SIZE="$(free | awk '/^Mem/ {mem=$2/1000000; print int(2.2*mem)}')G"
 HOME_SIZE=''       # Takes up rest of drive
 
@@ -481,8 +481,8 @@ lv_create(){
 
     # get root partition or volume
     rootsize=$(whiptail --title "Get Size of Root Partition or Volume" --radiolist \
-        "What size for your root partition? (12G, 50G, 100G, etc)" 20 50 4 \
-        "12G" "" ON \
+        "What size for your root partition? (15G, 50G, 100G, etc)" 20 50 4 \
+        "15G" "" ON \
         "50G" "" OFF \
         "75G" "" OFF \
         "100G" "" OFF 3>&1 1>&2 2>&3)
@@ -883,7 +883,7 @@ pick_desktop(){
     "Mate"     "Originally based on Gnome 2, traditional, lightweight"     OFF \
     "Gnome"    "Modern and even bleeding Edge Desktop"                     OFF \
     "XFCE"     "Lightweight and full featured Desktop"                     OFF \
-    "KDE"      "Another medium- to heavy-weight DE based on QT toolkit"    OFF \
+    "KDE"      "A large but heavy-weight DE based on QT toolkit"           OFF \
     "i3gaps"   "A very popular tiling window manager"                      OFF \
     "Qtile"    "A terrific tiling window manager written in Python"        OFF \
     "Xmonad"   "A favorite of tiling WM fans, written in Haskell"          OFF \
