@@ -769,7 +769,7 @@ diskmenu(){
 
             "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; check_tasks 4; lv_create ;;
             
-            "M") device=$(choose_disk); clear; parted "$device" 1>&1 2>&2 ; check_tasks 4 ;;
+            "M") device=$(choose_disk); clear; bash --init-file <(parted "$device" 1>&1 2>&2) ; check_tasks 4 ;;
 
             "R") startmenu ;;
         esac
