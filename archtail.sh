@@ -563,20 +563,30 @@ EOF
     if [[ "$USE_CRYPT" == 'TRUE' ]] ; then
         # create vg on encrypted partition
         vgcreate "$VOL_GROUP" "$CRYPT_PART"   &>> $LOGFILE
+
+        # You can extend with 'vgextend' to other devices too
+
+        # create the volumes with specific size
+        lvcreate -L "$ROOT_SIZE" "$CRYPT_PART" -n "$LV_ROOT"   &>> $LOGFILE
+        lvcreate -L "$SWAP_SIZE" "$CRYPT_PART" -n "$LV_SWAP"   &>> $LOGFILE
+        lvcreate -l 100%FREE  "$CRYPT_PART" -n "$LV_HOME"      &>> $LOGFILE
+        
+        # Format SWAP 
+        format_disk /dev/"$CRYPT_PART"/"$LV_SWAP" swap
     else
         # create the volume group
         vgcreate "$VOL_GROUP" "$ROOT_DEVICE"   &>> $LOGFILE
+        # You can extend with 'vgextend' to other devices too
+
+        # create the volumes with specific size
+        lvcreate -L "$ROOT_SIZE" "$VOL_GROUP" -n "$LV_ROOT"   &>> $LOGFILE
+        lvcreate -L "$SWAP_SIZE" "$VOL_GROUP" -n "$LV_SWAP"   &>> $LOGFILE
+        lvcreate -l 100%FREE  "$VOL_GROUP" -n "$LV_HOME"      &>> $LOGFILE
+        
+        # Format SWAP 
+        format_disk /dev/"$VOL_GROUP"/"$LV_SWAP" swap
     fi
     
-    # You can extend with 'vgextend' to other devices too
-
-    # create the volumes with specific size
-    lvcreate -L "$ROOT_SIZE" "$VOL_GROUP" -n "$LV_ROOT"   &>> $LOGFILE
-    lvcreate -L "$SWAP_SIZE" "$VOL_GROUP" -n "$LV_SWAP"   &>> $LOGFILE
-    lvcreate -l 100%FREE  "$VOL_GROUP" -n "$LV_HOME"      &>> $LOGFILE
-    
-    # Format SWAP 
-    format_disk /dev/"$VOL_GROUP"/"$LV_SWAP" swap
 
     # insert the vol group kernel module
     modprobe dm_mod                                       &>> $LOGFILE
