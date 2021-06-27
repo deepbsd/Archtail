@@ -33,6 +33,7 @@ mydesktop=( "${cinnamon_desktop[@]}" )
 # VOL GROUP VARIABLES
 USE_LVM=''   # gets set programmatically
 USE_CRYPT='' # gets set programmatically
+CRYPT_PART="arch_crypt"   # encrypted volume group for cryptsetup
 VOL_GROUP="arch_vg"
 LV_ROOT="ArchRoot"
 LV_HOME="ArchHome"
@@ -769,7 +770,7 @@ diskmenu(){
 
             "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; check_tasks 4; lv_create ;;
             
-            "M") device=$(choose_disk); clear; bash --init-file <(parted /dev/parted "$device" 1>&1 2>&2"$device" 1>&1 2>&2) ; check_tasks 4 ;;
+            "M") device=$(choose_disk); clear; bash --init-file <(parted /dev/"$device"  1>&1 2>&2) ; check_tasks 4 ;;
 
             "R") startmenu ;;
         esac
