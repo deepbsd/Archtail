@@ -735,10 +735,12 @@ crypt_setup(){
     echo "$passphrase" > /tmp/passphrase
 
     #echo -n "$passphrase" | cryptsetup -q luksFormat $1 -   2>&1 &>>$LOGFILE
-    cryptsetup luksFormat $1 --key-file /tmp/passphrase   2>&1 &>>$LOGFILE
+    cryptsetup -y -v luksFormat $1 --key-file /tmp/passphrase   2>&1 &>>$LOGFILE
     #echo -n "$passphrase" | cryptsetup -q luksFormat --hash=sha512 --key-size=512 --cipher=aes-xts-plain64 --verify-passphrase $1 -  2>&1 &>>$LOGFILE
 
     cryptsetup luksOpen  $1 $CRYPT_PART   2>&1 &>>$LOGFILE      
+
+    cryptsetup -v status $CRYPT_PART    2>&1 &>>$LOGFILE
 
     term=ANSI whiptail --backtitle "$back_message" --title "$title_message" --infobox "Wiping every byte of device with zeroes, could take a while..." 24 80
 
