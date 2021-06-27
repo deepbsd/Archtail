@@ -551,11 +551,22 @@ EOF
     # run cryptsetup on root device  # uncomment this later
     [[ "$USE_CRYPT" == 'TRUE' ]] && crypt_setup "$ROOT_DEVICE"
 
-    # create the physical volumes
-    pvcreate "$ROOT_DEVICE"                &>> $LOGFILE
+    # run cryptsetup on root device  # uncomment this later
+    if [[ "$USE_CRYPT" == 'TRUE' ]] ; then
+        pvcreate /dev/mapper/"$CRYPT_PART"                 &>> $LOGFILE
+    else
+        # create the physical volumes
+        pvcreate "$ROOT_DEVICE"                &>> $LOGFILE
+    fi
 
-    # create the volume group
-    vgcreate "$VOL_GROUP" "$ROOT_DEVICE"   &>> $LOGFILE
+
+    if [[ "$USE_CRYPT" == 'TRUE' ]] ; then
+        # create vg on encrypted partition
+        vgcreate "$VOL_GROUP" "$CRYPT_PART"   &>> $LOGFILE
+    else
+        # create the volume group
+        vgcreate "$VOL_GROUP" "$ROOT_DEVICE"   &>> $LOGFILE
+    fi
     
     # You can extend with 'vgextend' to other devices too
 
