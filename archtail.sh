@@ -560,6 +560,9 @@ EOF
     fi
 
 
+    # Setup LV's one way for encryption, another way without
+    # Note:  Haven't removed old comments because I'm still not sure new way will
+    # work.  Keep both methods around until I verify them
     if [[ "$USE_CRYPT" == 'TRUE' ]] ; then
         # create vg on encrypted partition
         vgcreate "$VOL_GROUP" "$CRYPT_PART"   &>> $LOGFILE
@@ -568,11 +571,26 @@ EOF
 
         # create the volumes with specific size
         lvcreate -L "$ROOT_SIZE" "$CRYPT_PART" -n "$LV_ROOT"   &>> $LOGFILE
+        #lvcreate -L "$ROOT_SIZE" "$VOL_GROUP" -n "$LV_ROOT"   &>> $LOGFILE
         lvcreate -L "$SWAP_SIZE" "$CRYPT_PART" -n "$LV_SWAP"   &>> $LOGFILE
+        #lvcreate -L "$SWAP_SIZE" "$VOL_GROUP" -n "$LV_SWAP"   &>> $LOGFILE
         lvcreate -l 100%FREE  "$CRYPT_PART" -n "$LV_HOME"      &>> $LOGFILE
+        #lvcreate -l 100%FREE  "$VOL_GROUP" -n "$LV_HOME"      &>> $LOGFILE
         
         # Format SWAP 
         format_disk /dev/"$CRYPT_PART"/"$LV_SWAP" swap
+        # insert the vol group kernel module
+        modprobe dm_mod                                       &>> $LOGFILE
+        
+        # activate the vol group
+        vgchange -ay                                          &>> $LOGFILE
+
+        ## format the volumes
+        format_disk /dev/"$CRYPT_PART"/"$LV_ROOT"  root
+        ## Format the EFI partition:  have to do this AFTER the 
+        ## root partition or else it won't get mounted properly
+        format_disk "$EFI_DEVICE" efi
+        format_disk /dev/"$CRYPT_PART"/"$LV_HOME"  home
     else
         # create the volume group
         vgcreate "$VOL_GROUP" "$ROOT_DEVICE"   &>> $LOGFILE
@@ -585,21 +603,34 @@ EOF
         
         # Format SWAP 
         format_disk /dev/"$VOL_GROUP"/"$LV_SWAP" swap
+    
+        # insert the vol group kernel module
+        modprobe dm_mod                                       &>> $LOGFILE
+        
+        # activate the vol group
+        vgchange -ay                                          &>> $LOGFILE
+
+        ## format the volumes
+        format_disk /dev/"$VOL_GROUP"/"$LV_ROOT"  root
+        ## Format the EFI partition:  have to do this AFTER the 
+        ## root partition or else it won't get mounted properly
+        format_disk "$EFI_DEVICE" efi
+        format_disk /dev/"$VOL_GROUP"/"$LV_HOME"  home
     fi
     
 
-    # insert the vol group kernel module
-    modprobe dm_mod                                       &>> $LOGFILE
-    
-    # activate the vol group
-    vgchange -ay                                          &>> $LOGFILE
+    ## insert the vol group kernel module
+    #modprobe dm_mod                                       &>> $LOGFILE
+    #
+    ## activate the vol group
+    #vgchange -ay                                          &>> $LOGFILE
 
-    ## format the volumes
-    format_disk /dev/"$VOL_GROUP"/"$LV_ROOT"  root
-    ## Format the EFI partition:  have to do this AFTER the 
-    ## root partition or else it won't get mounted properly
-    format_disk "$EFI_DEVICE" efi
-    format_disk /dev/"$VOL_GROUP"/"$LV_HOME"  home
+    ### format the volumes
+    #format_disk /dev/"$VOL_GROUP"/"$LV_ROOT"  root
+    ### Format the EFI partition:  have to do this AFTER the 
+    ### root partition or else it won't get mounted properly
+    #format_disk "$EFI_DEVICE" efi
+    #format_disk /dev/"$VOL_GROUP"/"$LV_HOME"  home
 
     # examine our work here
     lsblk > /tmp/filesystems_created
