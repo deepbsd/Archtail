@@ -5,6 +5,11 @@
 ###    GLOBAL VARIABLES  #######
 ################################
 
+# NOTE:  Many of these variables get set programmatically as you run the program
+# yet, they must be declared in the global namespace so they are updated in local
+# functions.  Here in Archtail, they get updated many times as you run the individual
+# functions, such as lv_create() and so forth.
+
 # VERIFY BOOT MODE
 efi_boot_mode(){
     # if the efivars directory exists we definitely have an EFI BIOS
