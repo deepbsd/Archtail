@@ -666,6 +666,7 @@ mount_part(){
     if [[ "$?" -eq 0 ]]; then
         echo "====== $device mounted successfully on $mt_pt ======" &>>$LOGFILE
     else
+
         TERM=ansi whiptail --title "Mount NOT successful" \
             --msgbox "$device failed mounting on $mt_pt" 8 65
         echo "!!!### ===== $device failed mounting on $mt_pt ===== ###!!!"
@@ -691,6 +692,7 @@ format_disk(){
             mount_part "$device" /mnt/boot/efi  &>> $LOGFILE
             ;;
         home  ) mkfs.ext4 "$device"             &>> $LOGFILE
+            mkdir /mnt/home                     &>> $LOGFILE
             mount_part "$device" /mnt/home      &>> $LOGFILE
             ;;
         boot  ) mkfs.ext4 "$device"             &>> $LOGFILE
