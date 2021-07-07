@@ -625,20 +625,6 @@ EOF
         format_disk /dev/"$VOL_GROUP"/"$LV_HOME"  home
     fi
     
-
-    ## insert the vol group kernel module
-    #modprobe dm_mod                                       &>> $LOGFILE
-    #
-    ## activate the vol group
-    #vgchange -ay                                          &>> $LOGFILE
-
-    ### format the volumes
-    #format_disk /dev/"$VOL_GROUP"/"$LV_ROOT"  root
-    ### Format the EFI partition:  have to do this AFTER the 
-    ### root partition or else it won't get mounted properly
-    #format_disk "$EFI_DEVICE" efi
-    #format_disk /dev/"$VOL_GROUP"/"$LV_HOME"  home
-
     # examine our work here
     lsblk > /tmp/filesystems_created
     whiptail --title "LV's Created and Mounted" --backtitle "Filesystem Created" \
