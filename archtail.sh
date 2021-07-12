@@ -375,6 +375,12 @@ lvm_hooks(){
     arch-chroot /mnt mkinitcpio -P 
 }
 
+encrypt_lvm_hooks(){
+    sed -i 's/^HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)$/HOOKS=(base udev autodetect modconf block encrypt lvm2 filesystems keyboard fsck)/g' /mnt/etc/mkinitcpio.conf
+    arch-chroot /mnt mkinitcpio -P 
+
+}
+
 
 # VALIDATE PKG NAMES IN SCRIPT
 validate_pkgs(){
