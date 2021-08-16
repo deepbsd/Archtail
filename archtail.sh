@@ -797,6 +797,7 @@ crypt_setup(){
 
     term=ANSI whiptail --backtitle "$back_message" --title "$title_message" --infobox "Wiping every byte of device with zeroes, could take a while..." 24 80
 
+    ## Shouldn't be using mapper at this point!!!
     dd if=/dev/zero of=/dev/mapper/"$CRYPT_PART" bs=1M    2>&1  &>>$LOGFILE
     cryptsetup luksClose "$CRYPT_PART"                    2>&1  &>>$LOGFILE
     
