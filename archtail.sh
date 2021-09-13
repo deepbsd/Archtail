@@ -176,7 +176,7 @@ auto_tz(){
 }
 
 change_tz(){
-    # Offer user chance to select a new tz incase wget didn't work properly
+    # Offer user chance to select a new tz in case wget didn't work properly
     backmessage="CHANGE TZ?"; message="Want to change TZ from $TIMEZONE?"
     # whiptail --yesno dialog
     if $(whiptail --backtitle "$backmessage" --title "$message" --yesno \
@@ -255,9 +255,6 @@ change_kb(){
 
 # FIND GRAPHICS CARD
 find_card(){
-    # I created this function to automatically find a graphics card.  Perhaps
-    # I'll eventually incorporate it programmatically.
-
     card=$(lspci | grep VGA | sed 's/^.*: //g')
 
     whiptail --title "Your Video Card" --msgbox \
@@ -1186,7 +1183,7 @@ startmenu(){
 
             "G")  install_grub; check_tasks 12 ;;
             
-            "E")  pick_desktop ; check_tasks 13 ;;
+            "E")  pick_desktop; find_card; check_tasks 13 ;;
 
             "X")  specialprogressgauge install_desktop "Installing Xorg and Desktop Resources..." "INSTALLING XORG"; 
                   whiptail --backtitle "X AND DESKTOPS INSTALLED" --title "Desktops Installed" \
