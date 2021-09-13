@@ -805,6 +805,14 @@ crypt_setup(){
 }
 
 # DISPLAY AND CHOOSE DISK PREP METHODS
+
+## This line could be put into the menu below if we want to use disk encryption.
+## It doesn't work yet, however.
+
+#        "E"   "Prepare Installation Disk Encryption and LVM"   \
+#            "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; check_tasks 4; lv_create ;;
+            
+
 diskmenu(){
 
     while true ; do
@@ -813,7 +821,6 @@ diskmenu(){
             --menu "Prepare Installation Disk (Choose One)" 18 80 6 \
         "N"   "Prepare Installation Disk with Normal Partitions" \
         "L"   "Prepare Installation Disk with LVM"   \
-#        "E"   "Prepare Installation Disk Encryption and LVM"   \
         "M"   "Manually Partition Disk with parted "   \
         "R"   "Return to previous menu"   3>&1 1>&2 2>&3 ) 
 
@@ -823,8 +830,6 @@ diskmenu(){
 
             "L") USE_LVM='TRUE'; check_tasks 4; lv_create ;;
 
-            "E") USE_LVM='TRUE'; USE_CRYPT='TRUE'; check_tasks 4; lv_create ;;
-            
             "M") device=$(choose_disk); clear; bash --init-file <(parted /dev/"$device"  1>&1 2>&2) ; check_tasks 4 ;;
 
             "R") startmenu ;;
