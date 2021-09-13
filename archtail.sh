@@ -20,18 +20,20 @@ efi_boot_mode(){
 }
 
 LOGFILE='/tmp/install.log'
+
 if $(efi_boot_mode); then 
     DISKTABLE='GPT'
 else
     DISKTABLE='MBR'
 fi
+
 IN_DEVICE=''
 EFI_SLICE=''
 ROOT_SLICE=''
 HOME_SLICE=''
 SWAP_SLICE=''
 
-# GRAPHICS DRIVERS ETC   ---  change as needed via whiptail later in script ---
+# DEFAULT GRAPHICS DRIVERS ETC   ---  change as needed via whiptail later in script ---
 wifi_drivers=(broadcom-wl-dkms iwd)   # find chipset for YOUR wifi card!
 graphics_driver=(xf86-video-vmware)   # $( pacman -Ss xf86-video- ) will list available drivers...
 display_mgr=(lightdm)                 # lightdm goes well with cinnamon desktop
@@ -138,9 +140,7 @@ completed_tasks=( "X" )
 ###    FUNCTIONS    ##############
 ##################################
  
-
 ############  UTILITY FUNCTIONS  ####################
-
 
 welcome(){
     message="Dave's ARCH Installer will lead you through a menu-driven process to\
@@ -168,7 +168,7 @@ auto_tz(){
         TIMEZONE=$(wget -O - -q http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')
     fi
 
-    # Default TZ is America/New_York
+    # Default TZ is America/New_York  (use auto_tz value if geoip site is up)
     TIMEZONE=${TIMEZONE:='America/New_York'}
 
     echo "***   auto_tz() says TIMEZONE is $TIMEZONE   ***"  &>>$LOGFILE
