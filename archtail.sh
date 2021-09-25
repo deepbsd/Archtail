@@ -599,8 +599,13 @@ EOF
         format_disk /dev/"$CRYPT_PART"/"$LV_ROOT"  root
         ## Format the EFI partition:  have to do this AFTER the 
         ## root partition or else it won't get mounted properly
-        [[ ! $(efi_boot_mode ) ]] && format_disk "$BOOT_DEVICE" boot 
-        [[ $(efi_boot_mode ) ]] && format_disk "$EFI_DEVICE" efi 
+        if $( efi_boot_mode ) ; then
+            format_disk "$EFI_DEVICE" efi
+        else
+            format_disk "$BOOT_DEVICE" boot
+        fi
+            #[[ ! $(efi_boot_mode ) ]] && format_disk "$BOOT_DEVICE" boot 
+            #[[ $(efi_boot_mode ) ]] && format_disk "$EFI_DEVICE" efi 
         format_disk /dev/"$CRYPT_PART"/"$LV_HOME"  home
     else
         # create the volume group
