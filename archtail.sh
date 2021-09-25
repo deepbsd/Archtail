@@ -613,7 +613,7 @@ EOF
         lvcreate -l 100%FREE  "$VOL_GROUP" -n "$LV_HOME"      &>> $LOGFILE
         
         # Format SWAP 
-        format_disk /dev/"$VOL_GROUP"/"$LV_SWAP" swap
+        format_disk "/dev/$VOL_GROUP/$LV_SWAP" swap
     
         # insert the vol group kernel module
         modprobe dm_mod                                       &>> $LOGFILE
