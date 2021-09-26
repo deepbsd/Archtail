@@ -83,7 +83,7 @@ executables=( "date" "whiptail" "rm" "echo" "ls" "sed" "grep" "sleep" "exit" "sh
 # replace with linux-lts or -zen if preferrable
 base_system=( base base-devel linux linux-headers dkms linux-firmware vim sudo bash-completion )
 
-base_essentials=(git mlocate pacman-contrib man-db man-pages)
+base_essentials=(git mlocate pacman-contrib pacman-keyring man-db man-pages)
 
 network_essentials=( iwd dhcpcd openssh networkmanager )
 
