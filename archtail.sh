@@ -358,6 +358,8 @@ check_tasks(){
 
 # FIND CLOSEST MIRROR
 check_reflector(){
+    # Archlinux tries to find and work with the closest mirrors before installing.  This function 
+    # tries to check whether that process is complete or not.
     
     whiptail --backtitle "REFLECTOR RUNNING" --title "Finding closest mirror" --infobox \
     "Evaluating and finding closest mirrors for Arch repos. This may take a while, but you'll be returned to the main menu as soon as possible." 10 65
