@@ -320,7 +320,7 @@ specialprogressgauge(){
     eval $process_to_measure &      # Start the process in the background
     thepid=$!               # Immediately capture the PID for this process
     echo "=== Watching PID $thepid for progress ===" &>>$LOGFILE
-    num=10                  # Shortest progress bar could be 15 sec to 45 sec
+    num=10                  # Shortest progress bar could be 10 sec to 30 sec
     while true; do
         showprogress 1 $num 1 3 
         sleep 2             # Max of 47 sec before we check for completion
