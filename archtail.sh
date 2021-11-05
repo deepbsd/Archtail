@@ -870,6 +870,11 @@ install_essential(){
     done
 }
 
+# TURN ON OS-PROBER
+turnon_os_prober(){
+    echo "GRUB_DISABLE_OS_PROBER=false" >> /mnt/etc/default/grub
+}
+
 # INSTALL BOOTLOADER
 install_grub(){
 
@@ -878,6 +883,9 @@ install_grub(){
 
     sleep 2
     arch-chroot /mnt pacman -S grub os-prober --noconfirm  &>>$LOGFILE
+
+    # CHECK FOR OTHER OSES (By default this is not enabled)
+    turnon_os_prober
 
     # Grub gets installed differently on efi- non-efi-systems
     if $(efi_boot_mode); then
