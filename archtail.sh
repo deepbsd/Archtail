@@ -346,11 +346,9 @@ time_date(){
 # CHECK IF TASK IS COMPLETED
 check_tasks(){
 
-    # If task already exists in array return falsey
+    # If task already exists in array return falsy
     # Function takes a task number as an argument
     # This function might not be needed anymore: STATUS TBD
-
-    #[[ "${completed_tasks[$task]}" =~ $checkmark ]] && return 1
 
     # just return an 'X' in the array position of the passed integer parameter
     completed_tasks[$1]="X"
