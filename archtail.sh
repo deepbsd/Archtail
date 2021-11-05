@@ -652,6 +652,7 @@ EOF
 
 # MOUNT PARTION
 mount_part(){
+    # Mount the device ($1) and the mount point ($2)
     # 2nd parameter is mount point
     device=$1; mt_pt=$2
 
