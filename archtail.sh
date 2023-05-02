@@ -370,12 +370,12 @@ check_reflector(){
 
 # FOR MKINITCPIO.IMG
 lvm_hooks(){
-    sed -i 's/^HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)$/HOOKS=(base udev autodetect modconf block lvm2 filesystems keyboard fsck)/g' /mnt/etc/mkinitcpio.conf
+    sed -i 's/^HOOKS=(base udev autodetect modconf kms keyboard keymap block filesystems fsck)$/HOOKS=(base udev autodetect modconf modconf kms keyboard keymap block lvm2 filesystems fsck)/g' /mnt/etc/mkinitcpio.conf
     arch-chroot /mnt mkinitcpio -P 
 }
 
-encrypt_lvm_hooks(){
-    sed -i 's/^HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)$/HOOKS=(base udev autodetect modconf block encrypt lvm2 filesystems keyboard fsck)/g' /mnt/etc/mkinitcpio.conf
+encrypt_lvm_hook(){
+    sed -i 's/^HOOKS=(base udev autodetect modconf kms keyboard keymap block filesystems fsck)$/HOOKS=(base udev autodetect modconf kms keyboard keymap block lvm2 filesystems keyboard fsck)/g' /mnt/etc/mkinitcpio.conf
     arch-chroot /mnt mkinitcpio -P 
 
 }
