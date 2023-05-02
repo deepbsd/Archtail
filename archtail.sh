@@ -83,7 +83,7 @@ executables=( "date" "whiptail" "rm" "echo" "ls" "sed" "grep" "sleep" "exit" "sh
 # replace with linux-lts or -zen if preferrable
 base_system=( base base-devel linux linux-headers dkms linux-firmware vim sudo bash-completion )
 
-base_essentials=(git mlocate pacman-contrib pacman-keyring man-db man-pages)
+base_essentials=(git mlocate pacman-contrib archlinux-keyring man-db man-pages)
 
 network_essentials=( iwd dhcpcd openssh networkmanager )
 
@@ -95,9 +95,9 @@ extra_x1=( gkrellm powerline powerline-fonts powerline-vim adobe-source-code-pro
 
 extra_x2=( noto-fonts breeze-gtk breeze-icons gtk-engine-murrine oxygen-icons xcursor-themes adapta-gtk-theme )
 
-extra_x3=( arc-gtk-theme elementary-icon-theme faenza-icon-theme gnome-icon-theme-extras arc-icon-theme lightdm-webkit-theme-litarvan mate-icon-theme ) 
+extra_x3=( arc-gtk-theme elementary-icon-theme gnome-icon-theme-extras arc-icon-theme lightdm-webkit-theme-litarvan mate-icon-theme ) 
 
-extra_x4=( materia-gtk-theme papirus-icon-theme xcursor-bluecurve xcursor-premium archlinux-wallpaper deepin-community-wallpapers deepin-wallpapers elementary-wallpapers )
+extra_x4=( materia-gtk-theme papirus-icon-theme archlinux-wallpaper deepin-community-wallpapers deepin-wallpapers elementary-wallpapers )
 
 cinnamon_desktop=( cinnamon nemo-fileroller )
 
