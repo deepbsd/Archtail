@@ -370,7 +370,11 @@ check_reflector(){
 
 # FOR MKINITCPIO.IMG
 lvm_hooks(){
-    sed -i 's/^HOOKS=(base udev autodetect modconf kms keyboard keymap block filesystems fsck)$/HOOKS=(base udev autodetect modconf modconf kms keyboard keymap block lvm2 filesystems fsck)/g' /mnt/etc/mkinitcpio.conf
+    # this change makes sure to add lvm2 hook even when modules or hooks change names (as long as there is a
+    # filesystems hook)
+    sed -i 's/^\(HOOKS=["(]base .*\) filesystems \(.*\)$/\1 lvm2 filesystems \2/g' /mnt/etc/mkinitcpio.conf
+
+    # sed -i 's/^HOOKS=(base udev autodetect modconf kms keyboard keymap block filesystems fsck)$/HOOKS=(base udev autodetect modconf modconf kms keyboard keymap block lvm2 filesystems fsck)/g' /mnt/etc/mkinitcpio.conf
     arch-chroot /mnt mkinitcpio -P 
 }
 
