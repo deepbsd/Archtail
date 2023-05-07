@@ -380,7 +380,7 @@ lvm_hooks(){
 
 encrypt_lvm_hook(){
 #    sed -i 's/^HOOKS=(base udev autodetect modconf kms keyboard keymap block filesystems fsck)$/HOOKS=(base udev autodetect modconf kms keyboard keymap block lvm2 filesystems keyboard fsck)/g' /mnt/etc/mkinitcpio.conf
-    sed -i 's/^\(HOOKS=["(]base .*\) filesystems \(.*\)$/\1 encrypt filesystems \2/g' /mnt/etc/mkinitcpio.conf
+    sed -i 's/^\(HOOKS=["(]base .*\) filesystems \(.*\)$/\1 encrypt lvm2 filesystems \2/g' /mnt/etc/mkinitcpio.conf
     arch-chroot /mnt mkinitcpio -P 
 
 }
