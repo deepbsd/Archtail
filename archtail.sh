@@ -21,12 +21,14 @@ efi_boot_mode(){
 
 LOGFILE='/tmp/install.log'
 
+# CHECK IF UEFI BIOS OR NOT AND DISKLABEL
 if $(efi_boot_mode); then 
     DISKTABLE='GPT'
 else
     DISKTABLE='MBR'
 fi
 
+# PUT THESE IN GLOBAL NAMESPACE
 IN_DEVICE=''
 EFI_SLICE=''
 ROOT_SLICE=''
