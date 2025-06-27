@@ -83,15 +83,15 @@ executables=( "date" "whiptail" "rm" "echo" "ls" "sed" "grep" "sleep" "exit" "sh
 "useradd" "systemctl" "declare" "while")
 
 # replace with linux-lts or -zen if preferrable
-base_system=( base base-devel linux linux-headers dkms linux-firmware vim sudo bash-completion )
+base_system=( base base-devel linux linux-headers dkms linux-firmware vim sudo bash-completion archlinux-keyring )
 
-base_essentials=(git mlocate pacman-contrib archlinux-keyring man-db man-pages)
+base_essentials=(git mlocate pacman-contrib man-db man-pages)
 
 network_essentials=( iwd dhcpcd openssh networkmanager )
 
 my_services=( dhcpcd sshd NetworkManager systemd-homed )
 
-basic_x=( xorg-server xorg-xinit mesa xorg-twm xterm gnome-terminal xorg-xclock xfce4-terminal firefox neofetch screenfetch lightdm-gtk-greeter )
+basic_x=( xorg-server xorg-xinit mesa xorg-twm xterm gnome-terminal xorg-xclock xfce4-terminal firefox fastfetch screenfetch lightdm-gtk-greeter )
 
 extra_x1=( gkrellm powerline powerline-fonts powerline-vim adobe-source-code-pro-fonts cantarell-fonts gnu-free-fonts ) 
 
