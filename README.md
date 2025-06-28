@@ -52,12 +52,6 @@ we're giving the user the chance to install a non-us keyboard keymap.
 
 ## TODO
 
-Eventually, I'll need to break this sucker up into separate files, and at that
-point you'll have to clone it into the Archiso instance.  That's fine.  I'd prefer
-to have kept it simple, but it's just gotten too big.
-
-There are some other things that have struck me though:
-
 1. Break some of the larger functions into smaller functions.  Particularly
    lv\_create.  That one is too big.  UPDATE: Haven't done this, but I have re-
    organized the sequence of the functions into Utility functions, Disk functions,
